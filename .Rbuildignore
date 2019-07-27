@@ -1,0 +1,15 @@
+^.*\.Rproj$
+^\.Rproj\.user$
+
+^man-roxygen
+
+^\..*
+.*\.md
+.*\.o
+.*\.so
+.*\.dll
+^LICENSE$
+^README.*
+^appveyor\.yml$
+^codecov\.R
+^docs$
