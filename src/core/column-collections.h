@@ -3,6 +3,7 @@
 
 #include <cstddef> // std::size_t
 #include <memory> // std::shared_ptr
+#include <type_traits> // conditional, is_same
 #include <vector>
 
 #include <Rcpp.h>
@@ -30,10 +31,21 @@ protected:
 
 // =================================================================================================
 
-class IntegerMatrixColumnCollection : public ColumnCollection
+template<typename T>
+class MatrixColumnCollection : public ColumnCollection
 {
 public:
-    IntegerMatrixColumnCollection(const Rcpp::IntegerMatrix& mat);
+    MatrixColumnCollection(const T& mat)
+        : ColumnCollection(mat.nrow())
+    {
+        typedef typename std::conditional<std::is_same<T, Rcpp::IntegerMatrix>::value, int, double>::type OUT;
+
+        for (int j = 0; j < mat.ncol(); j++) {
+            columns_.push_back(
+                std::make_shared<SurrogateColumn<OUT>>(&mat[static_cast<std::size_t>(j) * nrow_], nrow_)
+            );
+        }
+    }
 };
 
 } // namespace wiserow

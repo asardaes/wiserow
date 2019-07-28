@@ -18,14 +18,4 @@ const VariantColumn& ColumnCollection::operator[](const std::size_t j) {
     return *(columns_[j]);
 }
 
-IntegerMatrixColumnCollection::IntegerMatrixColumnCollection(const Rcpp::IntegerMatrix& mat)
-    : ColumnCollection(mat.nrow())
-{
-    for (int j = 0; j < mat.ncol(); j++) {
-        columns_.push_back(
-            std::make_shared<SurrogateColumn<int>>(&mat[static_cast<std::size_t>(j) * nrow_], nrow_)
-        );
-    }
-}
-
 } // namespace wiserow
