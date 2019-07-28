@@ -12,7 +12,7 @@ Metadata::Metadata(const Rcpp::List& metadata)
     Rcpp::StringVector in_modes = metadata["input_modes"];
     for (R_xlen_t i = 0; i < in_modes.length(); i++) {
         std::string in_mode = Rcpp::as<std::string>(in_modes(i));
-        input_modes.push_back(parse_type(in_mode));
+        input_modes.push_back(std::move(parse_type(in_mode)));
     }
 }
 
@@ -28,7 +28,7 @@ std::type_index Metadata::parse_type(const std::string& type_str) {
         return std::type_index(typeid(double));
     }
     else {
-        Rcpp::stop("Unknown type: " + type_str);
+        Rcpp::stop("[wiserow] unsupported type: " + type_str);
     }
 }
 

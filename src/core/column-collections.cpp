@@ -14,8 +14,12 @@ std::size_t ColumnCollection::nrow() const {
     return nrow_;
 }
 
-const VariantColumn& ColumnCollection::operator[](const std::size_t j) {
+const VariantColumn& ColumnCollection::operator[](const std::size_t j) const {
     return *(columns_[j]);
+}
+
+const supported_col_t ColumnCollection::operator()(const std::size_t i, const std::size_t j) const {
+    return (*(columns_[j]))[i];
 }
 
 } // namespace wiserow

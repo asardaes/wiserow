@@ -15,7 +15,7 @@ ColumnCollection DataCoercer::coerce(Metadata metadata, SEXP data) {
         }
     }
     else {
-        Rcpp::stop("Unknown input class: " + metadata.input_class);
+        Rcpp::stop("[wiserow] unsupported input class: " + metadata.input_class);
     }
 }
 
