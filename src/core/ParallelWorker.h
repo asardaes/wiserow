@@ -10,6 +10,8 @@
 
 namespace wiserow {
 
+// =================================================================================================
+
 inline void parallel_for(std::size_t begin,
                          std::size_t end,
                          RcppParallel::Worker& worker,
@@ -20,6 +22,8 @@ inline void parallel_for(std::size_t begin,
     RcppThread::checkUserInterrupt();
 }
 
+// =================================================================================================
+
 class ParallelWorker : public RcppParallel::Worker
 {
 public:
@@ -27,7 +31,7 @@ public:
     void operator()(std::size_t begin, std::size_t end) override final;
 
 protected:
-    ParallelWorker(const int grain, const int min, const int max);
+    ParallelWorker(const int interrupt_check_grain, const int min, const int max);
     virtual void work_it(std::size_t begin, std::size_t end) = 0;
     bool is_interrupted() const;
     bool is_interrupted(const std::size_t i) const;
@@ -35,7 +39,7 @@ protected:
     tthread::mutex mutex_;
 
 private:
-    int interrupt_grain(const int grain, const int min, const int max) const;
+    int interrupt_grain(const int interrupt_check_grain, const int min, const int max) const;
 
     const int interrupt_grain_;
 };
