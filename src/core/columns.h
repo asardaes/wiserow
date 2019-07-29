@@ -58,6 +58,8 @@ class ColumnCollectionMetadata {
 public:
     ColumnCollectionMetadata(const Rcpp::List& metadata);
 
+    const int num_workers;
+
     const std::string input_class;
     const std::type_index output_mode;
 
@@ -65,6 +67,7 @@ public:
 
 private:
     static std::string get_string(const Rcpp::List& metadata, const std::string& key);
+    static int get_int(const Rcpp::List& metadata, const std::string& key);
     static std::type_index parse_type(const std::string& type_str);
 };
 

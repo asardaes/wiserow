@@ -6,7 +6,7 @@
 \alias{wiserow-package}
 \title{Fast, multi-threaded implementations of common row-wise operations}
 \description{
-TBD
+TBD.
 }
 \author{
 Alexis Sarda-Espinosa

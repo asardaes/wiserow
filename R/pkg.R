@@ -1,6 +1,6 @@
 #' Fast, multi-threaded implementations of common row-wise operations
 #'
-#' TBD
+#' TBD.
 #'
 #' @author Alexis Sarda-Espinosa
 #'

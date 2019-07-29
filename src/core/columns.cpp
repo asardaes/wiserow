@@ -9,7 +9,8 @@ namespace wiserow {
 // =================================================================================================
 
 ColumnCollectionMetadata::ColumnCollectionMetadata(const Rcpp::List& metadata)
-    : input_class(get_string(metadata, "input_class"))
+    : num_workers(get_int(metadata, "num_workers"))
+    , input_class(get_string(metadata, "input_class"))
     , output_mode(std::move(parse_type(get_string(metadata, "output_mode"))))
 {
     Rcpp::StringVector in_modes = metadata["input_modes"];
@@ -21,6 +22,10 @@ ColumnCollectionMetadata::ColumnCollectionMetadata(const Rcpp::List& metadata)
 
 std::string ColumnCollectionMetadata::get_string(const Rcpp::List& metadata, const std::string& key) {
     return Rcpp::as<std::string>(metadata[key]);
+}
+
+int ColumnCollectionMetadata::get_int(const Rcpp::List& metadata, const std::string& key) {
+    return Rcpp::as<int>(metadata[key]);
 }
 
 std::type_index ColumnCollectionMetadata::parse_type(const std::string& type_str) {
