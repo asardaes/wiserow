@@ -1,9 +1,6 @@
 [![Travis-CI Build
 Status](https://travis-ci.org/asardaes/wiserow.svg?branch=master)](https://travis-ci.org/asardaes/wiserow)
-
-[![AppVeyor Build
-status](https://ci.appveyor.com/api/projects/status/bb9606tfe648gajn?svg=true)](https://ci.appveyor.com/project/asardaes/table-express)
-
+[![AppVeyor Build](https://ci.appveyor.com/api/projects/status/0906yq90252mlb77?svg=true)](https://ci.appveyor.com/project/asardaes/wiserow)
 [![codecov](https://codecov.io/gh/asardaes/wiserow/branch/master/graph/badge.svg)](https://codecov.io/gh/asardaes/wiserow)
 
 # Wiserow
