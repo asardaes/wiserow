@@ -5,6 +5,7 @@
 
 #include <boost/variant.hpp>
 
+#include "../core/OperationMetadata.h"
 #include "../core/ParallelWorker.h"
 #include "../core/columns.h"
 
@@ -16,7 +17,7 @@ template<typename T>
 class SumVisitor : public ParallelWorker, public boost::static_visitor<T>
 {
 public:
-    SumVisitor(const ColumnCollectionMetadata& metadata, const ColumnCollection& cc, T * const ans)
+    SumVisitor(const OperationMetadata& metadata, const ColumnCollection& cc, T * const ans)
         : ParallelWorker(cc.nrow() / metadata.num_workers, 1000, 10000)
         , col_collection_(cc)
         , ans_(ans)

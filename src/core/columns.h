@@ -4,13 +4,13 @@
 #include <cstddef> // size_t
 #include <memory> // shared_ptr
 #include <stdexcept> // out_of_range
-#include <string>
 #include <type_traits> // conditional, is_same
-#include <typeindex>
 #include <vector>
 
 #include <Rcpp.h>
 #include <boost/variant/variant.hpp>
+
+#include "OperationMetadata.h"
 
 namespace wiserow {
 
@@ -54,29 +54,10 @@ private:
 
 // =================================================================================================
 
-class ColumnCollectionMetadata {
-public:
-    ColumnCollectionMetadata(const Rcpp::List& metadata);
-
-    const int num_workers;
-
-    const std::string input_class;
-    const std::type_index output_mode;
-
-    std::vector<std::type_index> input_modes;
-
-private:
-    static std::string get_string(const Rcpp::List& metadata, const std::string& key);
-    static int get_int(const Rcpp::List& metadata, const std::string& key);
-    static std::type_index parse_type(const std::string& type_str);
-};
-
-// =================================================================================================
-
 class ColumnCollection
 {
 public:
-    static ColumnCollection coerce(ColumnCollectionMetadata metadata, SEXP data);
+    static ColumnCollection coerce(OperationMetadata metadata, SEXP data);
 
     ColumnCollection(const std::size_t nrow);
     virtual ~ColumnCollection() {}

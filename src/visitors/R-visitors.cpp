@@ -11,7 +11,7 @@ namespace wiserow {
 
 extern "C" SEXP row_sums(SEXP metadata, SEXP data) {
 BEGIN_RCPP
-    ColumnCollectionMetadata metadata_(metadata);
+    OperationMetadata metadata_(metadata);
     ColumnCollection col_collection = ColumnCollection::coerce(metadata_, data);
 
     if (metadata_.output_mode == typeid(int)) {
