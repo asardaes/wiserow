@@ -5,6 +5,9 @@ test_that("row_sums for matrices works.", {
     ans <- row_sums(int_mat, output_mode = "double")
     expect_identical(ans, expected)
 
+    ans <- row_sums(dbl_mat)
+    expect_identical(ans, expected)
+
     expected <- as.integer(expected)
     ans <- row_sums(int_mat)
     expect_identical(ans, expected)
