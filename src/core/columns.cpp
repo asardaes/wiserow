@@ -7,7 +7,7 @@ namespace wiserow {
 
 // =================================================================================================
 
-ColumnCollection ColumnCollection::coerce(OperationMetadata metadata, SEXP data) {
+ColumnCollection ColumnCollection::coerce(const OperationMetadata& metadata, SEXP data) {
     if (metadata.input_class == "matrix") {
         if (metadata.input_modes[0] == typeid(int)) {
             return MatrixColumnCollection<Rcpp::IntegerMatrix>(data);

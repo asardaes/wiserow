@@ -57,7 +57,7 @@ private:
 class ColumnCollection
 {
 public:
-    static ColumnCollection coerce(OperationMetadata metadata, SEXP data);
+    static ColumnCollection coerce(const OperationMetadata& metadata, SEXP data);
 
     ColumnCollection(const std::size_t nrow);
     virtual ~ColumnCollection() {}
