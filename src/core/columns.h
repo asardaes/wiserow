@@ -101,11 +101,11 @@ public:
     MatrixColumnCollection(const T& mat)
         : ColumnCollection(mat.nrow())
     {
-        typedef typename std::conditional<std::is_same<T, Rcpp::IntegerMatrix>::value, int, double>::type OUT;
+        typedef typename std::conditional<std::is_same<T, Rcpp::IntegerMatrix>::value, int, double>::type U;
 
         for (int j = 0; j < mat.ncol(); j++) {
             columns_.push_back(
-                std::make_shared<SurrogateColumn<OUT>>(&mat[static_cast<std::size_t>(j) * nrow_], nrow_)
+                std::make_shared<SurrogateColumn<U>>(&mat[static_cast<std::size_t>(j) * nrow_], nrow_)
             );
         }
     }

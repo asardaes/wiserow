@@ -12,7 +12,7 @@ namespace wiserow {
 
 // =================================================================================================
 
-template <typename T>
+template<typename T>
 class SumVisitor : public ParallelWorker, public boost::static_visitor<T>
 {
 public:
@@ -22,7 +22,7 @@ public:
         , ans_(ans)
     { }
 
-    template <typename U>
+    template<typename U>
     T operator()(const U val) const {
         return val;
     }
