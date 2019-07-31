@@ -16,7 +16,7 @@ public:
     const int num_workers;
 
     const std::string input_class;
-    std::vector<std::type_index> input_modes;
+    const std::vector<std::type_index> input_modes;
 
     const std::type_index output_mode;
 
@@ -24,6 +24,7 @@ private:
     static std::string get_string(const Rcpp::List& metadata, const std::string& key);
     static int get_int(const Rcpp::List& metadata, const std::string& key);
     static std::type_index parse_type(const std::string& type_str);
+    static std::vector<std::type_index> parse_types(const Rcpp::StringVector& in_modes);
 };
 
 } // namespace wiserow
