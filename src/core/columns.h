@@ -37,12 +37,12 @@ public:
     { }
 
     const supported_col_t operator[](const std::size_t id) const override {
-        if (id >= size_) {
+        if (id >= size_) { // nocov start
             throw std::out_of_range("Column of size " +
                                     std::to_string(size_) +
                                     " cannot be indexed at " +
                                     std::to_string(id));
-        }
+        } // nocov end
 
         return supported_col_t(data_ptr_[id]);
     }
