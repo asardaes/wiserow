@@ -1,19 +1,21 @@
 #include "columns.h"
 
-#include <typeinfo>
-#include <typeindex>
-
 namespace wiserow {
 
 // =================================================================================================
 
 ColumnCollection ColumnCollection::coerce(const OperationMetadata& metadata, SEXP data) {
     if (metadata.input_class == "matrix") {
-        if (metadata.input_modes[0] == typeid(int)) {
+        switch(metadata.input_modes[0]) {
+        case INTSXP: {
             return MatrixColumnCollection<Rcpp::IntegerMatrix>(data);
         }
-        else {
+        case REALSXP: {
             return MatrixColumnCollection<Rcpp::NumericMatrix>(data);
+        }
+        default: {
+            Rcpp::stop("[wiserow] matrices can only contain integers or doubles.");
+        }
         }
     }
     else {

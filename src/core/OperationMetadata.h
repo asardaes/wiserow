@@ -2,12 +2,13 @@
 #define WISEROW_OPERATIONMETADATA_H_
 
 #include <string>
-#include <typeindex>
 #include <vector>
 
 #include <Rcpp.h>
 
 namespace wiserow {
+
+typedef int r_t;
 
 class OperationMetadata {
 public:
@@ -16,15 +17,15 @@ public:
     const int num_workers;
 
     const std::string input_class;
-    const std::vector<std::type_index> input_modes;
+    const std::vector<r_t> input_modes;
 
-    const std::type_index output_mode;
+    const r_t output_mode;
 
 private:
     static std::string get_string(const Rcpp::List& metadata, const std::string& key);
     static int get_int(const Rcpp::List& metadata, const std::string& key);
-    static std::type_index parse_type(const std::string& type_str);
-    static std::vector<std::type_index> parse_types(const Rcpp::StringVector& in_modes);
+    static r_t parse_type(const std::string& type_str);
+    static std::vector<r_t> parse_types(const Rcpp::StringVector& in_modes);
 };
 
 } // namespace wiserow

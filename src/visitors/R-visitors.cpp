@@ -2,8 +2,6 @@
 
 #include <cstddef> // std::size_t
 #include <string>
-#include <typeinfo>
-#include <typeindex>
 
 #include "visitors.h"
 
@@ -22,14 +20,16 @@ extern "C" SEXP row_sums(SEXP metadata, SEXP data) {
 BEGIN_RCPP
     OperationMetadata metadata_(metadata);
 
-    if (metadata_.output_mode == typeid(int)) {
+    switch(metadata_.output_mode) {
+    case INTSXP: {
         return row_sums_template<int, INTSXP>(metadata_, data);
     }
-    else if (metadata_.output_mode == typeid(double)) {
+    case REALSXP: {
         return row_sums_template<double, REALSXP>(metadata_, data);
     }
-    else {
-        Rcpp::stop("[wiserow] unsupported output mode: " + std::string(metadata_.output_mode.name()));
+    default: {
+        Rcpp::stop("[wiserow] row_sums can only return integers or doubles.");
+    }
     }
 END_RCPP
 }
