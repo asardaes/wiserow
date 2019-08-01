@@ -7,31 +7,36 @@
 
 namespace wiserow {
 
-template<typename T, int RT>
-Rcpp::Vector<RT> row_sums_template(const OperationMetadata& metadata, SEXP data) {
+template<const char *fun, template<typename> class VT>
+SEXP visit_into_vector(SEXP m, SEXP data) {
+    BEGIN_RCPP
+    OperationMetadata metadata(m);
     ColumnCollection col_collection = ColumnCollection::coerce(metadata, data);
-    Rcpp::Vector<RT> ans(col_collection.nrow());
-    SumVisitor<T> visitor_worker(metadata, col_collection, &ans[0]);
-    parallel_for(0, col_collection.nrow(), visitor_worker);
-    return ans;
-}
 
-extern "C" SEXP row_sums(SEXP metadata, SEXP data) {
-BEGIN_RCPP
-    OperationMetadata metadata_(metadata);
-
-    switch(metadata_.output_mode) {
+    switch(metadata.output_mode) {
     case INTSXP: {
-        return row_sums_template<int, INTSXP>(metadata_, data);
+        Rcpp::IntegerVector ans(col_collection.nrow());
+        VT<int> visitor_worker(metadata, col_collection, &ans[0]);
+        parallel_for(0, col_collection.nrow(), visitor_worker);
+        return ans;
     }
     case REALSXP: {
-        return row_sums_template<double, REALSXP>(metadata_, data);
+        Rcpp::NumericVector ans(col_collection.nrow());
+        VT<double> visitor_worker(metadata, col_collection, &ans[0]);
+        parallel_for(0, col_collection.nrow(), visitor_worker);
+        return ans;
     }
     default: {
-        Rcpp::stop("[wiserow] row_sums can only return integers or doubles.");
+        Rcpp::stop("[wiserow] %s can only return integers or doubles.", fun);
     }
     }
-END_RCPP
+    END_RCPP
+}
+
+static const char row_sums_name[] = "row_sums";
+
+extern "C" SEXP row_sums(SEXP metadata, SEXP data) {
+    return visit_into_vector<row_sums_name, SumVisitor>(metadata, data);
 }
 
 } // namespace wiserow
