@@ -1,9 +1,9 @@
-#include "R-visitors.h"
+#include "wiserow.h"
 
 #include <cstddef> // std::size_t
 #include <string>
 
-#include "visitors.h"
+#include "workers/workers.h"
 
 namespace wiserow {
 
@@ -36,7 +36,7 @@ SEXP visit_into_vector(SEXP m, SEXP data) {
 static const char row_sums_name[] = "row_sums";
 
 extern "C" SEXP row_sums(SEXP metadata, SEXP data) {
-    return visit_into_vector<row_sums_name, SumVisitor>(metadata, data);
+    return visit_into_vector<row_sums_name, RowSumWorker>(metadata, data);
 }
 
 } // namespace wiserow
