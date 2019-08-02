@@ -3,7 +3,18 @@
 namespace wiserow {
 
 void ParallelWorker::operator()(std::size_t begin, std::size_t end) {
-    work_it(begin, end);
+    if (eptr) return;
+
+    try {
+        work_it(begin, end);
+    }
+    catch(...) {
+        mutex_.lock();
+        if (!eptr) eptr = std::current_exception();
+        mutex_.unlock();
+        return;
+    }
+
     // make sure this is called at least once per thread call
     RcppThread::isInterrupted();
 }

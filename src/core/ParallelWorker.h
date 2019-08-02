@@ -13,30 +13,13 @@ namespace wiserow {
 
 // =================================================================================================
 
-inline void parallel_for(std::size_t begin,
-                         std::size_t end,
-                         RcppParallel::Worker& worker,
-                         std::size_t grain_size = 1)
-{
-    // http://lists.r-forge.r-project.org/pipermail/rcpp-devel/2013-June/006070.html
-    try {
-        RcppParallel::parallelFor(begin, end, worker, grain_size);
-    } catch(...) {
-        std::exception_ptr eptr = std::current_exception();
-        if (eptr) std::rethrow_exception(eptr);
-    }
-
-    // always call after parallelFor to actually throw exception if there was an interruption
-    RcppThread::checkUserInterrupt();
-}
-
-// =================================================================================================
-
 class ParallelWorker : public RcppParallel::Worker
 {
 public:
     virtual ~ParallelWorker() = default;
     void operator()(std::size_t begin, std::size_t end) override final;
+
+    std::exception_ptr eptr;
 
 protected:
     ParallelWorker(const int interrupt_check_grain, const int min, const int max);
@@ -51,6 +34,22 @@ private:
 
     const int interrupt_grain_;
 };
+
+// =================================================================================================
+
+inline void parallel_for(std::size_t begin,
+                         std::size_t end,
+                         ParallelWorker& worker,
+                         std::size_t grain_size = 1)
+{
+    RcppParallel::parallelFor(begin, end, worker, grain_size);
+    if (worker.eptr) {
+        std::rethrow_exception(worker.eptr);
+    }
+
+    // always call after parallelFor to actually throw exception if there was an interruption
+    RcppThread::checkUserInterrupt();
+}
 
 } // namespace wiserow
 

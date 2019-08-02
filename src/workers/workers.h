@@ -26,7 +26,7 @@ public:
 
     void work_it(std::size_t begin, std::size_t end) override {
         for (std::size_t i = begin; i < end; i++) {
-            if (is_interrupted(i)) break; // nocov
+            if (eptr || is_interrupted(i)) break; // nocov
 
             for (std::size_t j = 0; j < col_collection_.ncol(); j++) {
                 ans_[i] += boost::apply_visitor(visitor_, col_collection_(i,j));
