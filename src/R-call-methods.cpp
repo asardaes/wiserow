@@ -7,8 +7,8 @@
 
 namespace wiserow {
 
-template<const char *fun, template<typename> class VT>
-SEXP visit_into_vector(SEXP m, SEXP data) {
+template<template<typename> class VT>
+SEXP visit_into_vector(const char *fun_name, SEXP m, SEXP data) {
     BEGIN_RCPP
     OperationMetadata metadata(m);
     ColumnCollection col_collection = ColumnCollection::coerce(metadata, data);
@@ -27,16 +27,14 @@ SEXP visit_into_vector(SEXP m, SEXP data) {
         return ans;
     }
     default: {
-        Rcpp::stop("[wiserow] %s can only return integers or doubles.", fun);
+        Rcpp::stop("[wiserow] %s can only return integers or doubles.", fun_name);
     }
     }
     END_RCPP
 }
 
-static const char row_sums_name[] = "row_sums";
-
 extern "C" SEXP row_sums(SEXP metadata, SEXP data) {
-    return visit_into_vector<row_sums_name, RowSumWorker>(metadata, data);
+    return visit_into_vector<RowSumWorker>("row_sums", metadata, data);
 }
 
 } // namespace wiserow
