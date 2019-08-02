@@ -28,6 +28,12 @@ r_t OperationMetadata::parse_type(const std::string& type_str) {
     else if (type_str == "double") {
         return REALSXP;
     }
+    else if (type_str == "logical") {
+        return LGLSXP;
+    }
+    else if (type_str == "character") {
+        return STRSXP;
+    }
     else {
         Rcpp::stop("[wiserow] unsupported type: " + type_str);
     }

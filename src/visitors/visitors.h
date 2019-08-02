@@ -1,6 +1,9 @@
 #ifndef WISEROW_VISITORS_H_
 #define WISEROW_VISITORS_H_
 
+#include <stdexcept> // invalid_argument
+#include <string>
+
 #include <boost/variant/static_visitor.hpp>
 
 namespace wiserow {
@@ -8,14 +11,18 @@ namespace wiserow {
 // =================================================================================================
 
 template<typename T>
-class GenericIdentityVisitor : public boost::static_visitor<T>
+class NumericVisitor : public boost::static_visitor<T>
 {
 public:
-    GenericIdentityVisitor() {}
+    NumericVisitor() {}
 
     template<typename U>
-    T operator()(const U val) const {
+    T operator()(const U& val) const {
         return val;
+    }
+
+    T operator()(const std::string& val) const {
+        throw std::invalid_argument("[wiserow] this operation does not support characters.");
     }
 };
 

@@ -28,8 +28,6 @@ public:
         for (std::size_t i = begin; i < end; i++) {
             if (is_interrupted(i)) break; // nocov
 
-            ans_[i] = T(0);
-
             for (std::size_t j = 0; j < col_collection_.ncol(); j++) {
                 ans_[i] += boost::apply_visitor(visitor_, col_collection_(i,j));
             }
@@ -39,7 +37,7 @@ public:
 private:
     const ColumnCollection col_collection_;
     T * const ans_;
-    const GenericIdentityVisitor<T> visitor_;
+    const NumericVisitor<T> visitor_;
 };
 
 } // namespace wiserow

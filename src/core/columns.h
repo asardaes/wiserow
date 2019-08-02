@@ -3,6 +3,7 @@
 
 #include <cstddef> // size_t
 #include <memory> // shared_ptr
+#include <string>
 #include <vector>
 
 #include <Rcpp.h>
@@ -12,7 +13,7 @@
 
 namespace wiserow {
 
-typedef boost::variant<int, double> supported_col_t;
+typedef boost::variant<int, double, std::string> supported_col_t;
 
 // =================================================================================================
 
