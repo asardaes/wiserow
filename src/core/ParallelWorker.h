@@ -4,6 +4,7 @@
 #define STRICT_R_HEADERS // collision between R.h and mingw_32/i686-w64-mingw32/include/windows.h
 
 #include <cstddef> // std::size_t
+#include <exception>
 
 #include <RcppParallel.h>
 #include <RcppThread.h>
@@ -17,7 +18,14 @@ inline void parallel_for(std::size_t begin,
                          RcppParallel::Worker& worker,
                          std::size_t grain_size = 1)
 {
-    RcppParallel::parallelFor(begin, end, worker, grain_size);
+    // http://lists.r-forge.r-project.org/pipermail/rcpp-devel/2013-June/006070.html
+    try {
+        RcppParallel::parallelFor(begin, end, worker, grain_size);
+    } catch(...) {
+        std::exception_ptr eptr = std::current_exception();
+        if (eptr) std::rethrow_exception(eptr);
+    }
+
     // always call after parallelFor to actually throw exception if there was an interruption
     RcppThread::checkUserInterrupt();
 }
