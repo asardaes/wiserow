@@ -19,8 +19,12 @@ void ParallelWorker::operator()(std::size_t begin, std::size_t end) {
     RcppThread::isInterrupted();
 }
 
-ParallelWorker::ParallelWorker(const int interrupt_check_grain, const int min, const int max)
-    : interrupt_grain_(interrupt_grain(interrupt_check_grain, min, max))
+ParallelWorker::ParallelWorker(const OperationMetadata& metadata,
+                               const int interrupt_check_grain,
+                               const int min,
+                               const int max)
+    : metadata_(metadata)
+    , interrupt_grain_(interrupt_grain(interrupt_check_grain, min, max))
 { }
 
 bool ParallelWorker::is_interrupted() const {

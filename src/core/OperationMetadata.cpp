@@ -11,6 +11,7 @@ OperationMetadata::OperationMetadata(const Rcpp::List& metadata)
     , input_class(get_string(metadata, "input_class"))
     , input_modes(parse_types(metadata["input_modes"]))
     , output_mode(std::move(parse_type(get_string(metadata, "output_mode"))))
+    , na_action(get_string(metadata, "na_action"))
 { }
 
 std::string OperationMetadata::get_string(const Rcpp::List& metadata, const std::string& key) {

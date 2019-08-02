@@ -7,14 +7,14 @@
 \usage{
 row_sums(.data, ...)
 
-\method{row_sums}{matrix}(.data, output_mode = storage.mode(.data), ...)
+\method{row_sums}{matrix}(.data, output_mode, ...)
 }
 \arguments{
 \item{.data}{A two-dimensional data structure.}
 
-\item{...}{Currently ignored.}
+\item{...}{Parameters for \code{\link[=op_ctrl]{op_ctrl()}}.}
 
-\item{output_mode}{Output's \code{\link[base:storage.mode]{base::storage.mode()}}.}
+\item{output_mode}{Output's \code{\link[base:storage.mode]{base::storage.mode()}}. If missing, it will be inferred.}
 }
 \description{
 Row-wise sum

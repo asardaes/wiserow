@@ -9,6 +9,8 @@
 #include <RcppParallel.h>
 #include <RcppThread.h>
 
+#include "OperationMetadata.h"
+
 namespace wiserow {
 
 // =================================================================================================
@@ -22,11 +24,14 @@ public:
     std::exception_ptr eptr;
 
 protected:
-    ParallelWorker(const int interrupt_check_grain, const int min, const int max);
+    ParallelWorker(const OperationMetadata& metadata, const int interrupt_check_grain, const int min, const int max);
+
     virtual void work_it(std::size_t begin, std::size_t end) = 0;
+
     bool is_interrupted() const;
     bool is_interrupted(const std::size_t i) const;
 
+    const OperationMetadata metadata_;
     tthread::mutex mutex_;
 
 private:

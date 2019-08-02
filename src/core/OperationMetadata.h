@@ -21,6 +21,8 @@ public:
 
     const r_t output_mode;
 
+    const std::string na_action;
+
 private:
     static std::string get_string(const Rcpp::List& metadata, const std::string& key);
     static int get_int(const Rcpp::List& metadata, const std::string& key);

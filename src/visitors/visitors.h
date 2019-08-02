@@ -10,6 +10,18 @@ namespace wiserow {
 
 // =================================================================================================
 
+class NAVisitor : public boost::static_visitor<bool>
+{
+public:
+    NAVisitor() {}
+
+    bool operator()(const int val) const;
+    bool operator()(const double val) const;
+    bool operator()(const boost::string_ref val) const;
+};
+
+// =================================================================================================
+
 template<typename T>
 class NumericVisitor : public boost::static_visitor<T>
 {

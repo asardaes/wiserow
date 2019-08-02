@@ -7,8 +7,8 @@
 
 namespace wiserow {
 
-template<template<typename> class VT>
-SEXP visit_into_vector(const char *fun_name, SEXP m, SEXP data) {
+template<template<typename> class Worker>
+SEXP visit_into_numeric_vector(const char* fun_name, SEXP m, SEXP data) {
     BEGIN_RCPP
     OperationMetadata metadata(m);
     ColumnCollection col_collection = ColumnCollection::coerce(metadata, data);
@@ -16,14 +16,14 @@ SEXP visit_into_vector(const char *fun_name, SEXP m, SEXP data) {
     switch(metadata.output_mode) {
     case INTSXP: {
         Rcpp::IntegerVector ans(col_collection.nrow());
-        VT<int> visitor_worker(metadata, col_collection, &ans[0]);
-        parallel_for(0, col_collection.nrow(), visitor_worker);
+        Worker<int> worker(metadata, col_collection, &ans[0]);
+        parallel_for(0, col_collection.nrow(), worker);
         return ans;
     }
     case REALSXP: {
         Rcpp::NumericVector ans(col_collection.nrow());
-        VT<double> visitor_worker(metadata, col_collection, &ans[0]);
-        parallel_for(0, col_collection.nrow(), visitor_worker);
+        Worker<double> worker(metadata, col_collection, &ans[0]);
+        parallel_for(0, col_collection.nrow(), worker);
         return ans;
     }
     default: {
@@ -34,7 +34,7 @@ SEXP visit_into_vector(const char *fun_name, SEXP m, SEXP data) {
 }
 
 extern "C" SEXP row_sums(SEXP metadata, SEXP data) {
-    return visit_into_vector<RowSumWorker>("row_sums", metadata, data);
+    return visit_into_numeric_vector<RowSumsWorker>("row_sums", metadata, data);
 }
 
 } // namespace wiserow
