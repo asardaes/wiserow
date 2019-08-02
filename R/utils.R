@@ -1,10 +1,12 @@
-validate_dim <- function(.data) {
-    .dim <- dim(.data)
+.supported_classes <- c("matrix")
 
-    if (is.null(.dim) || length(.dim) != 2L) {
-        stop("Invalid dimensions.")
-    }
-}
+.supported_modes <- c("integer",
+                      "double",
+                      "logical",
+                      "character")
+
+.supported_na_actions <- c("exclude",
+                           "pass")
 
 #' @importFrom RcppParallel defaultNumThreads
 #'

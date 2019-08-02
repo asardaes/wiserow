@@ -20,7 +20,3 @@ op_ctrl <- function(data_class, output_mode, na_action = "exclude", ...) {
         na_action = na_action
     )
 }
-
-.supported_classes <- c("matrix")
-.supported_modes <- c("integer", "double", "logical", "character")
-.supported_na_actions <- c("exclude", "pass")

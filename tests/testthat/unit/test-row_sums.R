@@ -1,9 +1,11 @@
 context("  Row sums")
 
-test_that("row_sums throws for character matrices.", {
+test_that("row_sums can handle errors and edge cases appropriately.", {
     suppressWarnings(
         expect_error(regexp = "not support", row_sums(char_mat, "integer"))
     )
+
+    expect_identical(row_sums(as.matrix(data.frame())), vector("integer"))
 })
 
 test_that("row_sums for integer matrices works.", {

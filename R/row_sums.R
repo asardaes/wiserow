@@ -14,8 +14,6 @@ row_sums <- function(.data, ...) {
 #' @export
 #'
 row_sums.matrix <- function(.data, output_mode, ...) {
-    validate_dim(.data)
-
     if (missing(output_mode)) {
         output_mode <- typeof(.data)
     }
@@ -29,5 +27,10 @@ row_sums.matrix <- function(.data, output_mode, ...) {
         metadata$output_mode <- "integer"
     }
 
-    .Call(C_row_sums, metadata, .data)
+    if (nrow(.data) < 1L) {
+        vector(metadata$output_mode)
+    }
+    else {
+        .Call(C_row_sums, metadata, .data)
+    }
 }
