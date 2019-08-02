@@ -1,8 +1,7 @@
 #include "columns.h"
 
 #include <stdexcept> // out_of_range
-#include <string>
-#include <vector>
+#include <string> // to_string
 
 namespace wiserow {
 
@@ -58,7 +57,7 @@ public:
                                     std::to_string(id));
         } // nocov end
 
-        return supported_col_t(std::string(data_ptr_[id]));
+        return supported_col_t(boost::string_ref(data_ptr_[id]));
     }
 
 private:

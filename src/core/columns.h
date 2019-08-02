@@ -3,17 +3,17 @@
 
 #include <cstddef> // size_t
 #include <memory> // shared_ptr
-#include <string>
 #include <vector>
 
 #include <Rcpp.h>
+#include <boost/utility/string_ref.hpp>
 #include <boost/variant/variant.hpp>
 
 #include "OperationMetadata.h"
 
 namespace wiserow {
 
-typedef boost::variant<int, double, std::string> supported_col_t;
+typedef boost::variant<int, double, boost::string_ref> supported_col_t;
 
 // =================================================================================================
 
