@@ -17,13 +17,13 @@ SEXP visit_into_numeric_vector(const char* fun_name, SEXP m, SEXP data) {
     case INTSXP: {
         Rcpp::IntegerVector ans(col_collection.nrow());
         Worker<int> worker(metadata, col_collection, &ans[0]);
-        parallel_for(0, col_collection.nrow(), worker);
+        parallel_for(worker);
         return ans;
     }
     case REALSXP: {
         Rcpp::NumericVector ans(col_collection.nrow());
         Worker<double> worker(metadata, col_collection, &ans[0]);
-        parallel_for(0, col_collection.nrow(), worker);
+        parallel_for(worker);
         return ans;
     }
     default: {

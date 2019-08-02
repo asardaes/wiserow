@@ -10,6 +10,7 @@
 #include <RcppThread.h>
 
 #include "OperationMetadata.h"
+#include "columns.h"
 
 namespace wiserow {
 
@@ -19,19 +20,23 @@ class ParallelWorker : public RcppParallel::Worker
 {
 public:
     virtual ~ParallelWorker() = default;
+
     void operator()(std::size_t begin, std::size_t end) override final;
 
+    std::size_t num_ops() const;
+
+    const OperationMetadata metadata;
     std::exception_ptr eptr;
 
 protected:
-    ParallelWorker(const OperationMetadata& metadata, const int interrupt_check_grain, const int min, const int max);
+    ParallelWorker(const OperationMetadata& metadata, const ColumnCollection& cc);
 
     virtual void work_it(std::size_t begin, std::size_t end) = 0;
 
     bool is_interrupted() const;
     bool is_interrupted(const std::size_t i) const;
 
-    const OperationMetadata metadata_;
+    const ColumnCollection col_collection_;
     tthread::mutex mutex_;
 
 private:
@@ -42,12 +47,15 @@ private:
 
 // =================================================================================================
 
-inline void parallel_for(std::size_t begin,
-                         std::size_t end,
-                         ParallelWorker& worker,
-                         std::size_t grain_size = 1)
-{
-    RcppParallel::parallelFor(begin, end, worker, grain_size);
+inline void parallel_for(ParallelWorker& worker) {
+    std::size_t num_ops = worker.num_ops();
+    double grain = num_ops / worker.metadata.num_workers / 10;
+    if (grain < 1000) {
+        grain = 1000;
+    }
+
+    RcppParallel::parallelFor(0, num_ops, worker, static_cast<std::size_t>(grain));
+
     if (worker.eptr) {
         std::rethrow_exception(worker.eptr);
     }

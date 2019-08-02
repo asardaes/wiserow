@@ -2,6 +2,16 @@
 
 namespace wiserow {
 
+ParallelWorker::ParallelWorker(const OperationMetadata& metadata, const ColumnCollection& cc)
+    : metadata(metadata)
+    , col_collection_(cc)
+    , interrupt_grain_(interrupt_grain(cc.nrow() / metadata.num_workers, 1000, 10000))
+{ }
+
+std::size_t ParallelWorker::num_ops() const {
+    return col_collection_.nrow();
+}
+
 void ParallelWorker::operator()(std::size_t begin, std::size_t end) {
     if (eptr) return;
 
@@ -18,14 +28,6 @@ void ParallelWorker::operator()(std::size_t begin, std::size_t end) {
     // make sure this is called at least once per thread call
     RcppThread::isInterrupted();
 }
-
-ParallelWorker::ParallelWorker(const OperationMetadata& metadata,
-                               const int interrupt_check_grain,
-                               const int min,
-                               const int max)
-    : metadata_(metadata)
-    , interrupt_grain_(interrupt_grain(interrupt_check_grain, min, max))
-{ }
 
 bool ParallelWorker::is_interrupted() const {
     return RcppThread::isInterrupted();
