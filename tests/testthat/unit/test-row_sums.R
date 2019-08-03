@@ -59,6 +59,10 @@ test_that("row_sums for integer matrices with column subset works.", {
     expect_identical(ans, integer(length(ans)))
 
     expect_error(row_sums(int_mat, cols = 10L), "Invalid column indices")
+
+    expected <- rowSums(int_mat[, c(1L, 1L, 3L)])
+    ans <- row_sums(int_mat, output_mode = "double", cols = c(1L, 1L, 3L))
+    expect_identical(ans, expected)
 })
 
 test_that("row_sums for integer matrices with row subset works.", {
@@ -73,6 +77,10 @@ test_that("row_sums for integer matrices with row subset works.", {
     expect_identical(ans, integer())
 
     expect_error(row_sums(int_mat, rows = 10000.0), "Invalid row indices")
+
+    expected <- rowSums(int_mat[rep(1001:2000, 2),])
+    ans <- row_sums(int_mat, output_mode = "double", rows = rep(1001:2000, 2))
+    expect_identical(ans, expected)
 })
 
 test_that("row_sums for double matrices works.", {
@@ -115,6 +123,10 @@ test_that("row_sums for double matrices with column subset works.", {
     expect_identical(ans, double(length(ans)))
 
     expect_error(row_sums(dbl_mat, cols = 10L), "Invalid column indices")
+
+    expected <- rowSums(dbl_mat[, c(1L, 1L, 3L)])
+    ans <- row_sums(dbl_mat, cols = c(1L, 1L, 3L))
+    expect_identical(ans, expected)
 })
 
 test_that("row_sums for double matrices with row subset works.", {
@@ -129,6 +141,10 @@ test_that("row_sums for double matrices with row subset works.", {
     expect_identical(ans, double())
 
     expect_error(row_sums(dbl_mat, rows = 10000.0), "Invalid row indices")
+
+    expected <- rowSums(dbl_mat[rep(1001:2000, 2),])
+    ans <- row_sums(dbl_mat, rows = rep(1001:2000, 2))
+    expect_identical(ans, expected)
 })
 
 test_that("row_sums for logical matrices works.", {
@@ -171,6 +187,10 @@ test_that("row_sums for logical matrices with column subset works.", {
     expect_identical(ans, integer(length(ans)))
 
     expect_error(row_sums(bool_mat, cols = 10L), "Invalid column indices")
+
+    expected <- rowSums(bool_mat[, c(1L, 1L, 3L)])
+    ans <- row_sums(bool_mat, output_mode = "double", cols = c(1L, 1L, 3L))
+    expect_identical(ans, expected)
 })
 
 test_that("row_sums for logical matrices with row subset works.", {
@@ -185,6 +205,10 @@ test_that("row_sums for logical matrices with row subset works.", {
     expect_identical(ans, integer())
 
     expect_error(row_sums(bool_mat, rows = 10000.0), "Invalid row indices")
+
+    expected <- rowSums(bool_mat[rep(1001:2000, 2),])
+    ans <- row_sums(bool_mat, output_mode = "double", rows = rep(1001:2000, 2))
+    expect_identical(ans, expected)
 })
 
 test_that("row_sums for complex matrices works.", {
@@ -229,6 +253,10 @@ test_that("row_sums for complex matrices with column subset works.", {
     expect_equal(ans, complex(length(ans)))
 
     expect_error(row_sums(cplx_mat, cols = 10L), "Invalid column indices")
+
+    expected <- rowSums(cplx_mat[, c(1L, 1L, 3L)])
+    ans <- row_sums(cplx_mat, cols = c(1L, 1L, 3L))
+    expect_identical(ans, expected)
 })
 
 test_that("row_sums for complex matrices with row subset works.", {
@@ -243,4 +271,8 @@ test_that("row_sums for complex matrices with row subset works.", {
     expect_equal(ans, complex())
 
     expect_error(row_sums(cplx_mat, rows = 10000.0), "Invalid row indices")
+
+    expected <- rowSums(cplx_mat[rep(1001:2000, 2),])
+    ans <- row_sums(cplx_mat, rows = rep(1001:2000, 2))
+    expect_identical(ans, expected)
 })
