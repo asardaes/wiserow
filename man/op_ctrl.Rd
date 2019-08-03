@@ -4,14 +4,15 @@
 \alias{op_ctrl}
 \title{Operation's control parameters}
 \usage{
-op_ctrl(data_class, output_mode, na_action = "exclude", ...)
+op_ctrl(output_mode, na_action = "exclude", cols = NULL, ...)
 }
 \arguments{
-\item{data_class}{See \code{\link[base:class]{base::class()}}.}
-
 \item{output_mode}{Desired \code{\link[base:storage.mode]{base::storage.mode()}} for the result.}
 
 \item{na_action}{One of "exclude" or "pass".}
+
+\item{cols}{A vector indicating which columns to consider for the operation. If \code{NULL}, all
+columns are used. If its length is 0, no columns are considered.}
 
 \item{...}{Internal.}
 }

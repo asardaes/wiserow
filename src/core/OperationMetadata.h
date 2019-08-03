@@ -1,6 +1,7 @@
 #ifndef WISEROW_OPERATIONMETADATA_H_
 #define WISEROW_OPERATIONMETADATA_H_
 
+#include <cstddef> // size_t
 #include <string>
 #include <vector>
 
@@ -8,7 +9,17 @@
 
 namespace wiserow {
 
-typedef int r_t;
+typedef int R_vec_t;
+
+struct surrogate_vector {
+    surrogate_vector(const int * const ptr, const std::size_t len, const bool is_null)
+        : ptr(ptr), len(len), is_null(is_null)
+    { }
+
+    const int * const ptr;
+    const std::size_t len;
+    const bool is_null;
+};
 
 class OperationMetadata {
 public:
@@ -17,17 +28,13 @@ public:
     const int num_workers;
 
     const std::string input_class;
-    const std::vector<r_t> input_modes;
+    const std::vector<R_vec_t> input_modes;
 
-    const r_t output_mode;
+    const R_vec_t output_mode;
 
     const std::string na_action;
 
-private:
-    static std::string get_string(const Rcpp::List& metadata, const std::string& key);
-    static int get_int(const Rcpp::List& metadata, const std::string& key);
-    static r_t parse_type(const std::string& type_str);
-    static std::vector<r_t> parse_types(const Rcpp::StringVector& in_modes);
+    const surrogate_vector cols;
 };
 
 } // namespace wiserow

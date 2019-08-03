@@ -6,6 +6,7 @@ Version: 0.0.1.9000
 Depends:
     R (>= 3.1.0)
 Imports:
+    glue,
     Rcpp (>= 1.0.1),
     RcppParallel (>= 4.4.0)
 LinkingTo:

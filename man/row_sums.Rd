@@ -12,7 +12,7 @@ row_sums(.data, ...)
 \arguments{
 \item{.data}{A two-dimensional data structure.}
 
-\item{...}{Parameters for \code{\link[=op_ctrl]{op_ctrl()}}.}
+\item{...}{Additional parameters for \code{\link[=op_ctrl]{op_ctrl()}}.}
 
 \item{output_mode}{Output's \code{\link[base:storage.mode]{base::storage.mode()}}. If missing, it will be inferred.}
 }

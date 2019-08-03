@@ -5,7 +5,6 @@
 #include <memory> // shared_ptr
 #include <vector>
 
-#include <Rcpp.h>
 #include <boost/utility/string_ref.hpp>
 #include <boost/variant/variant.hpp>
 
