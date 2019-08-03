@@ -1,6 +1,31 @@
 context("  Miscellaneous")
 
-# uses row_sums as gateway because it was the first R function
+# these use row_sums as gateway because it was the first R function
+
+test_that("Functions will throw if control strings cannot be mapped to known enums.", {
+    metadata <- op_ctrl(input_class = "mtx",
+                        input_modes = "integer",
+                        output_mode = "integer")
+
+    suppressWarnings(
+        expect_error(regexp = "unsupported input", .Call(wiserow:::`C_row_sums`, metadata, int_mat, integer()))
+    )
+
+    metadata$input_class <- "matrix"
+    metadata$output_mode <- "data.frame"
+
+    suppressWarnings(
+        expect_error(regexp = "unsupported mode", .Call(wiserow:::`C_row_sums`, metadata, int_mat, list()))
+    )
+
+    metadata$output_mode <- "integer"
+    metadata$output_class <- "none"
+
+    suppressWarnings(
+        expect_error(regexp = "unsupported output", .Call(wiserow:::`C_row_sums`, metadata, int_mat, list()))
+    )
+})
+
 test_that("Grain for interruption check is calculated correctly in C++.", {
     RcppParallel::setThreadOptions(1L)
     on.exit(RcppParallel::setThreadOptions())

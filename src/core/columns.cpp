@@ -28,16 +28,16 @@ ColumnCollection ColumnCollection::coerce(const OperationMetadata& metadata, SEX
         case CPLXSXP: {
             return MatrixColumnCollection<CPLXSXP, std::complex<double>>(data, metadata.cols);
         }
-        default: {
+        default: { // nocov start
             // can never happen because OperationMetadata's constructor checks this too
-            Rcpp::stop("[wiserow] matrices can only contain integers, doubles, logicals, or characters."); // nocov
-        }
+            Rcpp::stop("[wiserow] matrices can only contain integers, doubles, logicals, or characters.");
+        } // nocov end
         }
     }
-    default: {
+    default: { // nocov start
         // can never happen because enums, wtf gcc?
-        Rcpp::stop("[wiserow] this should never happen D="); // nocov
-    }
+        Rcpp::stop("[wiserow] this should never happen D=");
+    } // nocov end
     }
 }
 

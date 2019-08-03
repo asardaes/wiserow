@@ -24,6 +24,17 @@ InputClass parse_input_class(const Rcpp::List& metadata) {
     }
 }
 
+OutputClass parse_output_class(const Rcpp::List& metadata) {
+    std::string str = get_string(metadata, "output_class");
+
+    if (str == "vector") {
+        return OutputClass::vector;
+    }
+    else {
+        Rcpp::stop("[wiserow] unsupported output class: " + str);
+    }
+}
+
 R_vec_t parse_mode(const std::string& mode_str) {
     if (mode_str == "integer") {
         return INTSXP;
@@ -89,6 +100,7 @@ OperationMetadata::OperationMetadata(const Rcpp::List& metadata)
     : num_workers(get_int(metadata, "num_workers"))
     , input_class(parse_input_class(metadata))
     , input_modes(parse_modes(metadata["input_modes"]))
+    , output_class(parse_output_class(metadata))
     , output_mode(std::move(parse_mode(get_string(metadata, "output_mode"))))
     , na_action(parse_na_action(metadata))
     , cols(coerce_subset_indices(metadata["cols"]))

@@ -14,6 +14,7 @@ row_sums(.data, ...)
 
 \item{...}{Arguments passed on to \code{op_ctrl}
 \describe{
+  \item{output_class}{Only "vector" supported for now.}
   \item{na_action}{One of "exclude" or "pass".}
   \item{cols}{A vector indicating which columns to consider for the operation. If \code{NULL}, all
 columns are used. If its length is 0, no columns are considered. Negative values are supported.}

@@ -1,21 +1,6 @@
 context("  Row sums")
 
 test_that("row_sums can handle errors and edge cases appropriately.", {
-    metadata <- op_ctrl(input_class = "mtx",
-                        input_modes = "integer",
-                        output_mode = "integer")
-
-    suppressWarnings(
-        expect_error(regexp = "unsupported input", .Call(wiserow:::`C_row_sums`, metadata, int_mat))
-    )
-
-    metadata$input_class <- "matrix"
-    metadata$output_mode <- "data.frame"
-
-    suppressWarnings(
-        expect_error(regexp = "unsupported mode", .Call(wiserow:::`C_row_sums`, metadata, int_mat))
-    )
-
     suppressWarnings(
         expect_error(regexp = "not support", row_sums(char_mat, "integer"))
     )

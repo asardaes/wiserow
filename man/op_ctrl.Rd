@@ -4,11 +4,13 @@
 \alias{op_ctrl}
 \title{Operation's control parameters}
 \usage{
-op_ctrl(output_mode, na_action = "exclude", cols = NULL, rows = NULL,
-  ...)
+op_ctrl(output_mode, output_class = "vector", na_action = "exclude",
+  cols = NULL, rows = NULL, ...)
 }
 \arguments{
 \item{output_mode}{Desired \code{\link[base:storage.mode]{base::storage.mode()}} for the result.}
+
+\item{output_class}{Only "vector" supported for now.}
 
 \item{na_action}{One of "exclude" or "pass".}
 

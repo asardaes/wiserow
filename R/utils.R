@@ -1,4 +1,4 @@
-.supported_classes <- c("matrix")
+.supported_output_classes <- c("vector")
 
 .supported_modes <- c("integer",
                       "double",
@@ -46,4 +46,9 @@ validate_metadata <- function(.data, metadata) {
     }
 
     metadata
+}
+
+prepare_output <- function(.data, metadata) {
+    ans_len <- if (is.null(metadata$rows)) nrow(.data) else length(metadata$rows)
+    vector(metadata$output_mode, ans_len)
 }

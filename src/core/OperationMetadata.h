@@ -19,6 +19,10 @@ enum class InputClass {
     matrix
 };
 
+enum class OutputClass {
+    vector
+};
+
 struct surrogate_vector {
     surrogate_vector(const int * const ptr, const std::size_t len, const bool is_null)
         : ptr(ptr), len(len), is_null(is_null)
@@ -38,6 +42,7 @@ public:
     const InputClass input_class;
     const std::vector<R_vec_t> input_modes;
 
+    const OutputClass output_class;
     const R_vec_t output_mode;
 
     const NaAction na_action;

@@ -7,7 +7,7 @@
 namespace wiserow {
 
 extern "C" {
-    SEXP row_sums(SEXP metadata, SEXP data);
+    SEXP row_sums(SEXP metadata, SEXP data, SEXP output);
 }
 
 } // namespace wiserow

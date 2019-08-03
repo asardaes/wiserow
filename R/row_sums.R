@@ -28,11 +28,11 @@ row_sums.matrix <- function(.data, output_mode, ...) {
     }
 
     metadata <- validate_metadata(.data, metadata)
+    ans <- prepare_output(.data, metadata)
 
-    if (nrow(.data) < 1L) {
-        vector(metadata$output_mode)
+    if (nrow(.data) > 0L) {
+        .Call(C_row_sums, metadata, .data, ans)
     }
-    else {
-        .Call(C_row_sums, metadata, .data)
-    }
+
+    ans
 }
