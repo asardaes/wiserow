@@ -1,15 +1,27 @@
 #include "OperationMetadata.h"
 
+#include <string>
 #include <utility> // move
 
 namespace wiserow {
+
+int get_int(const Rcpp::List& metadata, const std::string& key) {
+    return Rcpp::as<int>(metadata[key]);
+}
 
 std::string get_string(const Rcpp::List& metadata, const std::string& key) {
     return Rcpp::as<std::string>(metadata[key]);
 }
 
-int get_int(const Rcpp::List& metadata, const std::string& key) {
-    return Rcpp::as<int>(metadata[key]);
+InputClass parse_input_class(const Rcpp::List& metadata) {
+    std::string str = get_string(metadata, "input_class");
+
+    if (str == "matrix") {
+        return InputClass::matrix;
+    }
+    else {
+        Rcpp::stop("[wiserow] unsupported input class: " + str);
+    }
 }
 
 R_vec_t parse_mode(const std::string& mode_str) {
@@ -44,6 +56,17 @@ std::vector<R_vec_t> parse_modes(const Rcpp::StringVector& in_modes) {
     return input_modes;
 }
 
+NaAction parse_na_action(const Rcpp::List& metadata) {
+    std::string str = get_string(metadata, "na_action");
+
+    if (str == "pass") {
+        return NaAction::pass;
+    }
+    else {
+        return NaAction::exclude;
+    }
+}
+
 surrogate_vector coerce_subset_indices(SEXP ids) {
     if (Rf_isNull(ids)) {
         return surrogate_vector(nullptr, 0, true);
@@ -64,10 +87,10 @@ surrogate_vector coerce_subset_indices(SEXP ids) {
 
 OperationMetadata::OperationMetadata(const Rcpp::List& metadata)
     : num_workers(get_int(metadata, "num_workers"))
-    , input_class(get_string(metadata, "input_class"))
+    , input_class(parse_input_class(metadata))
     , input_modes(parse_modes(metadata["input_modes"]))
     , output_mode(std::move(parse_mode(get_string(metadata, "output_mode"))))
-    , na_action(get_string(metadata, "na_action"))
+    , na_action(parse_na_action(metadata))
     , cols(coerce_subset_indices(metadata["cols"]))
     , rows(coerce_subset_indices(metadata["rows"]))
 { }

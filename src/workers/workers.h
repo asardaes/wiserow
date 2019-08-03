@@ -30,7 +30,7 @@ public:
             bool is_na = boost::apply_visitor(na_visitor_, col_collection_(i,j));
 
             if (is_na) {
-                if (metadata.na_action == "pass") {
+                if (metadata.na_action == NaAction::pass) {
                     ans_[i] = na_value_;
                     break;
                 }

@@ -17,7 +17,7 @@ SurrogateColumn<Rcpp::StringMatrix>::SurrogateColumn(const Rcpp::StringMatrix& m
 
 const supported_col_t SurrogateColumn<Rcpp::StringMatrix>::operator[](const std::size_t id) const {
     if (id >= size_) { // nocov start
-        throw std::out_of_range("Column of size " +
+        throw std::out_of_range("[wiserow] column of size " +
                                 std::to_string(size_) +
                                 " cannot be indexed at " +
                                 std::to_string(id));
@@ -35,7 +35,7 @@ SurrogateColumn<Rcpp::ComplexMatrix>::SurrogateColumn(const Rcpp::ComplexMatrix&
 
 const supported_col_t SurrogateColumn<Rcpp::ComplexMatrix>::operator[](const std::size_t id) const {
     if (id >= size_) { // nocov start
-        throw std::out_of_range("Column of size " +
+        throw std::out_of_range("[wiserow] column of size " +
                                 std::to_string(size_) +
                                 " cannot be indexed at " +
                                 std::to_string(id));

@@ -10,7 +10,8 @@
 namespace wiserow {
 
 ColumnCollection ColumnCollection::coerce(const OperationMetadata& metadata, SEXP data) {
-    if (metadata.input_class == "matrix") {
+    switch(metadata.input_class) {
+    case InputClass::matrix: {
         switch(metadata.input_modes[0]) {
         case INTSXP: {
             return MatrixColumnCollection<INTSXP, int>(data, metadata.cols);
@@ -33,8 +34,10 @@ ColumnCollection ColumnCollection::coerce(const OperationMetadata& metadata, SEX
         }
         }
     }
-    else {
-        Rcpp::stop("[wiserow] unsupported input class: " + metadata.input_class);
+    default: {
+        // can never happen because enums, wtf gcc?
+        Rcpp::stop("[wiserow] this should never happen D="); // nocov
+    }
     }
 }
 
