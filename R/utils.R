@@ -1,14 +1,20 @@
-.supported_output_classes <- c("vector",
-                               "list")
+.supported_output_classes <- c(
+    "vector",
+    "list"
+)
 
-.supported_modes <- c("integer",
-                      "double",
-                      "logical",
-                      "character",
-                      "complex")
+.supported_modes <- c(
+    "integer",
+    "double",
+    "logical",
+    "character",
+    "complex"
+)
 
-.supported_na_actions <- c("exclude",
-                           "pass")
+.supported_na_actions <- c(
+    "exclude",
+    "pass"
+)
 
 #' @importFrom RcppParallel defaultNumThreads
 #'
@@ -22,9 +28,15 @@ validate_metadata <- function(.data, metadata) {
     if (typeof(metadata$cols) == "double") {
         metadata$cols <- as.integer(metadata$cols)
     }
+    else if (typeof(metadata$cols) == "logical") {
+        metadata$cols <- which(metadata$cols)
+    }
 
     if (typeof(metadata$rows) == "double") {
         metadata$rows <- as.integer(metadata$rows)
+    }
+    else if (typeof(metadata$rows) == "logical") {
+        metadata$rows <- which(metadata$rows)
     }
 
     nc <- ncol(.data)
