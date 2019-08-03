@@ -4,7 +4,8 @@
 \alias{op_ctrl}
 \title{Operation's control parameters}
 \usage{
-op_ctrl(output_mode, na_action = "exclude", cols = NULL, ...)
+op_ctrl(output_mode, na_action = "exclude", cols = NULL, rows = NULL,
+  ...)
 }
 \arguments{
 \item{output_mode}{Desired \code{\link[base:storage.mode]{base::storage.mode()}} for the result.}
@@ -13,6 +14,8 @@ op_ctrl(output_mode, na_action = "exclude", cols = NULL, ...)
 
 \item{cols}{A vector indicating which columns to consider for the operation. If \code{NULL}, all
 columns are used. If its length is 0, no columns are considered. Negative values are supported.}
+
+\item{rows}{Like \code{cols} but for row indices.}
 
 \item{...}{Internal.}
 }

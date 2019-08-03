@@ -42,6 +42,22 @@ test_that("row_sums for integer matrices with column subset works.", {
 
     ans <- row_sums(int_mat, cols = integer())
     expect_identical(ans, integer(length(ans)))
+
+    expect_error(row_sums(int_mat, cols = 10L), "Invalid column indices")
+})
+
+test_that("row_sums for integer matrices with row subset works.", {
+    expected <- rowSums(int_mat[1:2000,])
+    ans <- row_sums(int_mat, output_mode = "double", rows = 1:2000)
+    expect_identical(ans, expected)
+
+    ans <- row_sums(int_mat, output_mode = "double", rows = -(2001:5000))
+    expect_identical(ans, expected)
+
+    ans <- row_sums(int_mat, rows = integer())
+    expect_identical(ans, integer())
+
+    expect_error(row_sums(int_mat, rows = 10000L), "Invalid row indices")
 })
 
 test_that("row_sums for double matrices works.", {
@@ -78,6 +94,22 @@ test_that("row_sums for double matrices with column subset works.", {
 
     ans <- row_sums(dbl_mat, cols = integer())
     expect_identical(ans, double(length(ans)))
+
+    expect_error(row_sums(dbl_mat, cols = 10L), "Invalid column indices")
+})
+
+test_that("row_sums for double matrices with row subset works.", {
+    expected <- rowSums(dbl_mat[1:2000,])
+    ans <- row_sums(dbl_mat, rows = 1:2000)
+    expect_identical(ans, expected)
+
+    ans <- row_sums(dbl_mat, rows = -(2001:5000))
+    expect_identical(ans, expected)
+
+    ans <- row_sums(dbl_mat, rows = integer())
+    expect_identical(ans, double())
+
+    expect_error(row_sums(dbl_mat, rows = 10000L), "Invalid row indices")
 })
 
 test_that("row_sums for logical matrices works.", {
@@ -114,4 +146,20 @@ test_that("row_sums for logical matrices with column subset works.", {
 
     ans <- row_sums(bool_mat, cols = integer())
     expect_identical(ans, integer(length(ans)))
+
+    expect_error(row_sums(bool_mat, cols = 10L), "Invalid column indices")
+})
+
+test_that("row_sums for logical matrices with row subset works.", {
+    expected <- rowSums(bool_mat[1:2000,])
+    ans <- row_sums(bool_mat, output_mode = "double", rows = 1:2000)
+    expect_identical(ans, expected)
+
+    ans <- row_sums(bool_mat, output_mode = "double", rows = -(2001:5000))
+    expect_identical(ans, expected)
+
+    ans <- row_sums(bool_mat, rows = integer())
+    expect_identical(ans, integer())
+
+    expect_error(row_sums(bool_mat, rows = 10000L), "Invalid row indices")
 })

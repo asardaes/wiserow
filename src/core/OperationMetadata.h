@@ -35,6 +35,7 @@ public:
     const std::string na_action;
 
     const surrogate_vector cols;
+    const surrogate_vector rows;
 };
 
 } // namespace wiserow

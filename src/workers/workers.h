@@ -25,22 +25,18 @@ public:
         , ans_(ans)
     { }
 
-    void work_it(std::size_t begin, std::size_t end) override {
-        for (std::size_t i = begin; i < end; i++) {
-            if (eptr || is_interrupted(i)) break; // nocov
+    void work_row(std::size_t i) override {
+        for (std::size_t j = 0; j < col_collection_.ncol(); j++) {
+            bool is_na = boost::apply_visitor(na_visitor_, col_collection_(i,j));
 
-            for (std::size_t j = 0; j < col_collection_.ncol(); j++) {
-                bool is_na = boost::apply_visitor(na_visitor_, col_collection_(i,j));
-
-                if (is_na) {
-                    if (metadata.na_action == "pass") {
-                        ans_[i] = na_value_;
-                        break;
-                    }
+            if (is_na) {
+                if (metadata.na_action == "pass") {
+                    ans_[i] = na_value_;
+                    break;
                 }
-                else {
-                    ans_[i] += boost::apply_visitor(visitor_, col_collection_(i,j));
-                }
+            }
+            else {
+                ans_[i] += boost::apply_visitor(visitor_, col_collection_(i,j));
             }
         }
     }

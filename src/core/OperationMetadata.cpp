@@ -41,12 +41,12 @@ std::vector<R_vec_t> parse_types(const Rcpp::StringVector& in_modes) {
     return input_modes;
 }
 
-surrogate_vector coerce_cols(SEXP cols) {
-    if (Rf_isNull(cols)) {
+surrogate_vector coerce_subset_indices(SEXP ids) {
+    if (Rf_isNull(ids)) {
         return surrogate_vector(nullptr, 0, true);
     }
     else {
-        Rcpp::IntegerVector vec(cols);
+        Rcpp::IntegerVector vec(ids);
 
         if (vec.length() > 0) {
             return surrogate_vector(&vec[0], vec.length(), false);
@@ -65,7 +65,8 @@ OperationMetadata::OperationMetadata(const Rcpp::List& metadata)
     , input_modes(parse_types(metadata["input_modes"]))
     , output_mode(std::move(parse_type(get_string(metadata, "output_mode"))))
     , na_action(get_string(metadata, "na_action"))
-    , cols(coerce_cols(metadata["cols"]))
+    , cols(coerce_subset_indices(metadata["cols"]))
+    , rows(coerce_subset_indices(metadata["rows"]))
 { }
 
 } // namespace wiserow

@@ -31,24 +31,29 @@ public:
 protected:
     ParallelWorker(const OperationMetadata& metadata, const ColumnCollection& cc);
 
-    virtual void work_it(std::size_t begin, std::size_t end) = 0;
-
-    bool is_interrupted() const;
-    bool is_interrupted(const std::size_t i) const;
+    virtual void work_row(std::size_t i) = 0;
 
     const ColumnCollection col_collection_;
-    tthread::mutex mutex_;
 
 private:
     int interrupt_grain(const int interrupt_check_grain, const int min, const int max) const;
 
+    std::size_t corresponding_row(std::size_t id) const;
+
+    bool is_interrupted(const std::size_t i) const;
+
     const int interrupt_grain_;
+    tthread::mutex mutex_;
 };
 
 // =================================================================================================
 
 inline void parallel_for(ParallelWorker& worker) {
     std::size_t num_ops = worker.num_ops();
+    if (num_ops < 1) {
+        return;
+    }
+
     double grain = num_ops / worker.metadata.num_workers / 10;
     if (grain < 1000) {
         grain = 1000;

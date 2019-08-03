@@ -21,14 +21,27 @@ validate_metadata <- function(.data, metadata) {
         metadata$cols <- as.integer(metadata$cols)
     }
 
-    nc <- ncol(.data)
+    if (typeof(metadata$rows) == "double") {
+        metadata$rows <- as.integer(metadata$rows)
+    }
 
-    if (any(metadata$cols > ncol(.data))) {
+    nc <- ncol(.data)
+    nr <- nrow(.data)
+
+    if (any(metadata$cols > nc)) {
         stop(glue::glue("Invalid column indices, data has {nc} columns, received: ",
                         "[{paste(metadata$cols, collapse = ',')}]"))
     }
     else if (any(metadata$cols < 1L)) {
-        metadata$cols <- setdiff(1L:ncol(.data), -1L * metadata$cols)
+        metadata$cols <- setdiff(1L:nc, -1L * metadata$cols)
+    }
+
+    if (any(metadata$rows > nr)) {
+        stop(glue::glue("Invalid row indices, data has {nr} rows, received: ",
+                        "[{paste(metadata$rows, collapse = ',')}]"))
+    }
+    else if (any(metadata$rows < 1L)) {
+        metadata$rows <- setdiff(1L:nr, -1L * metadata$rows)
     }
 
     metadata

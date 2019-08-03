@@ -7,21 +7,38 @@
 
 namespace wiserow {
 
+std::size_t output_length(const OperationMetadata& metadata, const ColumnCollection& col_collection) {
+    if (metadata.rows.ptr) {
+        return metadata.rows.len;
+    }
+    else if (metadata.rows.is_null) {
+        return col_collection.nrow();
+    }
+    else {
+        return 0;
+    }
+}
+
 template<template<typename> class Worker>
 SEXP visit_into_numeric_vector(const char* fun_name, SEXP m, SEXP data) {
     BEGIN_RCPP
     OperationMetadata metadata(m);
     ColumnCollection col_collection = ColumnCollection::coerce(metadata, data);
+    std::size_t out_len = output_length(metadata, col_collection);
 
     switch(metadata.output_mode) {
     case INTSXP: {
-        Rcpp::IntegerVector ans(col_collection.nrow());
+        Rcpp::IntegerVector ans(out_len);
+        if (out_len == 0) return ans;
+
         Worker<int> worker(metadata, col_collection, &ans[0]);
         parallel_for(worker);
         return ans;
     }
     case REALSXP: {
-        Rcpp::NumericVector ans(col_collection.nrow());
+        Rcpp::NumericVector ans(out_len);
+        if (out_len == 0) return ans;
+
         Worker<double> worker(metadata, col_collection, &ans[0]);
         parallel_for(worker);
         return ans;
