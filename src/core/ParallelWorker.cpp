@@ -5,7 +5,7 @@ namespace wiserow {
 ParallelWorker::ParallelWorker(const OperationMetadata& metadata, const ColumnCollection& cc)
     : metadata(metadata)
     , col_collection_(cc)
-    , interrupt_grain_(interrupt_grain(cc.nrow() / metadata.num_workers, 1000, 10000))
+    , interrupt_grain_(interrupt_grain(this->num_ops() / metadata.num_workers, 1000, 10000))
 { }
 
 std::size_t ParallelWorker::num_ops() const {
