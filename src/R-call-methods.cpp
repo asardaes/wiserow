@@ -54,7 +54,7 @@ SEXP visit_into_numeric_vector(const char* fun_name, SEXP m, SEXP data) {
         return ans;
     }
     default: {
-        Rcpp::stop("[wiserow] %s can only return integers or doubles.", fun_name);
+        Rcpp::stop("[wiserow] %s can only return integers, doubles or complex numbers.", fun_name);
     }
     }
     END_RCPP

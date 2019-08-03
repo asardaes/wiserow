@@ -29,7 +29,7 @@ test_that("row_sums can handle errors and edge cases appropriately.", {
     )
 
     suppressWarnings(
-        expect_error(regexp = "row_sums can only return integers or doubles", row_sums(int_mat, "character"))
+        expect_error(regexp = "row_sums can only return", row_sums(int_mat, "character"))
     )
 
     expect_identical(row_sums(as.matrix(data.frame())), vector("integer"))
