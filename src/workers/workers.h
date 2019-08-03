@@ -2,7 +2,6 @@
 #define WISEROW_WORKERS_H_
 
 #include <cstddef> // size_t
-#include <memory> // shared_ptr
 #include <type_traits> // is_same
 
 #include <boost/variant.hpp>
@@ -21,7 +20,7 @@ template<typename T>
 class RowSumsWorker : public ParallelWorker
 {
 public:
-    RowSumsWorker(const OperationMetadata& metadata, const ColumnCollection& cc, std::shared_ptr<OutputWrapper<T>> ans)
+    RowSumsWorker(const OperationMetadata& metadata, const ColumnCollection& cc, OutputWrapper<T>& ans)
         : ParallelWorker(metadata, cc)
         , ans_(ans)
     { }
@@ -32,18 +31,18 @@ public:
 
             if (is_na) {
                 if (metadata.na_action == NaAction::pass) {
-                    (*ans_)[out_id] = na_value_;
+                    ans_[out_id] = na_value_;
                     break;
                 }
             }
             else {
-                (*ans_)[out_id] += boost::apply_visitor(visitor_, col_collection_(in_id, j));
+                ans_[out_id] += boost::apply_visitor(visitor_, col_collection_(in_id, j));
             }
         }
     }
 
 private:
-    std::shared_ptr<OutputWrapper<T>> ans_;
+    OutputWrapper<T>& ans_;
 
     const T na_value_ = std::is_same<T, int>::value ? NA_INTEGER : NA_REAL;
     const NAVisitor na_visitor_;

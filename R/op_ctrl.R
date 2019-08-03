@@ -3,8 +3,8 @@
 #' @export
 #'
 #' @param output_mode Desired [base::storage.mode()] for the result.
-#' @param output_class Only "vector" supported for now.
-#' @param na_action One of "exclude" or "pass".
+#' @param output_class One of ("vector", "list"). Possibly abbreviated.
+#' @param na_action One of ("exclude", "pass"). Possibly abbreviated.
 #' @param cols A vector indicating which columns to consider for the operation. If `NULL`, all
 #'   columns are used. If its length is 0, no columns are considered. Negative values are supported.
 #' @param rows Like `cols` but for row indices.

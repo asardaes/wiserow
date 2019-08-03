@@ -28,6 +28,10 @@ test_that("row_sums for integer matrices works.", {
     expected <- as.integer(expected)
     ans <- row_sums(int_mat)
     expect_identical(ans, expected)
+
+    expected <- as.list(expected)
+    ans <- row_sums(int_mat, output_class = "list")
+    expect_identical(ans, expected)
 })
 
 test_that("row_sums for integer matrices with NAs works.", {
@@ -75,6 +79,10 @@ test_that("row_sums for integer matrices with row subset works.", {
 test_that("row_sums for double matrices works.", {
     expected <- rowSums(dbl_mat)
     ans <- row_sums(dbl_mat)
+    expect_identical(ans, expected)
+
+    expected <- as.list(expected)
+    ans <- row_sums(dbl_mat, output_class = "list")
     expect_identical(ans, expected)
 
     expected <- as.integer(expected)
@@ -132,6 +140,10 @@ test_that("row_sums for logical matrices works.", {
     expected <- as.integer(expected)
     ans <- row_sums(bool_mat)
     expect_identical(ans, expected)
+
+    expected <- as.list(expected)
+    ans <- row_sums(bool_mat, output_class = "list")
+    expect_identical(ans, expected)
 })
 
 test_that("row_sums for logical matrices with NAs works.", {
@@ -179,6 +191,10 @@ test_that("row_sums for logical matrices with row subset works.", {
 test_that("row_sums for complex matrices works.", {
     expected <- rowSums(cplx_mat)
     ans <- row_sums(cplx_mat)
+    expect_identical(ans, expected)
+
+    expected <- as.list(expected)
+    ans <- row_sums(cplx_mat, output_class = "list")
     expect_identical(ans, expected)
 
     expected <- rowSums(Mod(cplx_mat))

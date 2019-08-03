@@ -30,6 +30,9 @@ OutputClass parse_output_class(const Rcpp::List& metadata) {
     if (str == "vector") {
         return OutputClass::vector;
     }
+    else if (str == "list") {
+        return OutputClass::list;
+    }
     else {
         Rcpp::stop("[wiserow] unsupported output class: " + str);
     }

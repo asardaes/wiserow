@@ -46,6 +46,7 @@ public:
 
 // -------------------------------------------------------------------------------------------------
 // Specialization for std::complex<double>
+
 template<>
 class NumericVisitor<std::complex<double>> : public boost::static_visitor<std::complex<double>>
 {

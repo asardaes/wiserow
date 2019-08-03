@@ -1,4 +1,5 @@
-.supported_output_classes <- c("vector")
+.supported_output_classes <- c("vector",
+                               "list")
 
 .supported_modes <- c("integer",
                       "double",
@@ -48,7 +49,21 @@ validate_metadata <- function(.data, metadata) {
     metadata
 }
 
+#' @importFrom glue glue
+#'
 prepare_output <- function(.data, metadata) {
     ans_len <- if (is.null(metadata$rows)) nrow(.data) else length(metadata$rows)
-    vector(metadata$output_mode, ans_len)
+
+    if (metadata$output_class == "vector") {
+        ans <- vector(metadata$output_mode, ans_len)
+    }
+    else if (metadata$output_class == "list") {
+        # no rep()! that only does shallow copies
+        ans <- lapply(1L:ans_len, function(ignored) { vector(metadata$output_mode, 1L) })
+    }
+    else { # nocov start
+        stop(glue::glue("Unsupported output class: {metadata$output_class}"))
+    } # nocov end
+
+    ans
 }

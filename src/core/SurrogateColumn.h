@@ -41,6 +41,7 @@ private:
 
 // -------------------------------------------------------------------------------------------------
 // Specialization for Rcpp::StringMatrix
+
 template<>
 class SurrogateColumn<Rcpp::StringMatrix> : public VariantColumn
 {
@@ -57,6 +58,7 @@ private:
 // -------------------------------------------------------------------------------------------------
 // Specialization for Rcpp::ComplexMatrix
 // see http://rcpp-devel.r-forge.r-project.narkive.com/o5ubHVos/multiplication-of-complexvector
+
 template<>
 class SurrogateColumn<Rcpp::ComplexMatrix> : public VariantColumn
 {

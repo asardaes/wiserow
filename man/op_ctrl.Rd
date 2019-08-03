@@ -10,9 +10,9 @@ op_ctrl(output_mode, output_class = "vector", na_action = "exclude",
 \arguments{
 \item{output_mode}{Desired \code{\link[base:storage.mode]{base::storage.mode()}} for the result.}
 
-\item{output_class}{Only "vector" supported for now.}
+\item{output_class}{One of ("vector", "list"). Possibly abbreviated.}
 
-\item{na_action}{One of "exclude" or "pass".}
+\item{na_action}{One of ("exclude", "pass"). Possibly abbreviated.}
 
 \item{cols}{A vector indicating which columns to consider for the operation. If \code{NULL}, all
 columns are used. If its length is 0, no columns are considered. Negative values are supported.}

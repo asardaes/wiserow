@@ -20,7 +20,8 @@ enum class InputClass {
 };
 
 enum class OutputClass {
-    vector
+    vector,
+    list
 };
 
 struct surrogate_vector {

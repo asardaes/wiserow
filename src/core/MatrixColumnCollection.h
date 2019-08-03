@@ -34,6 +34,7 @@ public:
 
 // -------------------------------------------------------------------------------------------------
 // Specialization for STRSXP
+
 template<>
 class MatrixColumnCollection<STRSXP, const char *> : public ColumnCollection
 {
@@ -43,6 +44,7 @@ public:
 
 // -------------------------------------------------------------------------------------------------
 // Specialization for CPLXSXP
+
 template<>
 class MatrixColumnCollection<CPLXSXP, std::complex<double>> : public ColumnCollection
 {
