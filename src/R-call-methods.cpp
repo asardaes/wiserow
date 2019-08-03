@@ -1,5 +1,6 @@
 #include "wiserow.h"
 
+#include <complex>
 #include <cstddef> // std::size_t
 #include <string>
 
@@ -40,6 +41,15 @@ SEXP visit_into_numeric_vector(const char* fun_name, SEXP m, SEXP data) {
         if (out_len == 0) return ans;
 
         Worker<double> worker(metadata, col_collection, &ans[0]);
+        parallel_for(worker);
+        return ans;
+    }
+    case CPLXSXP: {
+        Rcpp::ComplexVector ans(out_len);
+        if (out_len == 0) return ans;
+
+        auto ptr = reinterpret_cast<std::complex<double> *>(&ans[0]);
+        Worker<std::complex<double>> worker(metadata, col_collection, ptr);
         parallel_for(worker);
         return ans;
     }

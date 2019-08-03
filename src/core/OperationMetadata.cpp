@@ -25,6 +25,9 @@ R_vec_t parse_mode(const std::string& mode_str) {
     else if (mode_str == "character") {
         return STRSXP;
     }
+    else if (mode_str == "complex") {
+        return CPLXSXP;
+    }
     else {
         Rcpp::stop("[wiserow] unsupported mode: " + mode_str);
     }

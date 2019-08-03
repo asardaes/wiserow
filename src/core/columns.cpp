@@ -24,6 +24,9 @@ ColumnCollection ColumnCollection::coerce(const OperationMetadata& metadata, SEX
         case STRSXP: {
             return MatrixColumnCollection<STRSXP, const char *>(data, metadata.cols);
         }
+        case CPLXSXP: {
+            return MatrixColumnCollection<CPLXSXP, std::complex<double>>(data, metadata.cols);
+        }
         default: {
             // can never happen because OperationMetadata's constructor checks this too
             Rcpp::stop("[wiserow] matrices can only contain integers, doubles, logicals, or characters."); // nocov

@@ -186,3 +186,57 @@ test_that("row_sums for logical matrices with row subset works.", {
 
     expect_error(row_sums(bool_mat, rows = 10000.0), "Invalid row indices")
 })
+
+test_that("row_sums for complex matrices works.", {
+    expected <- rowSums(cplx_mat)
+    ans <- row_sums(cplx_mat)
+    expect_identical(ans, expected)
+
+    expected <- rowSums(Mod(cplx_mat))
+    ans <- row_sums(cplx_mat, output_mode = "double")
+    expect_equal(ans, expected)
+
+    expected <- as.integer(Mod(cplx_mat))
+    dim(expected) <- dim(cplx_mat)
+    expected <- rowSums(expected)
+    ans <- row_sums(cplx_mat, output_mode = "integer")
+    expect_equal(ans, expected)
+})
+
+test_that("row_sums for complex matrices with NAs works.", {
+    expected <- rowSums(cplx_na_mat, na.rm = TRUE)
+    ans <- row_sums(cplx_na_mat)
+    expect_equal(ans, expected)
+
+    expected <- rowSums(cplx_na_mat)
+    ans <- row_sums(cplx_na_mat, na_action = "pass")
+    expect_equal(ans, expected)
+})
+
+test_that("row_sums for complex matrices with column subset works.", {
+    expected <- rowSums(cplx_mat[, -2L])
+    ans <- row_sums(cplx_mat, cols = c(1, 3))
+    expect_equal(ans, expected)
+
+    ans <- row_sums(cplx_mat, cols = -2L)
+    expect_equal(ans, expected)
+
+    ans <- row_sums(cplx_mat, cols = integer())
+    expect_equal(ans, complex(length(ans)))
+
+    expect_error(row_sums(cplx_mat, cols = 10L), "Invalid column indices")
+})
+
+test_that("row_sums for complex matrices with row subset works.", {
+    expected <- rowSums(cplx_mat[1:2000,])
+    ans <- row_sums(cplx_mat, rows = 1:2000)
+    expect_equal(ans, expected)
+
+    ans <- row_sums(cplx_mat, rows = -(2001:5000))
+    expect_equal(ans, expected)
+
+    ans <- row_sums(cplx_mat, rows = integer())
+    expect_equal(ans, complex())
+
+    expect_error(row_sums(cplx_mat, rows = 10000.0), "Invalid row indices")
+})

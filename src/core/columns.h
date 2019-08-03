@@ -1,6 +1,7 @@
 #ifndef WISEROW_COLUMNS_H_
 #define WISEROW_COLUMNS_H_
 
+#include <complex>
 #include <cstddef> // size_t
 #include <memory> // shared_ptr
 #include <vector>
@@ -12,7 +13,7 @@
 
 namespace wiserow {
 
-typedef boost::variant<int, double, boost::string_ref> supported_col_t;
+typedef boost::variant<int, double, boost::string_ref, std::complex<double>> supported_col_t;
 
 // =================================================================================================
 

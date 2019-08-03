@@ -1,5 +1,7 @@
 #include "visitors.h"
 
+#include <cmath> // isfinite
+
 #include <Rcpp.h>
 
 namespace wiserow {
@@ -16,6 +18,10 @@ bool NAVisitor::operator()(const double val) const {
 
 bool NAVisitor::operator()(const boost::string_ref val) const {
     return val.data() == na_string_ptr;
+}
+
+bool NAVisitor::operator()(const std::complex<double>& val) const {
+    return !std::isfinite(val.real()) || !std::isfinite(val.imag());
 }
 
 } // namespace wiserow

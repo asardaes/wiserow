@@ -3,7 +3,8 @@
 .supported_modes <- c("integer",
                       "double",
                       "logical",
-                      "character")
+                      "character",
+                      "complex")
 
 .supported_na_actions <- c("exclude",
                            "pass")
