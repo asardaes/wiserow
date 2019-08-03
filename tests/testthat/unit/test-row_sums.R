@@ -9,6 +9,13 @@ test_that("row_sums can handle errors and edge cases appropriately.", {
         expect_error(regexp = "unsupported input", .Call(wiserow:::`C_row_sums`, metadata, int_mat))
     )
 
+    metadata$input_class <- "matrix"
+    metadata$output_mode <- "data.frame"
+
+    suppressWarnings(
+        expect_error(regexp = "unsupported mode", .Call(wiserow:::`C_row_sums`, metadata, int_mat))
+    )
+
     suppressWarnings(
         expect_error(regexp = "not support", row_sums(char_mat, "integer"))
     )
