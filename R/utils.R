@@ -27,6 +27,9 @@ validate_metadata <- function(.data, metadata) {
         stop(glue::glue("Invalid column indices, data has {nc} columns, received: ",
                         "[{paste(metadata$cols, collapse = ',')}]"))
     }
+    else if (any(metadata$cols < 1L)) {
+        metadata$cols <- setdiff(1L:ncol(.data), -1L * metadata$cols)
+    }
 
     metadata
 }

@@ -16,7 +16,7 @@ row_sums(.data, ...)
 \describe{
   \item{na_action}{One of "exclude" or "pass".}
   \item{cols}{A vector indicating which columns to consider for the operation. If \code{NULL}, all
-columns are used. If its length is 0, no columns are considered.}
+columns are used. If its length is 0, no columns are considered. Negative values are supported.}
 }}
 
 \item{output_mode}{Output's \code{\link[base:storage.mode]{base::storage.mode()}}. If missing, it will be inferred.}

@@ -37,6 +37,9 @@ test_that("row_sums for integer matrices with column subset works.", {
     ans <- row_sums(int_mat, output_mode = "double", cols = c(1L, 3L))
     expect_identical(ans, expected)
 
+    ans <- row_sums(int_mat, output_mode = "double", cols = -2L)
+    expect_identical(ans, expected)
+
     ans <- row_sums(int_mat, cols = integer())
     expect_identical(ans, integer(length(ans)))
 })
@@ -70,6 +73,9 @@ test_that("row_sums for double matrices with column subset works.", {
     ans <- row_sums(dbl_mat, cols = c(1L, 3L))
     expect_identical(ans, expected)
 
+    ans <- row_sums(dbl_mat, cols = -2L)
+    expect_identical(ans, expected)
+
     ans <- row_sums(dbl_mat, cols = integer())
     expect_identical(ans, double(length(ans)))
 })
@@ -101,6 +107,9 @@ test_that("row_sums for logical matrices with NAs works.", {
 test_that("row_sums for logical matrices with column subset works.", {
     expected <- rowSums(bool_mat[, -2L])
     ans <- row_sums(bool_mat, output_mode = "double", cols = c(1L, 3L))
+    expect_identical(ans, expected)
+
+    ans <- row_sums(bool_mat, output_mode = "double", cols = -2L)
     expect_identical(ans, expected)
 
     ans <- row_sums(bool_mat, cols = integer())

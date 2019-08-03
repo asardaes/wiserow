@@ -5,7 +5,7 @@
 #' @param output_mode Desired [base::storage.mode()] for the result.
 #' @param na_action One of "exclude" or "pass".
 #' @param cols A vector indicating which columns to consider for the operation. If `NULL`, all
-#'   columns are used. If its length is 0, no columns are considered.
+#'   columns are used. If its length is 0, no columns are considered. Negative values are supported.
 #' @param ... Internal.
 #'
 op_ctrl <- function(output_mode, na_action = "exclude", cols = NULL, ...) {
