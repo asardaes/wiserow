@@ -25,6 +25,10 @@ test_that("row_sums can handle errors and edge cases appropriately.", {
     )
 
     suppressWarnings(
+        expect_error(regexp = "not support", row_sums(char_mat, "complex"))
+    )
+
+    suppressWarnings(
         expect_error(regexp = "row_sums can only return integers or doubles", row_sums(int_mat, "character"))
     )
 
