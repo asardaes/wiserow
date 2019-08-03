@@ -36,7 +36,6 @@ public:
     std::size_t nrow() const;
     std::size_t ncol() const;
 
-    const VariantColumn& operator[](const std::size_t j) const;
     const supported_col_t operator()(const std::size_t i, const std::size_t j) const;
 
 protected:
