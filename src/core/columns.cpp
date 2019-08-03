@@ -25,7 +25,8 @@ ColumnCollection ColumnCollection::coerce(const OperationMetadata& metadata, SEX
             return MatrixColumnCollection<STRSXP, const char *>(data, metadata.cols);
         }
         default: {
-            Rcpp::stop("[wiserow] matrices can only contain integers, doubles, logicals, or characters.");
+            // can never happen because OperationMetadata's constructor checks this too
+            Rcpp::stop("[wiserow] matrices can only contain integers, doubles, logicals, or characters."); // nocov
         }
         }
     }
