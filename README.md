@@ -5,7 +5,7 @@ Status](https://travis-ci.org/asardaes/wiserow.svg?branch=master)](https://travi
 
 # Wiserow
 
-Fast, multi-threaded implementations of common row-wise operations.
+Multi-threaded, coercion-free implementations of common row-wise operations.
 
 ## License
 

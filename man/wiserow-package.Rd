@@ -8,6 +8,14 @@
 \description{
 TBD.
 }
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://github.com/asardaes/wiserow}
+  \item Report bugs at \url{https://github.com/asardaes/wiserow/issues}
+}
+
+}
 \author{
 Alexis Sarda-Espinosa
 }

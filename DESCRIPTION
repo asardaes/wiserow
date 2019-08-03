@@ -1,6 +1,6 @@
 Package: wiserow
 Type: Package
-Title: Fast, multi-threaded implementations of common row-wise operations
+Title: Multi-threaded, coercion-free implementations of common row-wise operations
 Description: TBD.
 Version: 0.0.1.9000
 Depends:
@@ -15,11 +15,13 @@ LinkingTo:
     RcppThread
 Suggests:
     testthat
-Date: 2019-07-27
+Date: 2019-08-03
 Authors@R: c(
         person("Alexis", "Sarda-Espinosa", role=c("cre", "aut"), email="alexis.sarda@gmail.com")
     )
+BugReports: https://github.com/asardaes/wiserow/issues
 License: GPL (>= 3)
+URL: https://github.com/asardaes/wiserow
 NeedsCompilation: yes
 SystemRequirements: C++11, GNU make
 Language: en-US
