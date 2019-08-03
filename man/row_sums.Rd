@@ -12,7 +12,12 @@ row_sums(.data, ...)
 \arguments{
 \item{.data}{A two-dimensional data structure.}
 
-\item{...}{Additional parameters for \code{\link[=op_ctrl]{op_ctrl()}}.}
+\item{...}{Arguments passed on to \code{op_ctrl}
+\describe{
+  \item{na_action}{One of "exclude" or "pass".}
+  \item{cols}{A vector indicating which columns to consider for the operation. If \code{NULL}, all
+columns are used. If its length is 0, no columns are considered.}
+}}
 
 \item{output_mode}{Output's \code{\link[base:storage.mode]{base::storage.mode()}}. If missing, it will be inferred.}
 }

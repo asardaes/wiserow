@@ -3,7 +3,7 @@
 #' @export
 #'
 #' @param .data A two-dimensional data structure.
-#' @param ... Additional parameters for [op_ctrl()].
+#' @inheritDotParams op_ctrl -output_mode
 #' @param output_mode Output's [base::storage.mode()]. If missing, it will be inferred.
 #'
 row_sums <- function(.data, ...) {
