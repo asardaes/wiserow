@@ -31,7 +31,7 @@ public:
 protected:
     ParallelWorker(const OperationMetadata& metadata, const ColumnCollection& cc);
 
-    virtual void work_row(std::size_t i) = 0;
+    virtual void work_row(std::size_t in_id, std::size_t out_id) = 0;
 
     const ColumnCollection col_collection_;
 

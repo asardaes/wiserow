@@ -27,7 +27,7 @@ void ParallelWorker::operator()(std::size_t begin, std::size_t end) {
         for (std::size_t id = begin; id < end; id++) {
             if (eptr || is_interrupted(id)) break;
 
-            work_row(corresponding_row(id));
+            work_row(corresponding_row(id), id);
         }
     }
     catch(...) {

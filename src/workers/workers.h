@@ -25,18 +25,18 @@ public:
         , ans_(ans)
     { }
 
-    void work_row(std::size_t i) override {
+    void work_row(std::size_t in_id, std::size_t out_id) override {
         for (std::size_t j = 0; j < col_collection_.ncol(); j++) {
-            bool is_na = boost::apply_visitor(na_visitor_, col_collection_(i,j));
+            bool is_na = boost::apply_visitor(na_visitor_, col_collection_(in_id, j));
 
             if (is_na) {
                 if (metadata.na_action == NaAction::pass) {
-                    ans_[i] = na_value_;
+                    ans_[out_id] = na_value_;
                     break;
                 }
             }
             else {
-                ans_[i] += boost::apply_visitor(visitor_, col_collection_(i,j));
+                ans_[out_id] += boost::apply_visitor(visitor_, col_collection_(in_id, j));
             }
         }
     }

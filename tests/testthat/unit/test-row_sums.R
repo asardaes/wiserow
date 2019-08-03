@@ -74,11 +74,11 @@ test_that("row_sums for integer matrices with column subset works.", {
 })
 
 test_that("row_sums for integer matrices with row subset works.", {
-    expected <- rowSums(int_mat[1:2000,])
-    ans <- row_sums(int_mat, output_mode = "double", rows = 1:2000)
+    expected <- rowSums(int_mat[1001:2000,])
+    ans <- row_sums(int_mat, output_mode = "double", rows = 1001:2000)
     expect_identical(ans, expected)
 
-    ans <- row_sums(int_mat, output_mode = "double", rows = -(2001:5000))
+    ans <- row_sums(int_mat, output_mode = "double", rows = -c(1:1000, 2001:5000))
     expect_identical(ans, expected)
 
     ans <- row_sums(int_mat, rows = integer())
@@ -126,11 +126,11 @@ test_that("row_sums for double matrices with column subset works.", {
 })
 
 test_that("row_sums for double matrices with row subset works.", {
-    expected <- rowSums(dbl_mat[1:2000,])
-    ans <- row_sums(dbl_mat, rows = 1:2000)
+    expected <- rowSums(dbl_mat[1001:2000,])
+    ans <- row_sums(dbl_mat, rows = 1001:2000)
     expect_identical(ans, expected)
 
-    ans <- row_sums(dbl_mat, rows = -(2001:5000))
+    ans <- row_sums(dbl_mat, rows = -c(1:1000, 2001:5000))
     expect_identical(ans, expected)
 
     ans <- row_sums(dbl_mat, rows = integer())
@@ -178,11 +178,11 @@ test_that("row_sums for logical matrices with column subset works.", {
 })
 
 test_that("row_sums for logical matrices with row subset works.", {
-    expected <- rowSums(bool_mat[1:2000,])
-    ans <- row_sums(bool_mat, output_mode = "double", rows = 1:2000)
+    expected <- rowSums(bool_mat[1001:2000,])
+    ans <- row_sums(bool_mat, output_mode = "double", rows = 1001:2000)
     expect_identical(ans, expected)
 
-    ans <- row_sums(bool_mat, output_mode = "double", rows = -(2001:5000))
+    ans <- row_sums(bool_mat, output_mode = "double", rows = -c(1:1000, 2001:5000))
     expect_identical(ans, expected)
 
     ans <- row_sums(bool_mat, rows = integer())
@@ -232,11 +232,11 @@ test_that("row_sums for complex matrices with column subset works.", {
 })
 
 test_that("row_sums for complex matrices with row subset works.", {
-    expected <- rowSums(cplx_mat[1:2000,])
-    ans <- row_sums(cplx_mat, rows = 1:2000)
+    expected <- rowSums(cplx_mat[1001:2000,])
+    ans <- row_sums(cplx_mat, rows = 1001:2000)
     expect_equal(ans, expected)
 
-    ans <- row_sums(cplx_mat, rows = -(2001:5000))
+    ans <- row_sums(cplx_mat, rows = -c(1:1000, 2001:5000))
     expect_equal(ans, expected)
 
     ans <- row_sums(cplx_mat, rows = integer())
