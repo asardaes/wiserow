@@ -1,7 +1,6 @@
 #include "OperationMetadata.h"
 
 #include <string>
-#include <utility> // move
 
 namespace wiserow {
 
@@ -18,6 +17,9 @@ InputClass parse_input_class(const Rcpp::List& metadata) {
 
     if (str == "matrix") {
         return InputClass::MATRIX;
+    }
+    else if (str == "data.frame") {
+        return InputClass::DATAFRAME;
     }
     else {
         Rcpp::stop("[wiserow] unsupported input class: " + str);
@@ -64,7 +66,7 @@ std::vector<R_vec_t> parse_modes(const Rcpp::StringVector& in_modes) {
 
     for (R_xlen_t i = 0; i < in_modes.length(); i++) {
         std::string in_mode = Rcpp::as<std::string>(in_modes(i));
-        input_modes.push_back(std::move(parse_mode(in_mode)));
+        input_modes.push_back(parse_mode(in_mode));
     }
 
     return input_modes;
@@ -104,7 +106,7 @@ OperationMetadata::OperationMetadata(const Rcpp::List& metadata)
     , input_class(parse_input_class(metadata))
     , input_modes(parse_modes(metadata["input_modes"]))
     , output_class(parse_output_class(metadata))
-    , output_mode(std::move(parse_mode(get_string(metadata, "output_mode"))))
+    , output_mode(parse_mode(get_string(metadata, "output_mode")))
     , na_action(parse_na_action(metadata))
     , cols(coerce_subset_indices(metadata["cols"]))
     , rows(coerce_subset_indices(metadata["rows"]))

@@ -9,3 +9,11 @@ dbl_na_mat[sample(15000L, 5000L)] <- NA_real_
 bool_na_mat[sample(15000L, 5000L)] <- NA
 char_na_mat[sample(15000L, 5000L)] <- NA_character_
 cplx_na_mat[sample(15000L, 5000L)] <- NA_complex_
+
+df <- cbind(
+    as.data.frame(int_na_mat),
+    as.data.frame(dbl_na_mat),
+    as.data.frame(bool_na_mat),
+    as.data.frame(char_na_mat, stringsAsFactors = FALSE),
+    as.data.frame(cplx_na_mat)
+)

@@ -38,6 +38,15 @@ void visit_into_numeric_vector(const char* fun_name, const OperationMetadata& me
         parallel_for(worker);
         break;
     }
+    case LGLSXP: {
+        if (out_len == 0) break;
+
+        VectorOutputWrapper<LGLSXP, int> wrapper(output);
+        Worker<int> worker(metadata, col_collection, wrapper);
+
+        parallel_for(worker);
+        break;
+    }
     case CPLXSXP: {
         if (out_len == 0) break;
 
@@ -48,7 +57,7 @@ void visit_into_numeric_vector(const char* fun_name, const OperationMetadata& me
         break;
     }
     default: {
-        Rcpp::stop("[wiserow] %s can only return integers, doubles, or complex numbers.", fun_name);
+        Rcpp::stop("[wiserow] %s can only return integers, doubles, logicals, or complex numbers.", fun_name);
     }
     }
 }

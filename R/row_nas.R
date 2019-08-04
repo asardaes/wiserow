@@ -39,3 +39,29 @@ row_nas.matrix <- function(.data, which_cols = "none", ...) {
 
     ans
 }
+
+#' @rdname row_nas
+#' @export
+#'
+row_nas.data.frame <- function(.data, which_cols = "none", ...) {
+    which_cols <- match.arg(which_cols, c("all", "any", "none"))
+
+    metadata <- op_ctrl(input_class = "data.frame",
+                        input_modes = sapply(.data, typeof),
+                        output_mode = "logical",
+                        na_action = "pass",
+                        ...)
+
+    metadata <- validate_metadata(.data, metadata)
+    ans <- prepare_output(.data, metadata)
+
+    extras <- list(
+        bulk_bool_op = which_cols
+    )
+
+    if (nrow(.data) > 0L) {
+        .Call(C_row_nas, metadata, .data, ans, extras)
+    }
+
+    ans
+}

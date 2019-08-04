@@ -17,6 +17,11 @@ test_that("row_sums can handle errors and edge cases appropriately.", {
     expect_error(regexp = "row_sums can only return", row_sums(int_mat, "character", output_class = "list"))
 
     expect_identical(row_sums(as.matrix(data.frame())), vector("integer"))
+    expect_identical(row_sums(data.frame()), vector("integer"))
+
+    suppressWarnings(
+        expect_error(regexp = "not support", row_sums(df))
+    )
 })
 
 test_that("row_sums for integer matrices works.", {
@@ -290,5 +295,34 @@ test_that("row_sums for complex matrices with row subset works.", {
 
     expected <- rowSums(cplx_mat[rep(1001:2000, 2),])
     ans <- row_sums(cplx_mat, rows = rep(1001:2000, 2))
+    expect_identical(ans, expected)
+})
+
+test_that("row_sums for data frames works.", {
+    df <- df[, sapply(df, typeof) != "character"]
+
+    considered_cols <- list(
+        1:3,
+        7:9,
+        c(1:3, 7:9),
+        1:9,
+        1:12
+    )
+
+    for (cols in considered_cols) {
+        expected <- rowSums(df[1001:5000, cols], na.rm = TRUE)
+        names(expected) <- NULL
+
+        ans <- row_sums(df, rows = 1001:5000, cols = cols, na_action = "exclude")
+        expect_equal(ans, expected)
+
+        ans <- row_sums(df, rows = 1001:5000, cols = cols, na_action = "exclude", output_class = "list")
+        expect_equal(ans, as.list(expected))
+    }
+
+    # ----------------------------------------------------------------------------------------------
+
+    expected <- as.logical(rowSums(df[-10L, 7:9]))
+    ans <- row_sums(df, rows = -10L, cols = 7:9, na_action = "pass", output_mode = "logical")
     expect_identical(ans, expected)
 })

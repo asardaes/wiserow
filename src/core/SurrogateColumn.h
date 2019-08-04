@@ -46,7 +46,23 @@ template<>
 class SurrogateColumn<Rcpp::StringMatrix> : public VariantColumn
 {
 public:
-    SurrogateColumn(const Rcpp::StringMatrix& mat, const int j, const std::size_t size);
+    SurrogateColumn(const Rcpp::StringMatrix& mat, const int j);
+
+    const supported_col_t operator[](const std::size_t id) const override;
+
+private:
+    std::vector<char *> data_ptr_;
+    const std::size_t size_;
+};
+
+// -------------------------------------------------------------------------------------------------
+// Specialization for Rcpp::StringVector
+
+template<>
+class SurrogateColumn<Rcpp::StringVector> : public VariantColumn
+{
+public:
+    SurrogateColumn(const Rcpp::StringVector& vec);
 
     const supported_col_t operator[](const std::size_t id) const override;
 
@@ -63,7 +79,24 @@ template<>
 class SurrogateColumn<Rcpp::ComplexMatrix> : public VariantColumn
 {
 public:
-    SurrogateColumn(const Rcpp::ComplexMatrix& mat, const int j, const std::size_t size);
+    SurrogateColumn(const Rcpp::ComplexMatrix& mat, const int j);
+
+    const supported_col_t operator[](const std::size_t id) const override;
+
+private:
+    const std::complex<double> *data_ptr_;
+    const std::size_t size_;
+};
+
+// -------------------------------------------------------------------------------------------------
+// Specialization for Rcpp::ComplexVector
+// see http://rcpp-devel.r-forge.r-project.narkive.com/o5ubHVos/multiplication-of-complexvector
+
+template<>
+class SurrogateColumn<Rcpp::ComplexVector> : public VariantColumn
+{
+public:
+    SurrogateColumn(const Rcpp::ComplexVector& vec);
 
     const supported_col_t operator[](const std::size_t id) const override;
 

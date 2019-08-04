@@ -16,7 +16,8 @@ enum class NaAction {
 };
 
 enum class InputClass {
-    MATRIX
+    MATRIX,
+    DATAFRAME
 };
 
 enum class OutputClass {

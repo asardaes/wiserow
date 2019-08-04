@@ -408,3 +408,22 @@ test_that("row_nas for complex matrices with row subset works.", {
     expect_identical(ans, logical())
 })
 
+test_that("row_nas for data frames works.", {
+    expected <- sapply(4001:5000, df = df, function(i, df) { all(is.na(df[i, , drop = FALSE])) })
+    ans <- row_nas(df, "all", rows = 4001:5000)
+    expect_identical(ans, expected)
+    ans <- row_nas(df, "all", rows = 4001:5000, output_class = "list")
+    expect_identical(ans, as.list(expected))
+
+    expected <- sapply(4001:5000, df = df, function(i, df) { all(!is.na(df[i, , drop = FALSE])) })
+    ans <- row_nas(df, "none", rows = 4001:5000)
+    expect_identical(ans, expected)
+    ans <- row_nas(df, "none", rows = 4001:5000, output_class = "list")
+    expect_identical(ans, as.list(expected))
+
+    expected <- sapply(4001:5000, df = df, function(i, df) { anyNA(df[i, , drop = FALSE]) })
+    ans <- row_nas(df, "any", rows = 4001:5000)
+    expect_identical(ans, expected)
+    ans <- row_nas(df, "any", rows = 4001:5000, output_class = "list")
+    expect_identical(ans, as.list(expected))
+})

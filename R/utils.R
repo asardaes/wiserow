@@ -44,7 +44,7 @@ validate_metadata <- function(.data, metadata) {
 
     if (any(metadata$cols > nc)) {
         stop(glue::glue("Invalid column indices, data has {nc} columns, received: ",
-                        "[{paste(metadata$cols, collapse = ',')}]"))
+                        "[{ paste(metadata$cols, collapse = ',') }]"))
     }
     else if (any(metadata$cols < 1L)) {
         metadata$cols <- setdiff(1L:nc, -1L * metadata$cols)
@@ -52,7 +52,7 @@ validate_metadata <- function(.data, metadata) {
 
     if (any(metadata$rows > nr)) {
         stop(glue::glue("Invalid row indices, data has {nr} rows, received: ",
-                        "[{paste(metadata$rows, collapse = ',')}]"))
+                        "[{ paste(metadata$rows, collapse = ',') }]"))
     }
     else if (any(metadata$rows < 1L)) {
         metadata$rows <- setdiff(1L:nr, -1L * metadata$rows)
