@@ -1,3 +1,9 @@
+/**
+ * The constructors here take by value because we're mostly dealing with wrappers, so copies are
+ * cheap, and it makes it easier to instantiate shared_ptr<OutputWrapper<T>> by passing a SEXP
+ * variant to the constructors.
+ */
+
 #ifndef WISEROW_OUTPUTWRAPPER_H_
 #define WISEROW_OUTPUTWRAPPER_H_
 
@@ -36,7 +42,7 @@ public:
 template<int RT, typename T>
 class VectorOutputWrapper : public OutputWrapper<T> {
 public:
-    VectorOutputWrapper(Rcpp::Vector<RT>& data)
+    VectorOutputWrapper(Rcpp::Vector<RT> data)
         : data_(&data[0])
         , len_(data.length())
     { }
@@ -89,7 +95,7 @@ private:
 template<int RT, typename T>
 class ListOutputWrapper : public OutputWrapper<T> {
 public:
-    ListOutputWrapper(Rcpp::List& data)
+    ListOutputWrapper(Rcpp::List data)
         : data_(data.length())
         , lens_(data.length())
     {
@@ -133,7 +139,7 @@ private:
 template<>
 class ListOutputWrapper<CPLXSXP, std::complex<double>> : public OutputWrapper<std::complex<double>> {
 public:
-    ListOutputWrapper(Rcpp::List& data)
+    ListOutputWrapper(Rcpp::List data)
         : data_(data.length())
         , lens_(data.length())
     {
