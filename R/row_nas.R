@@ -1,24 +1,24 @@
-#' Check if rows have missing values
+#' Check if a row's columns have missing values
 #'
 #' For each desired row, check if all/any/none of the columns have missing values (`NA`).
 #'
 #' @export
-#' @templateVar par condition
+#' @templateVar par which_cols
 #' @templateVar choices ("all", "any", "none")
 #'
 #' @template data-param
-#' @inheritDotParams op_ctrl -output_mode -na_action
 #' @template generic-choices
+#' @inheritDotParams op_ctrl -output_mode -na_action
 #'
-row_nas <- function(.data, ...) {
+row_nas <- function(.data, which_cols = "none", ...) {
     UseMethod("row_nas")
 }
 
 #' @rdname row_nas
 #' @export
 #'
-row_nas.matrix <- function(.data, condition = "none", ...) {
-    condition <- match.arg(condition, c("all", "any", "none"))
+row_nas.matrix <- function(.data, which_cols = "none", ...) {
+    which_cols <- match.arg(which_cols, c("all", "any", "none"))
 
     metadata <- op_ctrl(input_class = "matrix",
                         input_modes = typeof(.data),
@@ -30,7 +30,7 @@ row_nas.matrix <- function(.data, condition = "none", ...) {
     ans <- prepare_output(.data, metadata)
 
     extras <- list(
-        bulk_comp_op = condition
+        bulk_comp_op = which_cols
     )
 
     if (nrow(.data) > 0L) {

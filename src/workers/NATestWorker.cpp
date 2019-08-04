@@ -30,7 +30,10 @@ void NATestWorker::work_row(std::size_t in_id, std::size_t out_id) {
     }
 
     switch(bulk_op_) {
-    case BulkCompOp::ALL:
+    case BulkCompOp::ALL: {
+        if (col_collection_.ncol() > 0) ans_[out_id] = flag;
+        break;
+    }
     case BulkCompOp::ANY: {
         ans_[out_id] = flag;
         break;

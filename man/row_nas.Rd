@@ -3,14 +3,16 @@
 \name{row_nas}
 \alias{row_nas}
 \alias{row_nas.matrix}
-\title{Check if rows have missing values}
+\title{Check if a row's columns have missing values}
 \usage{
-row_nas(.data, ...)
+row_nas(.data, which_cols = "none", ...)
 
-\method{row_nas}{matrix}(.data, condition = "none", ...)
+\method{row_nas}{matrix}(.data, which_cols = "none", ...)
 }
 \arguments{
 \item{.data}{A two-dimensional data structure.}
+
+\item{which_cols}{One of ("all", "any", "none"). Possibly abbreviated.}
 
 \item{...}{Arguments passed on to \code{op_ctrl}
 \describe{
@@ -20,8 +22,6 @@ columns are used. If its length is 0, no columns are considered. Negative and lo
 are supported.}
   \item{rows}{Like \code{cols} but for row indices.}
 }}
-
-\item{condition}{One of ("all", "any", "none"). Possibly abbreviated.}
 }
 \description{
 For each desired row, check if all/any/none of the columns have missing values (\code{NA}).
