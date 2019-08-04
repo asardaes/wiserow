@@ -9,3 +9,7 @@
 #' @importFrom RcppParallel RcppParallelLibs
 #'
 "_PACKAGE"
+
+.onUnload <- function(libpath) {
+    library.dynam.unload("wiserow", libpath)
+}
