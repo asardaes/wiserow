@@ -7,7 +7,7 @@
 
 static const R_CallMethodDef callMethods[] = {
     CALLDEF(row_sums, 3),
-    CALLDEF(cols_have_na, 4),
+    CALLDEF(row_nas, 4),
     {NULL, NULL, 0}
 };
 

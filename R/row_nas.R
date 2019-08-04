@@ -1,4 +1,6 @@
-#' Check if columns have missing values
+#' Check if rows have missing values
+#'
+#' For each desired row, check if all/any/none of the columns have missing values (`NA`).
 #'
 #' @export
 #'
@@ -6,14 +8,14 @@
 #' @inheritDotParams op_ctrl -output_mode -na_action
 #' @param condition One of ("all", "any", "none"). Possibly abbreviated.
 #'
-cols_have_na <- function(.data, ...) {
-    UseMethod("cols_have_na")
+row_nas <- function(.data, ...) {
+    UseMethod("row_nas")
 }
 
-#' @rdname cols_have_na
+#' @rdname row_nas
 #' @export
 #'
-cols_have_na.matrix <- function(.data, condition = "none", ...) {
+row_nas.matrix <- function(.data, condition = "none", ...) {
     condition <- match.arg(condition, c("all", "any", "none"))
 
     metadata <- op_ctrl(input_class = "matrix",
@@ -30,7 +32,7 @@ cols_have_na.matrix <- function(.data, condition = "none", ...) {
     )
 
     if (nrow(.data) > 0L) {
-        .Call(C_cols_have_na, metadata, .data, ans, extras)
+        .Call(C_row_nas, metadata, .data, ans, extras)
     }
 
     ans

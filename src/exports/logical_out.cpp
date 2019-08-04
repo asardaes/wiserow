@@ -11,7 +11,7 @@
 
 namespace wiserow {
 
-extern "C" SEXP cols_have_na(SEXP metadata, SEXP data, SEXP output, SEXP extras) {
+extern "C" SEXP row_nas(SEXP metadata, SEXP data, SEXP output, SEXP extras) {
     BEGIN_RCPP
     OperationMetadata metadata_(metadata);
 
