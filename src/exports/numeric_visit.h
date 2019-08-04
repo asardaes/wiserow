@@ -100,11 +100,11 @@ SEXP visit_into_numeric(const char* fun_name, SEXP m, SEXP data, SEXP output) {
     OperationMetadata metadata(m);
 
     switch(metadata.output_class) {
-    case OutputClass::vector: {
+    case OutputClass::VECTOR: {
         visit_into_numeric_vector<Worker>(fun_name, metadata, data, output);
         break;
     }
-    case OutputClass::list: {
+    case OutputClass::LIST: {
         visit_into_enlisted_numeric_vector<Worker>(fun_name, metadata, data, output);
         break;
     }

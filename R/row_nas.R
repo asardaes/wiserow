@@ -30,7 +30,7 @@ row_nas.matrix <- function(.data, which_cols = "none", ...) {
     ans <- prepare_output(.data, metadata)
 
     extras <- list(
-        bulk_comp_op = which_cols
+        bulk_bool_op = which_cols
     )
 
     if (nrow(.data) > 0L) {

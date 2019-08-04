@@ -11,17 +11,17 @@ namespace wiserow {
 typedef int R_vec_t;
 
 enum class NaAction {
-    exclude,
-    pass
+    EXCLUDE,
+    PASS
 };
 
 enum class InputClass {
-    matrix
+    MATRIX
 };
 
 enum class OutputClass {
-    vector,
-    list
+    VECTOR,
+    LIST
 };
 
 struct surrogate_vector {

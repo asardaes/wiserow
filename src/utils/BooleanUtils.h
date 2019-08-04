@@ -8,7 +8,7 @@ enum class BoolOp {
     OR
 };
 
-enum class BulkCompOp {
+enum class BulkBoolOp {
     ALL,
     ANY,
     NONE

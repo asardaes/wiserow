@@ -11,7 +11,7 @@ namespace wiserow {
 
 ColumnCollection ColumnCollection::coerce(const OperationMetadata& metadata, SEXP data) {
     switch(metadata.input_class) {
-    case InputClass::matrix: {
+    case InputClass::MATRIX: {
         switch(metadata.input_modes[0]) {
         case INTSXP: {
             return MatrixColumnCollection<INTSXP, int>(data, metadata.cols);

@@ -20,32 +20,32 @@ extern "C" SEXP row_nas(SEXP metadata, SEXP data, SEXP output, SEXP extras) {
     if (out_len == 0) return R_NilValue;
 
     Rcpp::List extras_(extras);
-    std::string bulk_comp_op = Rcpp::as<std::string>(extras_["bulk_comp_op"]);
+    std::string bulk_bool_op = Rcpp::as<std::string>(extras_["bulk_bool_op"]);
 
     std::shared_ptr<OutputWrapper<int>> wrapper_ptr;
     switch(metadata_.output_class) {
-    case OutputClass::vector: {
+    case OutputClass::VECTOR: {
         Rcpp::LogicalVector ans(output);
         wrapper_ptr = std::make_shared<VectorOutputWrapper<LGLSXP, int>>(ans);
         break;
     }
-    case OutputClass::list: {
+    case OutputClass::LIST: {
         Rcpp::List ans(output);
         wrapper_ptr = std::make_shared<ListOutputWrapper<LGLSXP, int>>(ans);
         break;
     }
     }
 
-    if (bulk_comp_op == "all") {
-        NATestWorker worker(metadata_, col_collection, *wrapper_ptr, BulkCompOp::ALL);
+    if (bulk_bool_op == "all") {
+        NATestWorker worker(metadata_, col_collection, *wrapper_ptr, BulkBoolOp::ALL);
         parallel_for(worker);
     }
-    else if (bulk_comp_op == "any") {
-        NATestWorker worker(metadata_, col_collection, *wrapper_ptr, BulkCompOp::ANY);
+    else if (bulk_bool_op == "any") {
+        NATestWorker worker(metadata_, col_collection, *wrapper_ptr, BulkBoolOp::ANY);
         parallel_for(worker);
     }
-    else if (bulk_comp_op == "none") {
-        NATestWorker worker(metadata_, col_collection, *wrapper_ptr, BulkCompOp::NONE);
+    else if (bulk_bool_op == "none") {
+        NATestWorker worker(metadata_, col_collection, *wrapper_ptr, BulkBoolOp::NONE);
         parallel_for(worker);
     }
 

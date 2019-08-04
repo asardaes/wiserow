@@ -17,7 +17,7 @@ InputClass parse_input_class(const Rcpp::List& metadata) {
     std::string str = get_string(metadata, "input_class");
 
     if (str == "matrix") {
-        return InputClass::matrix;
+        return InputClass::MATRIX;
     }
     else {
         Rcpp::stop("[wiserow] unsupported input class: " + str);
@@ -28,10 +28,10 @@ OutputClass parse_output_class(const Rcpp::List& metadata) {
     std::string str = get_string(metadata, "output_class");
 
     if (str == "vector") {
-        return OutputClass::vector;
+        return OutputClass::VECTOR;
     }
     else if (str == "list") {
-        return OutputClass::list;
+        return OutputClass::LIST;
     }
     else {
         Rcpp::stop("[wiserow] unsupported output class: " + str);
@@ -74,10 +74,10 @@ NaAction parse_na_action(const Rcpp::List& metadata) {
     std::string str = get_string(metadata, "na_action");
 
     if (str == "pass") {
-        return NaAction::pass;
+        return NaAction::PASS;
     }
     else {
-        return NaAction::exclude;
+        return NaAction::EXCLUDE;
     }
 }
 

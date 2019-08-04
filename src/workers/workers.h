@@ -32,7 +32,7 @@ public:
             bool is_na = boost::apply_visitor(na_visitor_, col_collection_(in_id, j));
 
             if (is_na) {
-                if (metadata.na_action == NaAction::pass) {
+                if (metadata.na_action == NaAction::PASS) {
                     ans_[out_id] = na_value_;
                     break;
                 }
@@ -56,13 +56,13 @@ private:
 class NATestWorker : public ParallelWorker
 {
 public:
-    NATestWorker(const OperationMetadata& metadata, const ColumnCollection& cc, OutputWrapper<int>& ans, const BulkCompOp bulk_op);
+    NATestWorker(const OperationMetadata& metadata, const ColumnCollection& cc, OutputWrapper<int>& ans, const BulkBoolOp bulk_op);
 
     void work_row(std::size_t in_id, std::size_t out_id) override;
 
 private:
     OutputWrapper<int>& ans_;
-    const BulkCompOp bulk_op_;
+    const BulkBoolOp bulk_op_;
     const LogicalOperator op_;
     const NAVisitor na_visitor_;
 };
