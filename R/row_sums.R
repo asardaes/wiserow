@@ -2,7 +2,7 @@
 #'
 #' @export
 #'
-#' @param .data A two-dimensional data structure.
+#' @template data-param
 #' @inheritDotParams op_ctrl -output_mode
 #' @param output_mode Output's [base::storage.mode()]. If missing, it will be inferred.
 #'

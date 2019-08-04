@@ -3,10 +3,12 @@
 #' For each desired row, check if all/any/none of the columns have missing values (`NA`).
 #'
 #' @export
+#' @templateVar par condition
+#' @templateVar choices ("all", "any", "none")
 #'
-#' @param .data A two-dimensional data structure.
+#' @template data-param
 #' @inheritDotParams op_ctrl -output_mode -na_action
-#' @param condition One of ("all", "any", "none"). Possibly abbreviated.
+#' @template generic-choices
 #'
 row_nas <- function(.data, ...) {
     UseMethod("row_nas")
