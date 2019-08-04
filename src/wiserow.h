@@ -7,6 +7,7 @@
 namespace wiserow {
 
 extern "C" {
+    SEXP cols_have_na(SEXP metadata, SEXP data, SEXP output, SEXP extras);
     SEXP row_sums(SEXP metadata, SEXP data, SEXP output);
 }
 
