@@ -2,8 +2,8 @@
 
 #include <Rcpp.h>
 
-#include "../workers/workers.h"
-#include "helpers.h"
+#include "../core.h"
+#include "../workers.h"
 #include "numeric_visit.h"
 
 namespace wiserow {

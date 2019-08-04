@@ -1,5 +1,5 @@
-#ifndef WISEROW_COLUMNS_H_
-#define WISEROW_COLUMNS_H_
+#ifndef WISEROW_COLUMNABSTRACTIONS_H_
+#define WISEROW_COLUMNABSTRACTIONS_H_
 
 #include <complex>
 #include <cstddef> // size_t
@@ -46,4 +46,4 @@ protected:
 
 } // namespace wiserow
 
-#endif // WISEROW_COLUMNS_H_
+#endif // WISEROW_COLUMNABSTRACTIONS_H_

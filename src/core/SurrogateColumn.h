@@ -10,7 +10,7 @@
 #include <boost/utility/string_ref.hpp>
 #include <Rcpp.h>
 
-#include "columns.h"
+#include "ColumnAbstractions.h"
 
 namespace wiserow {
 

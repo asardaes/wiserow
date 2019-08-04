@@ -1,5 +1,5 @@
-#ifndef WISEROW_VISITORS_H_
-#define WISEROW_VISITORS_H_
+#ifndef WISEROW_NUMERICVISITOR_H_
+#define WISEROW_NUMERICVISITOR_H_
 
 #include <complex>
 #include <stdexcept> // invalid_argument
@@ -8,21 +8,6 @@
 #include <boost/variant/static_visitor.hpp>
 
 namespace wiserow {
-
-// =================================================================================================
-
-class NAVisitor : public boost::static_visitor<bool>
-{
-public:
-    NAVisitor() {}
-
-    bool operator()(const int val) const;
-    bool operator()(const double val) const;
-    bool operator()(const boost::string_ref val) const;
-    bool operator()(const std::complex<double>& val) const;
-};
-
-// =================================================================================================
 
 template<typename T>
 class NumericVisitor : public boost::static_visitor<T>
@@ -65,4 +50,4 @@ public:
 
 } // namespace wiserow
 
-#endif // WISEROW_VISITORS_H_
+#endif // WISEROW_NUMERICVISITOR_H_

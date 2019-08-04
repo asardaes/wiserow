@@ -9,8 +9,8 @@
 #include <RcppParallel.h>
 #include <RcppThread.h>
 
+#include "ColumnAbstractions.h"
 #include "OperationMetadata.h"
-#include "columns.h"
 
 namespace wiserow {
 

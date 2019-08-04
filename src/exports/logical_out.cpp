@@ -6,7 +6,8 @@
 
 #include <Rcpp.h>
 
-#include "../workers/workers.h"
+#include "../core.h"
+#include "../workers.h"
 #include "helpers.h"
 
 namespace wiserow {

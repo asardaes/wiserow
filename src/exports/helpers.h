@@ -1,8 +1,7 @@
 #ifndef WISEROW_EXPORTSHELPERS_H_
 #define WISEROW_EXPORTSHELPERS_H_
 
-#include "../core/OperationMetadata.h"
-#include "../core/columns.h"
+#include "../core.h"
 
 namespace wiserow {
 

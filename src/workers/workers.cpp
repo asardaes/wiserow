@@ -1,4 +1,4 @@
-#include "workers.h"
+#include "NATestWorker.h"
 
 namespace wiserow {
 

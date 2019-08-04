@@ -1,4 +1,4 @@
-#include "visitors.h"
+#include "NAVisitor.h"
 
 #include <cmath> // isfinite
 

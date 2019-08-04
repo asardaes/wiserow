@@ -6,8 +6,8 @@
 
 #include <Rcpp.h>
 
+#include "ColumnAbstractions.h"
 #include "SurrogateColumn.h"
-#include "columns.h"
 
 namespace wiserow {
 
