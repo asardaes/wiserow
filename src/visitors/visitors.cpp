@@ -36,4 +36,27 @@ bool NAVisitor::operator()(const std::complex<double>& val) const {
     return forward((*this)(val.real()) || (*this)(val.imag()));
 }
 
+// =================================================================================================
+// InfiniteVisitor
+
+InfiniteVisitor::InfiniteVisitor(const BoolOp op, const std::shared_ptr<BooleanVisitor>& visitor)
+    : BooleanVisitorDecorator(op, visitor)
+{ }
+
+bool InfiniteVisitor::operator()(const int val) const {
+    return forward(false);
+}
+
+bool InfiniteVisitor::operator()(const double val) const {
+    return forward(!na_visitor_(val) && !std::isfinite(val));
+}
+
+bool InfiniteVisitor::operator()(const boost::string_ref val) const {
+    return forward(false);
+}
+
+bool InfiniteVisitor::operator()(const std::complex<double>& val) const {
+    return forward(!na_visitor_(val) && (!std::isfinite(val.real()) || !std::isfinite(val.imag())));
+}
+
 } // namespace wiserow

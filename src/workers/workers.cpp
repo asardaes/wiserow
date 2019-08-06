@@ -1,7 +1,5 @@
 #include "../workers.h"
 
-#include "BoolTestWorker.h"
-
 namespace wiserow {
 
 BoolTestWorker::BoolTestWorker(const OperationMetadata& metadata,
@@ -53,6 +51,15 @@ NATestWorker::NATestWorker(const OperationMetadata& metadata,
                            OutputWrapper<int>& ans,
                            const BulkBoolOp bulk_op)
     : BoolTestWorker(metadata, cc, ans, bulk_op, BooleanVisitorBuilder().is_na().build())
+{ }
+
+// =================================================================================================
+
+InfTestWorker::InfTestWorker(const OperationMetadata& metadata,
+                             const ColumnCollection& cc,
+                             OutputWrapper<int>& ans,
+                             const BulkBoolOp bulk_op)
+    : BoolTestWorker(metadata, cc, ans, bulk_op, BooleanVisitorBuilder().is_inf().build())
 { }
 
 } // namespace wiserow

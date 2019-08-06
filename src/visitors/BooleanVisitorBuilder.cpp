@@ -12,6 +12,11 @@ BooleanVisitorBuilder& BooleanVisitorBuilder::is_na() {
     return *this;
 }
 
+BooleanVisitorBuilder& BooleanVisitorBuilder::is_inf() {
+    visitor_ = std::make_shared<InfiniteVisitor>(op_, visitor_);
+    return *this;
+}
+
 std::shared_ptr<BooleanVisitor> BooleanVisitorBuilder::build() {
     return visitor_;
 }

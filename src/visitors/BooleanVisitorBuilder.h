@@ -3,6 +3,7 @@
 
 #include "BooleanVisitorDecorator.h"
 #include "NAVisitor.h"
+#include "InfiniteVisitor.h"
 
 #include "../utils.h"
 
@@ -14,6 +15,7 @@ public:
     BooleanVisitorBuilder(const BoolOp op = BoolOp::OR, const bool init = false);
 
     BooleanVisitorBuilder& is_na();
+    BooleanVisitorBuilder& is_inf();
 
     std::shared_ptr<BooleanVisitor> build();
 

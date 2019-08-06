@@ -1,6 +1,7 @@
 #ifndef WISEROW_WORKERS_H_
 #define WISEROW_WORKERS_H_
 
+#include "workers/InfTestWorker.h"
 #include "workers/NATestWorker.h"
 #include "workers/RowSumsWorker.h"
 

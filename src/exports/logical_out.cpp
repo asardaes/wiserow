@@ -12,13 +12,13 @@
 
 namespace wiserow {
 
-extern "C" SEXP row_nas(SEXP metadata, SEXP data, SEXP output, SEXP extras) {
-    BEGIN_RCPP
+template<typename Worker>
+void visit_with_bulk_bool_op(SEXP metadata, SEXP data, SEXP output, SEXP extras) {
     OperationMetadata metadata_(metadata);
 
     ColumnCollection col_collection = ColumnCollection::coerce(metadata_, data);
     std::size_t out_len = output_length(metadata_, col_collection);
-    if (out_len == 0) return R_NilValue;
+    if (out_len == 0) return;
 
     Rcpp::List extras_(extras);
     std::string bulk_bool_op = Rcpp::as<std::string>(extras_["bulk_bool_op"]);
@@ -38,18 +38,29 @@ extern "C" SEXP row_nas(SEXP metadata, SEXP data, SEXP output, SEXP extras) {
     }
 
     if (bulk_bool_op == "all") {
-        NATestWorker worker(metadata_, col_collection, *wrapper_ptr, BulkBoolOp::ALL);
+        Worker worker(metadata_, col_collection, *wrapper_ptr, BulkBoolOp::ALL);
         parallel_for(worker);
     }
     else if (bulk_bool_op == "any") {
-        NATestWorker worker(metadata_, col_collection, *wrapper_ptr, BulkBoolOp::ANY);
+        Worker worker(metadata_, col_collection, *wrapper_ptr, BulkBoolOp::ANY);
         parallel_for(worker);
     }
     else if (bulk_bool_op == "none") {
-        NATestWorker worker(metadata_, col_collection, *wrapper_ptr, BulkBoolOp::NONE);
+        Worker worker(metadata_, col_collection, *wrapper_ptr, BulkBoolOp::NONE);
         parallel_for(worker);
     }
+}
 
+extern "C" SEXP row_nas(SEXP metadata, SEXP data, SEXP output, SEXP extras) {
+    BEGIN_RCPP
+    visit_with_bulk_bool_op<NATestWorker>(metadata, data, output, extras);
+    return R_NilValue;
+    END_RCPP
+}
+
+extern "C" SEXP row_infs(SEXP metadata, SEXP data, SEXP output, SEXP extras) {
+    BEGIN_RCPP
+    visit_with_bulk_bool_op<InfTestWorker>(metadata, data, output, extras);
     return R_NilValue;
     END_RCPP
 }
