@@ -427,3 +427,9 @@ test_that("row_nas for data frames works.", {
     ans <- row_nas(df, "any", rows = 4001:5000, output_class = "list")
     expect_identical(ans, as.list(expected))
 })
+
+test_that("row_nas behaves like in R for infinite/NaN values.", {
+    df <- data.frame(Inf, -Inf, as.complex(Inf), as.complex(-Inf))
+    expect_true(row_nas(df, "none"))
+    expect_true(row_nas(data.frame(NaN), "any"))
+})

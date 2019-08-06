@@ -33,7 +33,7 @@ bool NAVisitor::operator()(const boost::string_ref val) const {
 }
 
 bool NAVisitor::operator()(const std::complex<double>& val) const {
-    return forward(!std::isfinite(val.real()) || !std::isfinite(val.imag()));
+    return forward((*this)(val.real()) || (*this)(val.imag()));
 }
 
 } // namespace wiserow
