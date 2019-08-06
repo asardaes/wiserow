@@ -27,25 +27,12 @@ public:
 class InitBooleanVisitor : public BooleanVisitor
 {
 public:
-    InitBooleanVisitor(const bool init)
-        : init_(init)
-    { }
+    InitBooleanVisitor(const bool init);
 
-    bool operator()(const int val) const override {
-        return init_;
-    }
-
-    bool operator()(const double val) const override {
-        return init_;
-    }
-
-    bool operator()(const boost::string_ref val) const override {
-        return init_;
-    }
-
-    bool operator()(const std::complex<double>& val) const override {
-        return init_;
-    }
+    bool operator()(const int val) const override;
+    bool operator()(const double val) const override;
+    bool operator()(const boost::string_ref val) const override;
+    bool operator()(const std::complex<double>& val) const override;
 
 private:
     const bool init_;
@@ -56,30 +43,14 @@ private:
 class BooleanVisitorDecorator : public BooleanVisitor
 {
 public:
-    BooleanVisitorDecorator(const BoolOp op, const std::shared_ptr<BooleanVisitor>& visitor)
-        : op_(op)
-        , visitor_(visitor)
-    { }
+    BooleanVisitorDecorator(const BoolOp op, const std::shared_ptr<BooleanVisitor>& visitor);
 
-    bool operator()(const int val) const override {
-        return delegate(val);
-    }
-
-    bool operator()(const double val) const override {
-        return delegate(val);
-    }
-
-    bool operator()(const boost::string_ref val) const override {
-        return delegate(val);
-    }
-
-    bool operator()(const std::complex<double>& val) const override {
-        return delegate(val);
-    }
+    bool operator()(const int val) const override;
+    bool operator()(const double val) const override;
+    bool operator()(const boost::string_ref val) const override;
+    bool operator()(const std::complex<double>& val) const override;
 
 protected:
-    const BoolOp op_;
-
     template<typename T = BooleanVisitorDecorator>
     bool forward(const bool val) const {
         switch(op_) {
@@ -95,6 +66,7 @@ protected:
     }
 
 private:
+    const BoolOp op_;
     const std::shared_ptr<BooleanVisitor> visitor_;
 
     template<typename T>
