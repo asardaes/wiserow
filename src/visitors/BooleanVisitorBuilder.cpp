@@ -2,12 +2,13 @@
 
 namespace wiserow {
 
-BooleanVisitorBuilder::BooleanVisitorBuilder(const bool init)
-    : visitor_(std::make_shared<InitBooleanVisitor>(init))
+BooleanVisitorBuilder::BooleanVisitorBuilder(const BoolOp op, const bool init)
+    : op_(op)
+    , visitor_(std::make_shared<InitBooleanVisitor>(init))
 { }
 
-BooleanVisitorBuilder& BooleanVisitorBuilder::is_na(const BoolOp op) {
-    visitor_ = std::make_shared<NAVisitor>(op, visitor_);
+BooleanVisitorBuilder& BooleanVisitorBuilder::is_na() {
+    visitor_ = std::make_shared<NAVisitor>(op_, visitor_);
     return *this;
 }
 

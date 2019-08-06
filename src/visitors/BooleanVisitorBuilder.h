@@ -11,13 +11,14 @@ namespace wiserow {
 class BooleanVisitorBuilder
 {
 public:
-    BooleanVisitorBuilder(const bool init = false);
+    BooleanVisitorBuilder(const BoolOp op = BoolOp::OR, const bool init = false);
 
-    BooleanVisitorBuilder& is_na(const BoolOp op);
+    BooleanVisitorBuilder& is_na();
 
     std::shared_ptr<BooleanVisitor> build();
 
 private:
+    const BoolOp op_;
     std::shared_ptr<BooleanVisitor> visitor_;
 };
 

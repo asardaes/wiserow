@@ -12,7 +12,7 @@ NATestWorker::NATestWorker(const OperationMetadata& metadata,
     , ans_(ans)
     , bulk_op_(bulk_op)
     , op_(bulk_op == BulkBoolOp::ALL ? BoolOp::AND : BoolOp::OR)
-    , visitor_(BooleanVisitorBuilder().is_na(BoolOp::OR).build())
+    , visitor_(BooleanVisitorBuilder().is_na().build())
 { }
 
 void NATestWorker::work_row(std::size_t in_id, std::size_t out_id) {
