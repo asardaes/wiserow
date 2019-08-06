@@ -2,21 +2,24 @@
 #define WISEROW_NAVISITOR_H_
 
 #include <complex>
+#include <memory>
 
 #include <boost/utility/string_ref.hpp>
-#include <boost/variant/static_visitor.hpp>
+
+#include "BooleanVisitorDecorator.h"
 
 namespace wiserow {
 
-class NAVisitor : public boost::static_visitor<bool>
+class NAVisitor : public BooleanVisitorDecorator
 {
 public:
-    NAVisitor() {}
+    NAVisitor();
+    NAVisitor(const BoolOp op, const std::shared_ptr<BooleanVisitor>& visitor);
 
-    bool operator()(const int val) const;
-    bool operator()(const double val) const;
-    bool operator()(const boost::string_ref val) const;
-    bool operator()(const std::complex<double>& val) const;
+    bool operator()(const int val) const override;
+    bool operator()(const double val) const override;
+    bool operator()(const boost::string_ref val) const override;
+    bool operator()(const std::complex<double>& val) const override;
 };
 
 } // namespace wiserow

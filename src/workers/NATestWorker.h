@@ -2,9 +2,9 @@
 #define WISEROW_NATESTWORKER_H_
 
 #include <cstddef> // size_t
+#include <memory>
 
 #include "../core.h"
-#include "../utils.h"
 #include "../visitors.h"
 
 namespace wiserow {
@@ -23,7 +23,7 @@ private:
     OutputWrapper<int>& ans_;
     const BulkBoolOp bulk_op_;
     const LogicalOperator op_;
-    const NAVisitor na_visitor_;
+    const std::shared_ptr<BooleanVisitor> visitor_;
 };
 
 } // namespace wiserow

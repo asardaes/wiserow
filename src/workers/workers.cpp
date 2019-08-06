@@ -12,13 +12,14 @@ NATestWorker::NATestWorker(const OperationMetadata& metadata,
     , ans_(ans)
     , bulk_op_(bulk_op)
     , op_(bulk_op == BulkBoolOp::ALL ? BoolOp::AND : BoolOp::OR)
+    , visitor_(BooleanVisitorBuilder().is_na(BoolOp::OR).build())
 { }
 
 void NATestWorker::work_row(std::size_t in_id, std::size_t out_id) {
     bool flag = bulk_op_ == BulkBoolOp::ALL ? true : false;
 
     for (std::size_t j = 0; j < col_collection_.ncol(); j++) {
-        bool is_na = boost::apply_visitor(na_visitor_, col_collection_(in_id, j));
+        bool is_na = boost::apply_visitor(*visitor_, col_collection_(in_id, j));
         flag = op_.apply(flag, is_na);
 
         if (bulk_op_ == BulkBoolOp::ALL && !flag) {
