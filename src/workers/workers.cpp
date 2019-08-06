@@ -1,26 +1,26 @@
-#include "NATestWorker.h"
+#include "../workers.h"
+
+#include "BoolTestWorker.h"
 
 namespace wiserow {
 
-// =================================================================================================
-
-NATestWorker::NATestWorker(const OperationMetadata& metadata,
-                           const ColumnCollection& cc,
-                           OutputWrapper<int>& ans,
-                           const BulkBoolOp bulk_op)
+BoolTestWorker::BoolTestWorker(const OperationMetadata& metadata,
+                               const ColumnCollection& cc,
+                               OutputWrapper<int>& ans,
+                               const BulkBoolOp bulk_op,
+                               const std::shared_ptr<BooleanVisitor>& visitor)
     : ParallelWorker(metadata, cc)
     , ans_(ans)
     , bulk_op_(bulk_op)
     , op_(bulk_op == BulkBoolOp::ALL ? BoolOp::AND : BoolOp::OR)
-    , visitor_(BooleanVisitorBuilder().is_na().build())
+    , visitor_(visitor)
 { }
 
-void NATestWorker::work_row(std::size_t in_id, std::size_t out_id) {
+void BoolTestWorker::work_row(std::size_t in_id, std::size_t out_id) {
     bool flag = bulk_op_ == BulkBoolOp::ALL ? true : false;
 
     for (std::size_t j = 0; j < col_collection_.ncol(); j++) {
-        bool is_na = boost::apply_visitor(*visitor_, col_collection_(in_id, j));
-        flag = op_.apply(flag, is_na);
+        flag = op_.apply(flag, boost::apply_visitor(*visitor_, col_collection_(in_id, j)));
 
         if (bulk_op_ == BulkBoolOp::ALL && !flag) {
             break;
@@ -45,5 +45,14 @@ void NATestWorker::work_row(std::size_t in_id, std::size_t out_id) {
     }
     }
 }
+
+// =================================================================================================
+
+NATestWorker::NATestWorker(const OperationMetadata& metadata,
+                           const ColumnCollection& cc,
+                           OutputWrapper<int>& ans,
+                           const BulkBoolOp bulk_op)
+    : BoolTestWorker(metadata, cc, ans, bulk_op, BooleanVisitorBuilder().is_na().build())
+{ }
 
 } // namespace wiserow

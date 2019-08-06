@@ -1,29 +1,17 @@
 #ifndef WISEROW_NATESTWORKER_H_
 #define WISEROW_NATESTWORKER_H_
 
-#include <cstddef> // size_t
-#include <memory>
-
-#include "../core.h"
-#include "../visitors.h"
+#include "BoolTestWorker.h"
 
 namespace wiserow {
 
-class NATestWorker : public ParallelWorker
+class NATestWorker : public BoolTestWorker
 {
 public:
     NATestWorker(const OperationMetadata& metadata,
                  const ColumnCollection& cc,
                  OutputWrapper<int>& ans,
                  const BulkBoolOp bulk_op);
-
-    void work_row(std::size_t in_id, std::size_t out_id) override;
-
-private:
-    OutputWrapper<int>& ans_;
-    const BulkBoolOp bulk_op_;
-    const LogicalOperator op_;
-    const std::shared_ptr<BooleanVisitor> visitor_;
 };
 
 } // namespace wiserow
