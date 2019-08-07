@@ -51,14 +51,14 @@ public:
     bool operator()(const std::complex<double>& val) const override;
 
 protected:
-    template<typename T = BooleanVisitorDecorator>
-    bool forward(const bool val) const {
+    template<typename T>
+    bool forward(const T val, const bool ans) const {
         switch(op_) {
         case BoolOp::AND: {
-            return val && T::operator()(val);
+            return ans && BooleanVisitorDecorator::operator()(val);
         }
         case BoolOp::OR: {
-            return val || T::operator()(val);
+            return ans || BooleanVisitorDecorator::operator()(val);
         }
         }
 
@@ -67,12 +67,7 @@ protected:
 
 private:
     const BoolOp op_;
-    const std::shared_ptr<BooleanVisitor> visitor_;
-
-    template<typename T>
-    bool delegate(const T val) const {
-        return (*visitor_)(val);
-    }
+    const std::shared_ptr<BooleanVisitor> visitor_; // think of it as parent in decorator chain
 };
 
 } // namespace wiserow

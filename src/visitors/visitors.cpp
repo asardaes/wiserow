@@ -21,19 +21,19 @@ NAVisitor::NAVisitor(const BoolOp op, const std::shared_ptr<BooleanVisitor>& vis
 { }
 
 bool NAVisitor::operator()(const int val) const {
-    return forward(Rcpp::IntegerVector::is_na(val));
+    return forward(val, Rcpp::IntegerVector::is_na(val));
 }
 
 bool NAVisitor::operator()(const double val) const {
-    return forward(Rcpp::NumericVector::is_na(val));
+    return forward(val, Rcpp::NumericVector::is_na(val));
 }
 
 bool NAVisitor::operator()(const boost::string_ref val) const {
-    return forward(val.data() == na_string_ptr);
+    return forward(val, val.data() == na_string_ptr);
 }
 
 bool NAVisitor::operator()(const std::complex<double>& val) const {
-    return forward((*this)(val.real()) || (*this)(val.imag()));
+    return forward(val, (*this)(val.real()) || (*this)(val.imag()));
 }
 
 // =================================================================================================
@@ -44,19 +44,19 @@ InfiniteVisitor::InfiniteVisitor(const BoolOp op, const std::shared_ptr<BooleanV
 { }
 
 bool InfiniteVisitor::operator()(const int val) const {
-    return forward(false);
+    return forward(val, false);
 }
 
 bool InfiniteVisitor::operator()(const double val) const {
-    return forward(!na_visitor_(val) && !std::isfinite(val));
+    return forward(val, !na_visitor_(val) && !std::isfinite(val));
 }
 
 bool InfiniteVisitor::operator()(const boost::string_ref val) const {
-    return forward(false);
+    return forward(val, false);
 }
 
 bool InfiniteVisitor::operator()(const std::complex<double>& val) const {
-    return forward(!na_visitor_(val) && (!std::isfinite(val.real()) || !std::isfinite(val.imag())));
+    return forward(val, !na_visitor_(val) && (!std::isfinite(val.real()) || !std::isfinite(val.imag())));
 }
 
 } // namespace wiserow

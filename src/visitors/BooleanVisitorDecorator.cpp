@@ -29,20 +29,22 @@ BooleanVisitorDecorator::BooleanVisitorDecorator(const BoolOp op, const std::sha
     , visitor_(visitor)
 { }
 
+// these below will only be called when visitor_ points to InitBooleanVisitor
+
 bool BooleanVisitorDecorator::operator()(const int val) const {
-    return delegate(val);
+    return (*visitor_)(val);
 }
 
 bool BooleanVisitorDecorator::operator()(const double val) const {
-    return delegate(val);
+    return (*visitor_)(val);
 }
 
 bool BooleanVisitorDecorator::operator()(const boost::string_ref val) const {
-    return delegate(val);
+    return (*visitor_)(val);
 }
 
 bool BooleanVisitorDecorator::operator()(const std::complex<double>& val) const {
-    return delegate(val);
+    return (*visitor_)(val);
 }
 
 } // namespace wiserow
