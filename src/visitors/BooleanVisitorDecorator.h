@@ -43,31 +43,21 @@ private:
 class BooleanVisitorDecorator : public BooleanVisitor
 {
 public:
-    BooleanVisitorDecorator(const BoolOp op, const std::shared_ptr<BooleanVisitor>& visitor);
-
-    bool operator()(const int val) const override;
-    bool operator()(const double val) const override;
-    bool operator()(const boost::string_ref val) const override;
-    bool operator()(const std::complex<double>& val) const override;
+    BooleanVisitorDecorator(const BoolOp op, const std::shared_ptr<BooleanVisitor>& visitor, const bool negate);
 
 protected:
     template<typename T>
-    bool forward(const T val, const bool ans) const {
-        switch(op_) {
-        case BoolOp::AND: {
-            return ans && BooleanVisitorDecorator::operator()(val);
-        }
-        case BoolOp::OR: {
-            return ans || BooleanVisitorDecorator::operator()(val);
-        }
-        }
-
-        return false; // nocov
+    bool super(const T& val) const {
+        return (*parent_)(val);
     }
+
+    bool short_circuit(const bool val) const;
+    bool forward(const bool ans) const;
 
 private:
     const BoolOp op_;
-    const std::shared_ptr<BooleanVisitor> visitor_; // think of it as parent in decorator chain
+    const std::shared_ptr<BooleanVisitor> parent_;
+    const bool negate_;
 };
 
 } // namespace wiserow

@@ -18,7 +18,8 @@ void BoolTestWorker::work_row(std::size_t in_id, std::size_t out_id) {
     bool flag = bulk_op_ == BulkBoolOp::ALL ? true : false;
 
     for (std::size_t j = 0; j < col_collection_.ncol(); j++) {
-        flag = op_.apply(flag, boost::apply_visitor(*visitor_, col_collection_(in_id, j)));
+        supported_col_t variant = col_collection_(in_id, j);
+        flag = op_.apply(flag, boost::apply_visitor(*visitor_, variant));
 
         if (bulk_op_ == BulkBoolOp::ALL && !flag) {
             break;
@@ -60,6 +61,15 @@ InfTestWorker::InfTestWorker(const OperationMetadata& metadata,
                              OutputWrapper<int>& ans,
                              const BulkBoolOp bulk_op)
     : BoolTestWorker(metadata, cc, ans, bulk_op, BooleanVisitorBuilder().is_inf().build())
+{ }
+
+// =================================================================================================
+
+FiniteTestWorker::FiniteTestWorker(const OperationMetadata& metadata,
+                                   const ColumnCollection& cc,
+                                   OutputWrapper<int>& ans,
+                                   const BulkBoolOp bulk_op)
+    : BoolTestWorker(metadata, cc, ans, bulk_op, BooleanVisitorBuilder(BoolOp::AND, true).is_na(true).is_inf(true).build())
 { }
 
 } // namespace wiserow

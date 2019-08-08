@@ -24,27 +24,26 @@ bool InitBooleanVisitor::operator()(const std::complex<double>& val) const {
 
 // -------------------------------------------------------------------------------------------------
 
-BooleanVisitorDecorator::BooleanVisitorDecorator(const BoolOp op, const std::shared_ptr<BooleanVisitor>& visitor)
+BooleanVisitorDecorator::BooleanVisitorDecorator(const BoolOp op,
+                                                 const std::shared_ptr<BooleanVisitor>& visitor,
+                                                 const bool negate)
     : op_(op)
-    , visitor_(visitor)
+    , parent_(visitor)
+    , negate_(negate)
 { }
 
-// these below will only be called when visitor_ points to InitBooleanVisitor
-
-bool BooleanVisitorDecorator::operator()(const int val) const {
-    return (*visitor_)(val);
+bool BooleanVisitorDecorator::short_circuit(const bool val) const {
+    if ((op_ == BoolOp::AND && !val) || (op_ == BoolOp::OR && val)) {
+        return true;
+    }
+    else {
+        return false;
+    }
 }
 
-bool BooleanVisitorDecorator::operator()(const double val) const {
-    return (*visitor_)(val);
-}
-
-bool BooleanVisitorDecorator::operator()(const boost::string_ref val) const {
-    return (*visitor_)(val);
-}
-
-bool BooleanVisitorDecorator::operator()(const std::complex<double>& val) const {
-    return (*visitor_)(val);
+// if this is called, it means short_circuit was already tested
+bool BooleanVisitorDecorator::forward(const bool ans) const {
+    return ans ^ negate_; // XOR
 }
 
 } // namespace wiserow

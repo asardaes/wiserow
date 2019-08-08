@@ -7,13 +7,13 @@ BooleanVisitorBuilder::BooleanVisitorBuilder(const BoolOp op, const bool init)
     , visitor_(std::make_shared<InitBooleanVisitor>(init))
 { }
 
-BooleanVisitorBuilder& BooleanVisitorBuilder::is_na() {
-    visitor_ = std::make_shared<NAVisitor>(op_, visitor_);
+BooleanVisitorBuilder& BooleanVisitorBuilder::is_na(const bool negate) {
+    visitor_ = std::make_shared<NAVisitor>(op_, visitor_, negate);
     return *this;
 }
 
-BooleanVisitorBuilder& BooleanVisitorBuilder::is_inf() {
-    visitor_ = std::make_shared<InfiniteVisitor>(op_, visitor_);
+BooleanVisitorBuilder& BooleanVisitorBuilder::is_inf(const bool negate) {
+    visitor_ = std::make_shared<InfiniteVisitor>(op_, visitor_, negate);
     return *this;
 }
 

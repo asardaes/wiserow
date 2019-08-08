@@ -14,7 +14,7 @@ namespace wiserow {
 class InfiniteVisitor : public BooleanVisitorDecorator
 {
 public:
-    InfiniteVisitor(const BoolOp op, const std::shared_ptr<BooleanVisitor>& visitor);
+    InfiniteVisitor(const BoolOp op, const std::shared_ptr<BooleanVisitor>& visitor, const bool negate);
 
     bool operator()(const int val) const override;
     bool operator()(const double val) const override;

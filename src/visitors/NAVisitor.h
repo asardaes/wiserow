@@ -14,7 +14,7 @@ class NAVisitor : public BooleanVisitorDecorator
 {
 public:
     NAVisitor();
-    NAVisitor(const BoolOp op, const std::shared_ptr<BooleanVisitor>& visitor);
+    NAVisitor(const BoolOp op, const std::shared_ptr<BooleanVisitor>& visitor, const bool negate);
 
     bool operator()(const int val) const override;
     bool operator()(const double val) const override;

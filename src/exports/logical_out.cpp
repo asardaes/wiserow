@@ -51,9 +51,9 @@ void visit_with_bulk_bool_op(SEXP metadata, SEXP data, SEXP output, SEXP extras)
     }
 }
 
-extern "C" SEXP row_nas(SEXP metadata, SEXP data, SEXP output, SEXP extras) {
+extern "C" SEXP row_finites(SEXP metadata, SEXP data, SEXP output, SEXP extras) {
     BEGIN_RCPP
-    visit_with_bulk_bool_op<NATestWorker>(metadata, data, output, extras);
+    visit_with_bulk_bool_op<FiniteTestWorker>(metadata, data, output, extras);
     return R_NilValue;
     END_RCPP
 }
@@ -61,6 +61,13 @@ extern "C" SEXP row_nas(SEXP metadata, SEXP data, SEXP output, SEXP extras) {
 extern "C" SEXP row_infs(SEXP metadata, SEXP data, SEXP output, SEXP extras) {
     BEGIN_RCPP
     visit_with_bulk_bool_op<InfTestWorker>(metadata, data, output, extras);
+    return R_NilValue;
+    END_RCPP
+}
+
+extern "C" SEXP row_nas(SEXP metadata, SEXP data, SEXP output, SEXP extras) {
+    BEGIN_RCPP
+    visit_with_bulk_bool_op<NATestWorker>(metadata, data, output, extras);
     return R_NilValue;
     END_RCPP
 }

@@ -14,8 +14,8 @@ class BooleanVisitorBuilder
 public:
     BooleanVisitorBuilder(const BoolOp op = BoolOp::OR, const bool init = false);
 
-    BooleanVisitorBuilder& is_na();
-    BooleanVisitorBuilder& is_inf();
+    BooleanVisitorBuilder& is_na(const bool negate = false);
+    BooleanVisitorBuilder& is_inf(const bool negate = false);
 
     std::shared_ptr<BooleanVisitor> build();
 
