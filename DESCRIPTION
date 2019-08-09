@@ -6,6 +6,7 @@ Version: 0.0.1.9000
 Depends:
     R (>= 3.1.0)
 Imports:
+    data.table,
     glue,
     Rcpp (>= 1.0.1),
     RcppParallel (>= 4.4.0)
@@ -16,7 +17,7 @@ LinkingTo:
     RcppThread
 Suggests:
     testthat
-Date: 2019-08-03
+Date: 2019-08-09
 Authors@R: c(
         person("Alexis", "Sarda-Espinosa", role=c("cre", "aut"), email="alexis.sarda@gmail.com")
     )

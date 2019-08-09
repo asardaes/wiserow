@@ -42,21 +42,27 @@ row_sums.matrix <- function(.data, output_mode, ...) {
 #' @export
 #'
 row_sums.data.frame <- function(.data, output_mode, ...) {
-    input_modes <- sapply(.data, typeof)
+    dots <- list(...)
+    if (is.null(dots$input_modes)) {
+        dots$input_modes <- sapply(.data, typeof)
+    }
+
     out_mode_missing <- missing(output_mode)
 
     if (out_mode_missing) {
         output_mode <- "integer"
     }
 
-    metadata <- op_ctrl(input_class = "data.frame",
-                        input_modes = input_modes,
-                        output_mode = output_mode,
-                        ...)
+    dots <- c(dots, list(
+        input_class = "data.frame",
+        output_mode = output_mode
+    ))
 
+    metadata <- do.call(op_ctrl, dots)
     metadata <- validate_metadata(.data, metadata)
 
     if (out_mode_missing) {
+        input_modes <- metadata$input_modes
         if (length(input_modes) > 0L) {
             cols <- if (is.null(metadata$cols)) seq_along(input_modes) else metadata$cols
             supported <- input_modes[cols] != "character"
@@ -74,4 +80,13 @@ row_sums.data.frame <- function(.data, output_mode, ...) {
     }
 
     ans
+}
+
+#' @rdname row_sums
+#' @export
+#' @importFrom data.table .SD
+#'
+row_sums.data.table <- function(.data, ...) {
+    input_modes <- unlist(.data[, lapply(.SD, typeof)])
+    NextMethod("row_sums", .data, input_modes = input_modes)
 }

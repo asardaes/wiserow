@@ -326,3 +326,32 @@ test_that("row_sums for data frames works.", {
     ans <- row_sums(df, rows = -10L, cols = 7:9, na_action = "pass", output_mode = "logical")
     expect_identical(ans, expected)
 })
+
+test_that("row_sums for data tables works.", {
+    dt <- data.table::as.data.table(df[, sapply(df, typeof) != "character"])
+
+    considered_cols <- list(
+        1:3,
+        7:9,
+        c(1:3, 7:9),
+        1:9,
+        1:12
+    )
+
+    for (cols in considered_cols) {
+        expected <- rowSums(dt[1001:5000, ..cols], na.rm = TRUE)
+        names(expected) <- NULL
+
+        ans <- row_sums(dt, rows = 1001:5000, cols = cols, na_action = "exclude")
+        expect_equal(ans, expected)
+
+        ans <- row_sums(dt, rows = 1001:5000, cols = cols, na_action = "exclude", output_class = "list")
+        expect_equal(ans, as.list(expected))
+    }
+
+    # ----------------------------------------------------------------------------------------------
+
+    expected <- as.logical(rowSums(dt[-10L, 7:9]))
+    ans <- row_sums(dt, rows = -10L, cols = 7:9, na_action = "pass", output_mode = "logical")
+    expect_identical(ans, expected)
+})

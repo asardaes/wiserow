@@ -4,6 +4,7 @@
 \alias{row_sums}
 \alias{row_sums.matrix}
 \alias{row_sums.data.frame}
+\alias{row_sums.data.table}
 \title{Row-wise sum}
 \usage{
 row_sums(.data, ...)
@@ -11,6 +12,8 @@ row_sums(.data, ...)
 \method{row_sums}{matrix}(.data, output_mode, ...)
 
 \method{row_sums}{data.frame}(.data, output_mode, ...)
+
+\method{row_sums}{data.table}(.data, ...)
 }
 \arguments{
 \item{.data}{A two-dimensional data structure.}
