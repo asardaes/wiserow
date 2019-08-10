@@ -302,11 +302,11 @@ test_that("row_sums for data frames works.", {
     df <- df[, sapply(df, typeof) != "character"]
 
     considered_cols <- list(
-        1:3,
-        7:9,
-        c(1:3, 7:9),
-        1:9,
-        1:12
+        paste0("int.V", 1:3),
+        paste0("bool.V", 1:3),
+        c(paste0("int.V", 1:3), paste0("bool.V", 1:3)),
+        1:9, # no complex
+        1:12 # all
     )
 
     for (cols in considered_cols) {
@@ -316,7 +316,7 @@ test_that("row_sums for data frames works.", {
         ans <- row_sums(df, rows = 1001:5000, cols = cols, na_action = "exclude")
         expect_equal(ans, expected)
 
-        ans <- row_sums(df, rows = 1001:5000, cols = cols, na_action = "exclude", output_class = "list")
+        ans <- row_sums(df, rows = as.character(1001:5000), cols = cols, na_action = "exclude", output_class = "list")
         expect_equal(ans, as.list(expected))
     }
 

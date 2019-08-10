@@ -1,6 +1,13 @@
 context("  Miscellaneous")
 
-# these use row_sums as gateway because it was the first R function
+# some of these use row_sums as gateway because it was the first R function
+
+test_that("validate_metadata throws for invalid subset indices.", {
+    expect_error(wiserow:::validate_metadata(int_mat, list(rows = "foo")), regexp = "no row names")
+    expect_error(wiserow:::validate_metadata(int_mat, list(cols = "foo")), regexp = "no column names")
+    expect_error(wiserow:::validate_metadata(df, list(rows = "foo")), regexp = "cannot have NA")
+    expect_error(wiserow:::validate_metadata(df, list(cols = "foo")), regexp = "cannot have NA")
+})
 
 test_that("Functions will throw if control strings cannot be mapped to known enums.", {
     metadata <- op_ctrl(input_class = "mtx",

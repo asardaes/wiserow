@@ -25,18 +25,11 @@ num_workers <- function() {
 #' @importFrom glue glue
 #'
 validate_metadata <- function(.data, metadata) {
-    if (typeof(metadata$cols) == "double") {
-        metadata$cols <- as.integer(metadata$cols)
+    if (!is.null(metadata$cols)) {
+        metadata$cols <- handle_subset_ids(.data, metadata$cols, "column")
     }
-    else if (typeof(metadata$cols) == "logical") {
-        metadata$cols <- which(metadata$cols)
-    }
-
-    if (typeof(metadata$rows) == "double") {
-        metadata$rows <- as.integer(metadata$rows)
-    }
-    else if (typeof(metadata$rows) == "logical") {
-        metadata$rows <- which(metadata$rows)
+    if (!is.null(metadata$rows)) {
+        metadata$rows <- handle_subset_ids(.data, metadata$rows, "row")
     }
 
     nc <- ncol(.data)
@@ -59,6 +52,31 @@ validate_metadata <- function(.data, metadata) {
     }
 
     metadata
+}
+
+#' @importFrom glue glue
+#'
+handle_subset_ids <- function(.data, ids, which_dim) {
+    ans <- switch(typeof(ids),
+                  "double" = as.integer(ids),
+                  "logical" = which(ids),
+                  "character" = {
+                      nms <- if (which_dim == "column") colnames(.data) else rownames(.data)
+                      if (is.null(nms)) {
+                          stop(glue::glue("Cannot index { which_dim }s with characters if ",
+                                          "no { which_dim } names are present."))
+                      }
+
+                      match(ids, nms)
+                  },
+                  # default
+                  ids)
+
+    if (anyNA(ans)) {
+        stop("Subsetting indices (rows/cols) cannot have NA values.")
+    }
+
+    ans
 }
 
 #' @importFrom glue glue

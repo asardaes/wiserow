@@ -6,8 +6,8 @@
 #' @param output_class One of ("vector", "list"). Possibly abbreviated.
 #' @param na_action One of ("exclude", "pass"). Possibly abbreviated.
 #' @param cols A vector indicating which columns to consider for the operation. If `NULL`, all
-#'   columns are used. If its length is 0, no columns are considered. Negative and logical values
-#'   are supported.
+#'   columns are used. If its length is 0, no columns are considered. Negative numbers, logical
+#'   values , and character vectors representing row/column names are supported.
 #' @param rows Like `cols` but for row indices.
 #' @param ... Internal.
 #'
