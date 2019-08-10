@@ -8,7 +8,7 @@
 #'
 #' @template data-param
 #' @template generic-choices
-#' @inheritDotParams op_ctrl -output_mode -na_action
+#' @inheritDotParams op_ctrl -output_mode -na_action -factor_mode
 #'
 row_infs <- function(.data, which_cols = "none", ...) {
     UseMethod("row_infs")
@@ -53,7 +53,8 @@ row_infs.data.frame <- function(.data, which_cols = "none", ...) {
     dots <- c(dots, list(
         input_class = "data.frame",
         output_mode = "logical",
-        na_action = "pass"
+        na_action = "pass",
+        factor_mode = "integer"
     ))
 
     metadata <- do.call(op_ctrl, dots)

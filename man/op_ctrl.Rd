@@ -5,20 +5,24 @@
 \title{Operation's control parameters}
 \usage{
 op_ctrl(output_mode, output_class = "vector", na_action = "exclude",
-  cols = NULL, rows = NULL, ...)
+  cols = NULL, rows = NULL, factor_mode = "character", ...)
 }
 \arguments{
 \item{output_mode}{Desired \code{\link[base:storage.mode]{base::storage.mode()}} for the result.}
 
-\item{output_class}{One of ("vector", "list"). Possibly abbreviated.}
+\item{output_class}{One of ("vector", "list"), possibly abbreviated.}
 
-\item{na_action}{One of ("exclude", "pass"). Possibly abbreviated.}
+\item{na_action}{One of ("exclude", "pass"), possibly abbreviated.}
 
 \item{cols}{A vector indicating which columns to consider for the operation. If \code{NULL}, all
 columns are used. If its length is 0, no columns are considered. Negative numbers, logical
 values , and character vectors representing row/column names are supported.}
 
 \item{rows}{Like \code{cols} but for row indices.}
+
+\item{factor_mode}{One of ("integer", "character"), possibly abbreviated. If a column is a
+factor, this determines whether the operation uses its internal integer values, or the
+character values from its levels.}
 
 \item{...}{Internal.}
 }

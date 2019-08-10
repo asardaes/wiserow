@@ -51,6 +51,8 @@ public:
 
     const surrogate_vector cols;
     const surrogate_vector rows;
+
+    const R_vec_t factor_mode;
 };
 
 } // namespace wiserow

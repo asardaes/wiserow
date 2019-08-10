@@ -453,3 +453,25 @@ test_that("row_nas behaves like in R for infinite/NaN values.", {
     expect_true(row_nas(df, "none"))
     expect_true(row_nas(data.frame(NaN), "any"))
 })
+
+test_that("row_nas for factor columns works.", {
+    df <- as.data.frame(lapply(df[, paste0("char.V", 1:3)], as.factor))
+
+    expected <- sapply(4001:5000, df = df, function(i, df) { all(is.na(df[i, , drop = FALSE])) })
+    ans <- row_nas(df, "all", rows = 4001:5000)
+    expect_identical(ans, expected)
+    ans <- row_nas(df, "all", rows = 4001:5000, output_class = "list", factor_mode = "int")
+    expect_identical(ans, as.list(expected))
+
+    expected <- sapply(4001:5000, df = df, function(i, df) { all(!is.na(df[i, , drop = FALSE])) })
+    ans <- row_nas(df, "none", rows = 4001:5000)
+    expect_identical(ans, expected)
+    ans <- row_nas(df, "none", rows = 4001:5000, output_class = "list", factor_mode = "int")
+    expect_identical(ans, as.list(expected))
+
+    expected <- sapply(4001:5000, df = df, function(i, df) { anyNA(df[i, , drop = FALSE]) })
+    ans <- row_nas(df, "any", rows = 4001:5000)
+    expect_identical(ans, expected)
+    ans <- row_nas(df, "any", rows = 4001:5000, output_class = "list", factor_mode = "int")
+    expect_identical(ans, as.list(expected))
+})

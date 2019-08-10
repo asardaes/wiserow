@@ -84,7 +84,25 @@ DataFrameColumnCollection::DataFrameColumnCollection(const Rcpp::DataFrame& df, 
         switch(metadata.input_modes[current_j]) {
         case INTSXP: {
             Rcpp::IntegerVector vec(df[current_j]);
-            columns_.push_back(std::make_shared<SurrogateColumn<int>>(&vec[0], vec.length()));
+
+            if (!Rf_isFactor(df[current_j]) || metadata.factor_mode == INTSXP) {
+                columns_.push_back(std::make_shared<SurrogateColumn<int>>(&vec[0], vec.length()));
+            }
+            else {
+                Rcpp::StringVector levels = vec.attr("levels");
+                Rcpp::StringVector factors(vec.length());
+                for (R_xlen_t i = 0; i < vec.length(); i++) {
+                    if (Rcpp::IntegerVector::is_na(vec[i])) {
+                        factors[i] = NA_STRING;
+                    }
+                    else {
+                        factors[i] = levels[vec[i] - 1];
+                    }
+                }
+
+                columns_.push_back(std::make_shared<SurrogateColumn<Rcpp::StringVector>>(factors));
+            }
+
             break;
         }
         case REALSXP: {

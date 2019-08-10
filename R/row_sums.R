@@ -3,7 +3,7 @@
 #' @export
 #'
 #' @template data-param
-#' @inheritDotParams op_ctrl -output_mode
+#' @inheritDotParams op_ctrl -output_mode -factor_mode
 #' @param output_mode Output's [base::storage.mode()]. If missing, it will be inferred.
 #'
 row_sums <- function(.data, ...) {
@@ -55,7 +55,8 @@ row_sums.data.frame <- function(.data, output_mode, ...) {
 
     dots <- c(dots, list(
         input_class = "data.frame",
-        output_mode = output_mode
+        output_mode = output_mode,
+        factor_mode = "integer"
     ))
 
     metadata <- do.call(op_ctrl, dots)

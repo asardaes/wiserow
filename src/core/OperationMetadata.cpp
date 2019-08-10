@@ -110,6 +110,7 @@ OperationMetadata::OperationMetadata(const Rcpp::List& metadata)
     , na_action(parse_na_action(metadata))
     , cols(coerce_subset_indices(metadata["cols"]))
     , rows(coerce_subset_indices(metadata["rows"]))
+    , factor_mode(parse_mode(get_string(metadata, "factor_mode")))
 { }
 
 } // namespace wiserow
