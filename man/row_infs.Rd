@@ -4,6 +4,7 @@
 \alias{row_infs}
 \alias{row_infs.matrix}
 \alias{row_infs.data.frame}
+\alias{row_infs.data.table}
 \title{Check if a row's columns have infinite values}
 \usage{
 row_infs(.data, which_cols = "none", ...)
@@ -11,6 +12,8 @@ row_infs(.data, which_cols = "none", ...)
 \method{row_infs}{matrix}(.data, which_cols = "none", ...)
 
 \method{row_infs}{data.frame}(.data, which_cols = "none", ...)
+
+\method{row_infs}{data.table}(.data, ...)
 }
 \arguments{
 \item{.data}{A two-dimensional data structure.}

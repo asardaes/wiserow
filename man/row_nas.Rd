@@ -4,6 +4,7 @@
 \alias{row_nas}
 \alias{row_nas.matrix}
 \alias{row_nas.data.frame}
+\alias{row_nas.data.table}
 \title{Check if a row's columns have missing values}
 \usage{
 row_nas(.data, which_cols = "none", ...)
@@ -11,6 +12,8 @@ row_nas(.data, which_cols = "none", ...)
 \method{row_nas}{matrix}(.data, which_cols = "none", ...)
 
 \method{row_nas}{data.frame}(.data, which_cols = "none", ...)
+
+\method{row_nas}{data.table}(.data, ...)
 }
 \arguments{
 \item{.data}{A two-dimensional data structure.}

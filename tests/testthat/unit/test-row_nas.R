@@ -428,6 +428,26 @@ test_that("row_nas for data frames works.", {
     expect_identical(ans, as.list(expected))
 })
 
+test_that("row_nas for data tables works.", {
+    expected <- sapply(4001:5000, df = df, function(i, df) { all(is.na(df[i, , drop = FALSE])) })
+    ans <- row_nas(dt, "all", rows = 4001:5000)
+    expect_identical(ans, expected)
+    ans <- row_nas(dt, "all", rows = 4001:5000, output_class = "list")
+    expect_identical(ans, as.list(expected))
+
+    expected <- sapply(4001:5000, df = df, function(i, df) { all(!is.na(df[i, , drop = FALSE])) })
+    ans <- row_nas(dt, "none", rows = 4001:5000)
+    expect_identical(ans, expected)
+    ans <- row_nas(dt, "none", rows = 4001:5000, output_class = "list")
+    expect_identical(ans, as.list(expected))
+
+    expected <- sapply(4001:5000, df = df, function(i, df) { anyNA(df[i, , drop = FALSE]) })
+    ans <- row_nas(dt, "any", rows = 4001:5000)
+    expect_identical(ans, expected)
+    ans <- row_nas(dt, "any", rows = 4001:5000, output_class = "list")
+    expect_identical(ans, as.list(expected))
+})
+
 test_that("row_nas behaves like in R for infinite/NaN values.", {
     df <- data.frame(Inf, -Inf, as.complex(Inf), as.complex(-Inf))
     expect_true(row_nas(df, "none"))

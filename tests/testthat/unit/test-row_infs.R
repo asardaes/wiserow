@@ -6,15 +6,16 @@ test_that("row_infs works as expected.", {
 
     df[, dbl_cols] <- lapply(df[, dbl_cols], function(x) { replace(x, is.na(x), Inf) })
     df[, cplx_cols] <- lapply(df[, cplx_cols], function(x) { replace(x, is.na(x), as.complex(Inf)) })
+    dt <- data.table::as.data.table(df)
 
     expected <- sapply(4001:5000, df = df, function(i, df) { all(sapply(df[i, , drop = FALSE], is.infinite)) })
     ans <- row_infs(df, "all", rows = 4001:5000)
     expect_identical(ans, expected)
-    ans <- row_infs(df, "all", rows = 4001:5000, output_class = "list")
+    ans <- row_infs(dt, "all", rows = 4001:5000, output_class = "list")
     expect_identical(ans, as.list(expected))
 
     expected <- sapply(4001:5000, df = df, function(i, df) { all(!sapply(df[i, , drop = FALSE], is.infinite)) })
-    ans <- row_infs(df, "none", rows = 4001:5000)
+    ans <- row_infs(dt, "none", rows = 4001:5000)
     expect_identical(ans, expected)
     ans <- row_infs(df, "none", rows = 4001:5000, output_class = "list")
     expect_identical(ans, as.list(expected))
@@ -22,7 +23,7 @@ test_that("row_infs works as expected.", {
     expected <- sapply(4001:5000, df = df, function(i, df) { any(sapply(df[i, , drop = FALSE], is.infinite)) })
     ans <- row_infs(df, "any", rows = 4001:5000)
     expect_identical(ans, expected)
-    ans <- row_infs(df, "any", rows = 4001:5000, output_class = "list")
+    ans <- row_infs(dt, "any", rows = 4001:5000, output_class = "list")
     expect_identical(ans, as.list(expected))
 
     expect_true(all(row_infs(int_na_mat, "none")))

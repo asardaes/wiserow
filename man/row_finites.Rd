@@ -4,6 +4,7 @@
 \alias{row_finites}
 \alias{row_finites.matrix}
 \alias{row_finites.data.frame}
+\alias{row_finites.data.table}
 \title{Check if a row's columns have finite values}
 \usage{
 row_finites(.data, which_cols = "none", ...)
@@ -11,6 +12,8 @@ row_finites(.data, which_cols = "none", ...)
 \method{row_finites}{matrix}(.data, which_cols = "none", ...)
 
 \method{row_finites}{data.frame}(.data, which_cols = "none", ...)
+
+\method{row_finites}{data.table}(.data, ...)
 }
 \arguments{
 \item{.data}{A two-dimensional data structure.}
