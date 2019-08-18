@@ -4,6 +4,8 @@
 
 #include <Rcpp.h>
 
+#include "boolean-visitors.h"
+
 namespace wiserow {
 
 // Singleton, if address is same, string is NA

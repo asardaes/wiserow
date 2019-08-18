@@ -16,6 +16,16 @@
     "pass"
 )
 
+.supported_comp_operators <- c(
+    "==",
+    "!=",
+    "<",
+    "<=",
+    ">",
+    ">=",
+    "is"
+)
+
 #' @importFrom RcppParallel defaultNumThreads
 #'
 num_workers <- function() {

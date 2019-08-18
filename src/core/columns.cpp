@@ -59,6 +59,10 @@ std::size_t ColumnCollection::nrow() const {
     return nrow_;
 }
 
+std::shared_ptr<const VariantColumn> ColumnCollection::operator[](const std::size_t j) const {
+    return columns_[j];
+}
+
 const supported_col_t ColumnCollection::operator()(const std::size_t i, const std::size_t j) const {
     return (*(columns_[j]))[i];
 }
@@ -112,7 +116,7 @@ DataFrameColumnCollection::DataFrameColumnCollection(const Rcpp::DataFrame& df, 
         }
         case LGLSXP: {
             Rcpp::LogicalVector vec(df[current_j]);
-            columns_.push_back(std::make_shared<SurrogateColumn<int>>(&vec[0], vec.length()));
+            columns_.push_back(std::make_shared<SurrogateColumn<int>>(&vec[0], vec.length(), true));
             break;
         }
         case STRSXP: {

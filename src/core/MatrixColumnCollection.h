@@ -18,15 +18,17 @@ public:
     MatrixColumnCollection(const Rcpp::Matrix<RT>& mat, const surrogate_vector& cols)
         : ColumnCollection(mat.nrow())
     {
+        bool is_logical = RT == LGLSXP;
+
         if (cols.ptr) {
             for (std::size_t i = 0; i < cols.len; i++) {
                 int j = cols.ptr[i] - 1;
-                columns_.push_back(std::make_shared<SurrogateColumn<T>>(&mat[j * nrow_], nrow_));
+                columns_.push_back(std::make_shared<SurrogateColumn<T>>(&mat[j * nrow_], nrow_, is_logical));
             }
         }
         else if (cols.is_null) {
             for (int j = 0; j < mat.ncol(); j++) {
-                columns_.push_back(std::make_shared<SurrogateColumn<T>>(&mat[j * nrow_], nrow_));
+                columns_.push_back(std::make_shared<SurrogateColumn<T>>(&mat[j * nrow_], nrow_, is_logical));
             }
         }
     }

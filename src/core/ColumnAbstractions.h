@@ -22,6 +22,11 @@ class VariantColumn
 public:
     virtual ~VariantColumn() {}
     virtual const supported_col_t operator[](const std::size_t id) const = 0;
+
+    // sometimes we need to know
+    virtual bool is_logical() const {
+        return false;
+    }
 };
 
 // =================================================================================================
@@ -37,6 +42,7 @@ public:
     std::size_t nrow() const;
     std::size_t ncol() const;
 
+    std::shared_ptr<const VariantColumn> operator[](const std::size_t j) const;
     const supported_col_t operator()(const std::size_t i, const std::size_t j) const;
 
 protected:

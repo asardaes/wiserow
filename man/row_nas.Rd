@@ -25,7 +25,7 @@ row_nas(.data, which_cols = "none", ...)
   \item{output_class}{One of ("vector", "list"), possibly abbreviated.}
   \item{cols}{A vector indicating which columns to consider for the operation. If \code{NULL}, all
 columns are used. If its length is 0, no columns are considered. Negative numbers, logical
-values , and character vectors representing row/column names are supported.}
+values, and character vectors representing column names are supported.}
   \item{rows}{Like \code{cols} but for row indices.}
   \item{factor_mode}{One of ("integer", "character"), possibly abbreviated. If a column is a
 factor, this determines whether the operation uses its internal integer values, or the

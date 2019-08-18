@@ -1,5 +1,7 @@
 #include "BooleanVisitorBuilder.h"
 
+#include "boolean-visitors.h"
+
 namespace wiserow {
 
 BooleanVisitorBuilder::BooleanVisitorBuilder(const BoolOp op, const bool init)

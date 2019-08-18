@@ -8,7 +8,7 @@
 
 #include "../core.h"
 #include "../utils.h"
-#include "../visitors.h"
+#include "../visitors/boolean-visitors.h"
 
 namespace wiserow {
 

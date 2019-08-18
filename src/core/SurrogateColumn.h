@@ -18,9 +18,10 @@ template<typename T>
 class SurrogateColumn : public VariantColumn
 {
 public:
-    SurrogateColumn(T const * const data_ptr, const std::size_t size)
+    SurrogateColumn(T const * const data_ptr, const std::size_t size, const bool is_logical = false)
         : data_ptr_(data_ptr)
         , size_(size)
+        , is_logical_(is_logical)
     { }
 
     const supported_col_t operator[](const std::size_t id) const override {
@@ -34,9 +35,14 @@ public:
         return supported_col_t(data_ptr_[id]);
     }
 
+    virtual bool is_logical() const override {
+        return is_logical_;
+    }
+
 private:
     T const * const data_ptr_;
     const std::size_t size_;
+    const bool is_logical_;
 };
 
 // -------------------------------------------------------------------------------------------------

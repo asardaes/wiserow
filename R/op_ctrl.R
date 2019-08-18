@@ -7,7 +7,7 @@
 #' @param na_action One of ("exclude", "pass"), possibly abbreviated.
 #' @param cols A vector indicating which columns to consider for the operation. If `NULL`, all
 #'   columns are used. If its length is 0, no columns are considered. Negative numbers, logical
-#'   values , and character vectors representing row/column names are supported.
+#'   values, and character vectors representing column names are supported.
 #' @param rows Like `cols` but for row indices.
 #' @param factor_mode One of ("integer", "character"), possibly abbreviated. If a column is a
 #'   factor, this determines whether the operation uses its internal integer values, or the
