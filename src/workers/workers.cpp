@@ -83,81 +83,35 @@ FiniteTestWorker::FiniteTestWorker(const OperationMetadata& metadata,
 
 // =================================================================================================
 
-std::shared_ptr<BooleanVisitor> get_comp_visitor(const CompOp& comp_op,
-                                                 const SEXP& target_val,
-                                                 bool& na_target,
-                                                 char*& char_target)
-{
-    bool negate = comp_op == CompOp::EQ ? false : true;
+struct target_traits {
+    bool is_na;
+    char* char_target;
+};
 
-    switch(TYPEOF(target_val)) {
-    case INTSXP: {
-        Rcpp::IntegerVector vec(target_val);
-        int val = vec[0];
-
-        if (Rcpp::IntegerVector::is_na(val)) {
-            na_target = true;
-            return BooleanVisitorBuilder().is_na(negate).build();
-        }
-        else {
-            return BooleanVisitorBuilder(BoolOp::AND, true).compare(comp_op, val).build();
-        }
-    }
-    case REALSXP: {
-        Rcpp::NumericVector vec(target_val);
-        double val = vec[0];
-
-        if (Rcpp::NumericVector::is_na(val)) {
-            na_target = true;
-            return BooleanVisitorBuilder().is_na(negate).build();
-        }
-        else {
-            return BooleanVisitorBuilder(BoolOp::AND, true).compare(comp_op, val).build();
-        }
-    }
-    case LGLSXP: {
-        Rcpp::LogicalVector vec(target_val);
-        int val = vec[0];
-
-        if (Rcpp::LogicalVector::is_na(val)) {
-            na_target = true;
-            return BooleanVisitorBuilder().is_na(negate).build();
-        }
-        else {
-            return BooleanVisitorBuilder(BoolOp::AND, true).compare(comp_op, val != 0).build();
-        }
-    }
-    case CPLXSXP: {
-        Rcpp::ComplexVector vec(target_val);
-        Rcomplex val = vec[0];
-
-        if (Rcpp::ComplexVector::is_na(val)) {
-            na_target = true;
-            return BooleanVisitorBuilder().is_na(negate).build();
-        }
-        else {
-            return BooleanVisitorBuilder(BoolOp::AND, true).compare(comp_op, std::complex<double>(val.r, val.i)).build();
-        }
-    }
+target_traits get_target_traits(const SEXP& target) {
+    switch(TYPEOF(target)) {
+    case INTSXP:
+        return { Rcpp::traits::is_na<INTSXP>(Rcpp::as<int>(target)), nullptr };
+    case REALSXP:
+        return { Rcpp::traits::is_na<REALSXP>(Rcpp::as<double>(target)), nullptr };
+    case LGLSXP:
+        return { Rcpp::traits::is_na<LGLSXP>(Rcpp::as<int>(target)), nullptr };
+    case CPLXSXP:
+        return { Rcpp::traits::is_na<CPLXSXP>(Rcpp::as<Rcomplex>(target)), nullptr };
     case STRSXP: {
-        Rcpp::StringVector vec(target_val);
+        Rcpp::StringVector vec(target);
 
         if (Rcpp::traits::is_na<STRSXP>(vec[0])) {
-            na_target = true;
-            return BooleanVisitorBuilder().is_na(negate).build();
+            return { true, nullptr };
         }
         else {
             Rcpp::CharacterVector val = Rcpp::as<Rcpp::CharacterVector>(vec[0]);
             char *val_ptr = (char *)(val[0]);
-            boost::string_ref str_ref(val_ptr);
-
-            char_target = val_ptr;
-            return BooleanVisitorBuilder(BoolOp::AND, true).compare(comp_op, str_ref).build();
+            return { false, val_ptr };
         }
     }
-    default: {
+    default:
         Rcpp::stop("[wiserow] target values for comparison can only be integers, doubles, logicals, complex numbers, or strings.");
-    }
     }
 }
 
@@ -178,11 +132,10 @@ ComparisonWorker::ComparisonWorker(const OperationMetadata& metadata,
     , comp_operator_(comp_op_)
 {
     for (R_xlen_t i = 0; i < target_vals.length(); i++) {
-        bool na_target = false;
-        char *char_target = nullptr;
-        visitors_.push_back(get_comp_visitor(comp_op_, target_vals[i], na_target, char_target));
-        na_targets_.push_back(na_target);
-        char_targets_.push_back(char_target);
+        target_traits tt = get_target_traits(target_vals[i]);
+        visitors_.push_back(BooleanVisitorBuilder().compare(comp_op_, target_vals[i]).build());
+        na_targets_.push_back(tt.is_na);
+        char_targets_.push_back(tt.char_target);
     }
 }
 
