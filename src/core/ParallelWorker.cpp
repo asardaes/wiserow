@@ -24,6 +24,8 @@ void ParallelWorker::operator()(std::size_t begin, std::size_t end) {
     if (eptr) return;
 
     try {
+        set_up_thread();
+
         for (std::size_t id = begin; id < end; id++) {
             if (eptr || is_interrupted(id)) break;
 
@@ -34,9 +36,9 @@ void ParallelWorker::operator()(std::size_t begin, std::size_t end) {
         mutex_.lock();
         if (!eptr) eptr = std::current_exception();
         mutex_.unlock();
-        return;
     }
 
+    clean_thread();
     // make sure this is called at least once per thread call
     RcppThread::isInterrupted();
 }

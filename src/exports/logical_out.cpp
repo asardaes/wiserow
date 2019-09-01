@@ -101,15 +101,18 @@ extern "C" SEXP row_compare(SEXP metadata, SEXP data, SEXP output, SEXP extras) 
     std::shared_ptr<OutputWrapper<int>> wrapper_ptr = get_wrapper_ptr(metadata_, output);
 
     if (bulk_bool_op == "all") {
-        ComparisonWorker worker(metadata_, col_collection, *wrapper_ptr, BulkBoolOp::ALL, comp_op, target_val);
+        CompBasedIntWorker worker(metadata_, col_collection, *wrapper_ptr,comp_op, target_val);
+        worker.out_strategy = std::make_shared<BulkBoolStrategy>(BulkBoolOp::ALL, metadata_.na_action);
         parallel_for(worker);
     }
     else if (bulk_bool_op == "any") {
-        ComparisonWorker worker(metadata_, col_collection, *wrapper_ptr, BulkBoolOp::ANY, comp_op, target_val);
+        CompBasedIntWorker worker(metadata_, col_collection, *wrapper_ptr, comp_op, target_val);
+        worker.out_strategy = std::make_shared<BulkBoolStrategy>(BulkBoolOp::ANY, metadata_.na_action);
         parallel_for(worker);
     }
     else if (bulk_bool_op == "none") {
-        ComparisonWorker worker(metadata_, col_collection, *wrapper_ptr, BulkBoolOp::NONE, comp_op, target_val);
+        CompBasedIntWorker worker(metadata_, col_collection, *wrapper_ptr, comp_op, target_val);
+        worker.out_strategy = std::make_shared<BulkBoolStrategy>(BulkBoolOp::NONE, metadata_.na_action);
         parallel_for(worker);
     }
 

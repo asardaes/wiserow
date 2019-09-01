@@ -1,6 +1,7 @@
 #include "../workers.h"
 
 #include <complex>
+#include <stdexcept> // logic_error
 #include <string>
 
 #include <boost/utility/string_ref.hpp>
@@ -105,9 +106,7 @@ target_traits get_target_traits(const SEXP& target) {
             return { true, nullptr };
         }
         else {
-            Rcpp::CharacterVector val = Rcpp::as<Rcpp::CharacterVector>(vec[0]);
-            char *val_ptr = (char *)(val[0]);
-            return { false, val_ptr };
+            return { false, vec[0] };
         }
     }
     default:
@@ -115,19 +114,17 @@ target_traits get_target_traits(const SEXP& target) {
     }
 }
 
+thread_local std::shared_ptr<IntOutputStrategy> CompBasedIntWorker::thread_local_strategy_ = nullptr;
+
 // -------------------------------------------------------------------------------------------------
 
-ComparisonWorker::ComparisonWorker(const OperationMetadata& metadata,
-                                   const ColumnCollection& cc,
-                                   OutputWrapper<int>& ans,
-                                   const BulkBoolOp bulk_op,
-                                   const SEXP& comp_op,
-                                   const Rcpp::List& target_vals)
+CompBasedIntWorker::CompBasedIntWorker(const OperationMetadata& metadata,
+                                       const ColumnCollection& cc,
+                                       OutputWrapper<int>& ans,
+                                       const SEXP& comp_op,
+                                       const Rcpp::List& target_vals)
     : ParallelWorker(metadata, cc)
-    , na_action_(metadata.na_action)
     , ans_(ans)
-    , bulk_op_(bulk_op)
-    , op_(bulk_op == BulkBoolOp::ALL ? BoolOp::AND : BoolOp::OR)
     , comp_op_(parse_comp_op(Rcpp::as<std::string>(comp_op)))
     , comp_operator_(comp_op_)
 {
@@ -141,23 +138,42 @@ ComparisonWorker::ComparisonWorker(const OperationMetadata& metadata,
 
 // -------------------------------------------------------------------------------------------------
 
-void ComparisonWorker::work_row(std::size_t in_id, std::size_t out_id) {
-    bool flag = bulk_op_ == BulkBoolOp::ALL ? true : false;
+void CompBasedIntWorker::set_up_thread() {
+    if (!out_strategy) { // nocov start
+        throw std::logic_error("Output strategy has not been set.");
+    } // nocov end
+
+    thread_local_strategy_ = out_strategy->clone();
+}
+
+// -------------------------------------------------------------------------------------------------
+
+void CompBasedIntWorker::clean_thread() {
+    if (thread_local_strategy_) {
+        thread_local_strategy_->reset();
+    }
+}
+
+// -------------------------------------------------------------------------------------------------
+
+void CompBasedIntWorker::work_row(std::size_t in_id, std::size_t out_id) {
+    if (!thread_local_strategy_) { // nocov start
+        throw std::logic_error("Thread-local output strategy has not been set.");
+    } // nocov end
+
     bool any_na = false;
+    thread_local_strategy_->reset();
 
     for (std::size_t j = 0; j < col_collection_.ncol(); j++) {
         auto visitor = visitors_[j % visitors_.size()];
         bool na_target = na_targets_[j % na_targets_.size()];
-        char *char_target = char_targets_[j % char_targets_.size()];
+        const char *char_target = char_targets_[j % char_targets_.size()];
         supported_col_t variant = col_collection_(in_id, j);
 
         if (!na_target) {
             bool is_na = boost::apply_visitor(na_visitor_, variant);
             if (is_na) {
-                if (na_action_ == NaAction::PASS) {
-                    any_na = true;
-                }
-
+                if (metadata.na_action == NaAction::PASS) any_na = true;
                 continue;
             }
         }
@@ -171,54 +187,90 @@ void ComparisonWorker::work_row(std::size_t in_id, std::size_t out_id) {
             // tricky case when source is R-logical (with underlying int) that should be converted to string
             bool variant_bool = boost::get<int>(variant) != 0;
             boost::string_ref str_ref(char_target);
-            flag = op_.apply(flag, comp_operator_.apply(variant_bool, str_ref));
+            thread_local_strategy_->apply(j, comp_operator_.apply(variant_bool, str_ref));
         }
         else {
-            flag = op_.apply(flag, boost::apply_visitor(*visitor, variant));
+            thread_local_strategy_->apply(j, boost::apply_visitor(*visitor, variant));
         }
 
-        // maybe don't break because R's all/any still check all values for NA when na.rm = FALSE
-        if (na_action_ == NaAction::EXCLUDE) {
-            if (bulk_op_ == BulkBoolOp::ALL && !flag) {
-                break;
-            }
-            else if (flag && (bulk_op_ == BulkBoolOp::ANY || bulk_op_ == BulkBoolOp::NONE)) {
-                break;
-            }
+        if (thread_local_strategy_->short_circuit()) {
+            break;
         }
     }
 
-    switch(bulk_op_) {
+    ans_[out_id] = thread_local_strategy_->output(col_collection_.ncol(), any_na);
+}
+
+// =================================================================================================
+
+BulkBoolStrategy::BulkBoolStrategy(const BulkBoolOp& bb_op, const NaAction& na_action)
+    : bb_op_(bb_op)
+    , logical_operator_(bb_op == BulkBoolOp::ALL ? BoolOp::AND : BoolOp::OR)
+    , na_action_(na_action)
+    , init_(bb_op == BulkBoolOp::ALL ? true : false)
+    , flag_(init_)
+{ }
+
+void BulkBoolStrategy::reset() {
+    flag_ = init_;
+}
+
+bool BulkBoolStrategy::short_circuit() {
+    // maybe don't break because R's all/any still check all values for NA when na.rm = FALSE
+    if (na_action_ == NaAction::EXCLUDE) {
+        if (bb_op_ == BulkBoolOp::ALL && !flag_) {
+            return true;
+        }
+        else if (flag_ && (bb_op_ == BulkBoolOp::ANY || bb_op_ == BulkBoolOp::NONE)) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+void BulkBoolStrategy::apply(const std::size_t, const bool flag) {
+    flag_ = logical_operator_.apply(flag_, flag);
+}
+
+int BulkBoolStrategy::output(const std::size_t ncol, const bool any_na) {
+    switch(bb_op_) {
     case BulkBoolOp::ALL: {
-        if (col_collection_.ncol() > 0) {
-            if (flag && any_na) {
-                ans_[out_id] = NA_INTEGER;
+        if (ncol > 0) {
+            if (flag_ && any_na) {
+                return NA_INTEGER;
             }
             else {
-                ans_[out_id] = flag;
+                return flag_;
             }
         }
-        break;
+        else {
+            return 0;
+        }
     }
     case BulkBoolOp::ANY: {
-        if (!flag && any_na) {
-            ans_[out_id] = NA_INTEGER;
+        if (!flag_ && any_na) {
+            return NA_INTEGER;
         }
         else {
-            ans_[out_id] = flag;
+            return flag_;
         }
-        break;
     }
     case BulkBoolOp::NONE: {
-        if (!flag && any_na) {
-            ans_[out_id] = NA_INTEGER;
+        if (!flag_ && any_na) {
+            return NA_INTEGER;
         }
         else {
-            ans_[out_id] = !flag;
+            return !flag_;
         }
-        break;
     }
     }
+
+    return NA_INTEGER; // nocov
+}
+
+std::shared_ptr<IntOutputStrategy> BulkBoolStrategy::clone() {
+    return std::make_shared<BulkBoolStrategy>(this->bb_op_, this->na_action_);
 }
 
 } // namespace wiserow
