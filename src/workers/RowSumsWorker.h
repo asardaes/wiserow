@@ -21,7 +21,7 @@ public:
         , ans_(ans)
     { }
 
-    void work_row(std::size_t in_id, std::size_t out_id) override {
+    thread_local_ptr work_row(std::size_t in_id, std::size_t out_id, thread_local_ptr) override {
         for (std::size_t j = 0; j < col_collection_.ncol(); j++) {
             bool is_na = boost::apply_visitor(na_visitor_, col_collection_(in_id, j));
 
@@ -35,6 +35,8 @@ public:
                 ans_[out_id] += boost::apply_visitor(visitor_, col_collection_(in_id, j));
             }
         }
+
+        return nullptr;
     }
 
 private:
@@ -57,7 +59,7 @@ public:
         , ans_(ans)
     { }
 
-    void work_row(std::size_t in_id, std::size_t out_id) override {
+    thread_local_ptr work_row(std::size_t in_id, std::size_t out_id, thread_local_ptr) override {
         for (std::size_t j = 0; j < col_collection_.ncol(); j++) {
             bool is_na = boost::apply_visitor(na_visitor_, col_collection_(in_id, j));
 
@@ -76,6 +78,8 @@ public:
         if (metadata.output_mode == LGLSXP && ans != na_value_ && ans > 1) {
             ans_[out_id] = 1;
         }
+
+        return nullptr;
     }
 
 private:

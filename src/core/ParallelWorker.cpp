@@ -24,12 +24,12 @@ void ParallelWorker::operator()(std::size_t begin, std::size_t end) {
     if (eptr) return;
 
     try {
-        set_up_thread();
+        thread_local_ptr t_local(nullptr);
 
         for (std::size_t id = begin; id < end; id++) {
             if (eptr || is_interrupted(id)) break;
 
-            work_row(corresponding_row(id), id);
+            t_local = work_row(corresponding_row(id), id, t_local);
         }
     }
     catch(...) {
@@ -38,7 +38,6 @@ void ParallelWorker::operator()(std::size_t begin, std::size_t end) {
         mutex_.unlock();
     }
 
-    clean_thread();
     // make sure this is called at least once per thread call
     RcppThread::isInterrupted();
 }

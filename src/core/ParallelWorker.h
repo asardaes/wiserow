@@ -5,6 +5,7 @@
 
 #include <cstddef> // std::size_t
 #include <exception>
+#include <memory>
 
 #include <RcppParallel.h>
 #include <RcppThread.h>
@@ -13,6 +14,12 @@
 #include "OperationMetadata.h"
 
 namespace wiserow {
+
+class WorkerThreadLocal
+{
+public:
+    virtual ~WorkerThreadLocal() = default;
+};
 
 // =================================================================================================
 
@@ -29,14 +36,14 @@ public:
     std::exception_ptr eptr;
 
 protected:
+    typedef std::shared_ptr<WorkerThreadLocal> thread_local_ptr;
+
     ParallelWorker(const OperationMetadata& metadata, const ColumnCollection& cc);
 
-    virtual void set_up_thread() {}
-    virtual void clean_thread() {}
-
-    virtual void work_row(std::size_t in_id, std::size_t out_id) = 0;
+    virtual thread_local_ptr work_row(std::size_t in_id, std::size_t out_id, thread_local_ptr t_local) = 0;
 
     const ColumnCollection col_collection_;
+    tthread::mutex mutex_;
 
 private:
     int interrupt_grain(const int interrupt_check_grain, const int min, const int max) const;
@@ -46,7 +53,6 @@ private:
     bool is_interrupted(const std::size_t i) const;
 
     const int interrupt_grain_;
-    tthread::mutex mutex_;
 };
 
 // =================================================================================================

@@ -1,11 +1,7 @@
 #include "../workers.h"
 
 #include <complex>
-#include <stdexcept> // logic_error
-#include <string>
 
-#include <boost/utility/string_ref.hpp>
-#include <boost/variant/get.hpp>
 #include <Rcpp.h>
 
 namespace wiserow {
@@ -24,7 +20,7 @@ BoolTestWorker::BoolTestWorker(const OperationMetadata& metadata,
 
 // -------------------------------------------------------------------------------------------------
 
-void BoolTestWorker::work_row(std::size_t in_id, std::size_t out_id) {
+ParallelWorker::thread_local_ptr BoolTestWorker::work_row(std::size_t in_id, std::size_t out_id, thread_local_ptr) {
     bool flag = bulk_op_ == BulkBoolOp::ALL ? true : false;
 
     for (std::size_t j = 0; j < col_collection_.ncol(); j++) {
@@ -53,6 +49,8 @@ void BoolTestWorker::work_row(std::size_t in_id, std::size_t out_id) {
         break;
     }
     }
+
+    return nullptr;
 }
 
 // =================================================================================================
@@ -84,11 +82,6 @@ FiniteTestWorker::FiniteTestWorker(const OperationMetadata& metadata,
 
 // =================================================================================================
 
-struct target_traits {
-    bool is_na;
-    char* char_target;
-};
-
 target_traits get_target_traits(const SEXP& target) {
     switch(TYPEOF(target)) {
     case INTSXP:
@@ -114,93 +107,6 @@ target_traits get_target_traits(const SEXP& target) {
     }
 }
 
-thread_local std::shared_ptr<IntOutputStrategy> CompBasedIntWorker::thread_local_strategy_ = nullptr;
-
-// -------------------------------------------------------------------------------------------------
-
-CompBasedIntWorker::CompBasedIntWorker(const OperationMetadata& metadata,
-                                       const ColumnCollection& cc,
-                                       OutputWrapper<int>& ans,
-                                       const SEXP& comp_op,
-                                       const Rcpp::List& target_vals)
-    : ParallelWorker(metadata, cc)
-    , ans_(ans)
-    , comp_op_(parse_comp_op(Rcpp::as<std::string>(comp_op)))
-    , comp_operator_(comp_op_)
-{
-    for (R_xlen_t i = 0; i < target_vals.length(); i++) {
-        target_traits tt = get_target_traits(target_vals[i]);
-        visitors_.push_back(BooleanVisitorBuilder().compare(comp_op_, target_vals[i]).build());
-        na_targets_.push_back(tt.is_na);
-        char_targets_.push_back(tt.char_target);
-    }
-}
-
-// -------------------------------------------------------------------------------------------------
-
-void CompBasedIntWorker::set_up_thread() {
-    if (!out_strategy) { // nocov start
-        throw std::logic_error("Output strategy has not been set.");
-    } // nocov end
-
-    thread_local_strategy_ = out_strategy->clone();
-}
-
-// -------------------------------------------------------------------------------------------------
-
-void CompBasedIntWorker::clean_thread() {
-    if (thread_local_strategy_) {
-        thread_local_strategy_->reset();
-    }
-}
-
-// -------------------------------------------------------------------------------------------------
-
-void CompBasedIntWorker::work_row(std::size_t in_id, std::size_t out_id) {
-    if (!thread_local_strategy_) { // nocov start
-        throw std::logic_error("Thread-local output strategy has not been set.");
-    } // nocov end
-
-    bool any_na = false;
-    thread_local_strategy_->reset();
-
-    for (std::size_t j = 0; j < col_collection_.ncol(); j++) {
-        auto visitor = visitors_[j % visitors_.size()];
-        bool na_target = na_targets_[j % na_targets_.size()];
-        const char *char_target = char_targets_[j % char_targets_.size()];
-        supported_col_t variant = col_collection_(in_id, j);
-
-        if (!na_target) {
-            bool is_na = boost::apply_visitor(na_visitor_, variant);
-            if (is_na) {
-                if (metadata.na_action == NaAction::PASS) any_na = true;
-                continue;
-            }
-        }
-        else if (comp_op_ != CompOp::EQ && comp_op_ != CompOp::NEQ) {
-            // if target for comparison is NA but operator is not one of [==, !=], result is NA
-            any_na = true;
-            continue;
-        }
-
-        if (char_target && col_collection_[j]->is_logical()) {
-            // tricky case when source is R-logical (with underlying int) that should be converted to string
-            bool variant_bool = boost::get<int>(variant) != 0;
-            boost::string_ref str_ref(char_target);
-            thread_local_strategy_->apply(j, comp_operator_.apply(variant_bool, str_ref));
-        }
-        else {
-            thread_local_strategy_->apply(j, boost::apply_visitor(*visitor, variant));
-        }
-
-        if (thread_local_strategy_->short_circuit()) {
-            break;
-        }
-    }
-
-    ans_[out_id] = thread_local_strategy_->output(col_collection_.ncol(), any_na);
-}
-
 // =================================================================================================
 
 BulkBoolStrategy::BulkBoolStrategy(const BulkBoolOp& bb_op, const NaAction& na_action)
@@ -211,7 +117,7 @@ BulkBoolStrategy::BulkBoolStrategy(const BulkBoolOp& bb_op, const NaAction& na_a
     , flag_(init_)
 { }
 
-void BulkBoolStrategy::reset() {
+void BulkBoolStrategy::reinit() {
     flag_ = init_;
 }
 
@@ -229,8 +135,8 @@ bool BulkBoolStrategy::short_circuit() {
     return false;
 }
 
-void BulkBoolStrategy::apply(const std::size_t, const bool flag) {
-    flag_ = logical_operator_.apply(flag_, flag);
+void BulkBoolStrategy::apply(const std::size_t, const supported_col_t&, const int match_flag) {
+    flag_ = logical_operator_.apply(flag_, static_cast<bool>(match_flag));
 }
 
 int BulkBoolStrategy::output(const std::size_t ncol, const bool any_na) {
@@ -269,7 +175,7 @@ int BulkBoolStrategy::output(const std::size_t ncol, const bool any_na) {
     return NA_INTEGER; // nocov
 }
 
-std::shared_ptr<IntOutputStrategy> BulkBoolStrategy::clone() {
+std::shared_ptr<OutputStrategy<int>> BulkBoolStrategy::clone() {
     return std::make_shared<BulkBoolStrategy>(this->bb_op_, this->na_action_);
 }
 

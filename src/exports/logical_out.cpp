@@ -101,18 +101,18 @@ extern "C" SEXP row_compare(SEXP metadata, SEXP data, SEXP output, SEXP extras) 
     std::shared_ptr<OutputWrapper<int>> wrapper_ptr = get_wrapper_ptr(metadata_, output);
 
     if (bulk_bool_op == "all") {
-        CompBasedIntWorker worker(metadata_, col_collection, *wrapper_ptr,comp_op, target_val);
-        worker.out_strategy = std::make_shared<BulkBoolStrategy>(BulkBoolOp::ALL, metadata_.na_action);
+        auto out_strategy = std::make_shared<BulkBoolStrategy>(BulkBoolOp::ALL, metadata_.na_action);
+        CompBasedWorker<int> worker(metadata_, col_collection, *wrapper_ptr, comp_op, target_val, out_strategy);
         parallel_for(worker);
     }
     else if (bulk_bool_op == "any") {
-        CompBasedIntWorker worker(metadata_, col_collection, *wrapper_ptr, comp_op, target_val);
-        worker.out_strategy = std::make_shared<BulkBoolStrategy>(BulkBoolOp::ANY, metadata_.na_action);
+        auto out_strategy = std::make_shared<BulkBoolStrategy>(BulkBoolOp::ANY, metadata_.na_action);
+        CompBasedWorker<int> worker(metadata_, col_collection, *wrapper_ptr, comp_op, target_val, out_strategy);
         parallel_for(worker);
     }
     else if (bulk_bool_op == "none") {
-        CompBasedIntWorker worker(metadata_, col_collection, *wrapper_ptr, comp_op, target_val);
-        worker.out_strategy = std::make_shared<BulkBoolStrategy>(BulkBoolOp::NONE, metadata_.na_action);
+        auto out_strategy = std::make_shared<BulkBoolStrategy>(BulkBoolOp::NONE, metadata_.na_action);
+        CompBasedWorker<int> worker(metadata_, col_collection, *wrapper_ptr, comp_op, target_val, out_strategy);
         parallel_for(worker);
     }
 

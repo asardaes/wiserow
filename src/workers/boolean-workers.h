@@ -24,7 +24,7 @@ public:
                    const BulkBoolOp bulk_op,
                    const std::shared_ptr<BooleanVisitor>& visitor);
 
-    virtual void work_row(std::size_t in_id, std::size_t out_id) override;
+    virtual thread_local_ptr work_row(std::size_t in_id, std::size_t out_id, thread_local_ptr) override;
 
 private:
     OutputWrapper<int>& ans_;
