@@ -181,7 +181,7 @@ public:
         }
 
         int ans = ans_[out_id];
-        if (metadata.output_mode == LGLSXP && ans > 1) {
+        if (metadata.output_mode == LGLSXP && ans != na_value_ && ans != 0) {
             ans_[out_id] = 1;
         }
 
