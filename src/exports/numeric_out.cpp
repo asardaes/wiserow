@@ -8,9 +8,9 @@
 
 namespace wiserow {
 
-extern "C" SEXP row_sums(SEXP metadata, SEXP data, SEXP output) {
+extern "C" SEXP row_arith(SEXP metadata, SEXP data, SEXP output, SEXP extras) {
     BEGIN_RCPP
-    return visit_into_numeric<RowSumsWorker>("row_sums", metadata, data, output);
+    return visit_into_numeric<RowArithWorker>("row_sums", metadata, data, output, extras);
     END_RCPP
 }
 

@@ -15,21 +15,21 @@ test_that("Functions will throw if control strings cannot be mapped to known enu
                         output_mode = "integer")
 
     suppressWarnings(
-        expect_error(regexp = "unsupported input", .Call(wiserow:::`C_row_sums`, metadata, int_mat, integer()))
+        expect_error(regexp = "unsupported input", .Call(wiserow:::`C_row_arith`, metadata, int_mat, integer(), list()))
     )
 
     metadata$input_class <- "matrix"
     metadata$output_mode <- "data.frame"
 
     suppressWarnings(
-        expect_error(regexp = "unsupported mode", .Call(wiserow:::`C_row_sums`, metadata, int_mat, list()))
+        expect_error(regexp = "unsupported mode", .Call(wiserow:::`C_row_arith`, metadata, int_mat, list(), list()))
     )
 
     metadata$output_mode <- "integer"
     metadata$output_class <- "none"
 
     suppressWarnings(
-        expect_error(regexp = "unsupported output", .Call(wiserow:::`C_row_sums`, metadata, int_mat, list()))
+        expect_error(regexp = "unsupported output", .Call(wiserow:::`C_row_arith`, metadata, int_mat, list(), list()))
     )
 })
 
