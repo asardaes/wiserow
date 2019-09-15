@@ -30,28 +30,31 @@ std::shared_ptr<OutputWrapper<int>> get_wrapper_ptr(const OperationMetadata& met
 // =================================================================================================
 
 template<typename Worker>
-void visit_with_bulk_bool_op(SEXP metadata, SEXP data, SEXP output, SEXP extras) {
+void visit_with_bulk_bool_op(SEXP metadata, SEXP data, SEXP output, const Rcpp::List extras) {
     OperationMetadata metadata_(metadata);
 
     ColumnCollection col_collection = ColumnCollection::coerce(metadata_, data);
     std::size_t out_len = output_length(metadata_, col_collection);
     if (out_len == 0) return;
 
-    Rcpp::List extras_(extras);
-    std::string bulk_bool_op = Rcpp::as<std::string>(extras_["bulk_bool_op"]);
+    std::string bulk_bool_op = Rcpp::as<std::string>(extras["bulk_bool_op"]);
 
     std::shared_ptr<OutputWrapper<int>> wrapper_ptr = get_wrapper_ptr(metadata_, output);
 
+    // always NaAction::Exclude to force short-circuit if appropriate
     if (bulk_bool_op == "all") {
-        Worker worker(metadata_, col_collection, *wrapper_ptr, BulkBoolOp::ALL);
+        auto out_strategy = std::make_shared<BulkBoolStrategy>(BulkBoolOp::ALL, NaAction::EXCLUDE);
+        Worker worker(metadata_, col_collection, *wrapper_ptr, out_strategy);
         parallel_for(worker);
     }
     else if (bulk_bool_op == "any") {
-        Worker worker(metadata_, col_collection, *wrapper_ptr, BulkBoolOp::ANY);
+        auto out_strategy = std::make_shared<BulkBoolStrategy>(BulkBoolOp::ANY, NaAction::EXCLUDE);
+        Worker worker(metadata_, col_collection, *wrapper_ptr, out_strategy);
         parallel_for(worker);
     }
     else if (bulk_bool_op == "none") {
-        Worker worker(metadata_, col_collection, *wrapper_ptr, BulkBoolOp::NONE);
+        auto out_strategy = std::make_shared<BulkBoolStrategy>(BulkBoolOp::NONE, NaAction::EXCLUDE);
+        Worker worker(metadata_, col_collection, *wrapper_ptr, out_strategy);
         parallel_for(worker);
     }
 }

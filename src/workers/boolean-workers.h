@@ -10,6 +10,7 @@
 #include "../core.h"
 #include "../utils.h"
 #include "../visitors.h"
+#include "worker-strategies.h"
 
 namespace wiserow {
 
@@ -21,16 +22,15 @@ public:
     BoolTestWorker(const OperationMetadata& metadata,
                    const ColumnCollection& cc,
                    OutputWrapper<int>& ans,
-                   const BulkBoolOp bulk_op,
-                   const std::shared_ptr<BooleanVisitor>& visitor);
+                   const std::shared_ptr<BooleanVisitor>& visitor,
+                   const std::shared_ptr<OutputStrategy<int>>& out_strategy);
 
-    virtual thread_local_ptr work_row(std::size_t in_id, std::size_t out_id, thread_local_ptr) override;
+    virtual thread_local_ptr work_row(std::size_t in_id, std::size_t out_id, thread_local_ptr t_local) override;
 
 private:
     OutputWrapper<int>& ans_;
-    const BulkBoolOp bulk_op_;
-    const LogicalOperator op_;
     const std::shared_ptr<BooleanVisitor> visitor_;
+    const std::shared_ptr<OutputStrategy<int>> out_strategy_;
 };
 
 // =================================================================================================
@@ -41,7 +41,7 @@ public:
     NATestWorker(const OperationMetadata& metadata,
                  const ColumnCollection& cc,
                  OutputWrapper<int>& ans,
-                 const BulkBoolOp bulk_op);
+                 const std::shared_ptr<OutputStrategy<int>>& out_strategy);
 };
 
 // =================================================================================================
@@ -52,7 +52,7 @@ public:
     InfTestWorker(const OperationMetadata& metadata,
                   const ColumnCollection& cc,
                   OutputWrapper<int>& ans,
-                  const BulkBoolOp bulk_op);
+                  const std::shared_ptr<OutputStrategy<int>>& out_strategy);
 };
 
 // =================================================================================================
@@ -63,7 +63,7 @@ public:
     FiniteTestWorker(const OperationMetadata& metadata,
                      const ColumnCollection& cc,
                      OutputWrapper<int>& ans,
-                     const BulkBoolOp bulk_op);
+                     const std::shared_ptr<OutputStrategy<int>>& out_strategy);
 };
 
 } // namespace wiserow
