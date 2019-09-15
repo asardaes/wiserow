@@ -15,10 +15,8 @@ class OutputStrategy : public WorkerThreadLocal
 public:
     virtual ~OutputStrategy() {}
 
-    virtual void reinit() {}
-    virtual bool short_circuit() {
-        return false;
-    }
+    virtual void reinit() = 0;
+    virtual bool short_circuit() = 0;
 
     virtual void apply(const std::size_t col, const supported_col_t& variant, const bool match_flag) = 0;
     virtual T output(const OperationMetadata& metadata, const std::size_t ncol, const bool any_na) = 0;
