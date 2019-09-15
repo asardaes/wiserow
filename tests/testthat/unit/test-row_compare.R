@@ -220,3 +220,9 @@ test_that("row_sums for all/any/none behaves like R's all/any/any(!flags) with r
     ans <- row_compare(cplx_na_mat, "none", "is", 10+10i, na_action = "pass")
     expect_identical(ans, expected)
 })
+
+test_that("row_compare can support which_first.", {
+    expected <- apply(int_mat, 1L, function(row) { which.max(row > 500L) })
+    ans <- row_compare(int_mat, "which_first", ">", 500)
+    expect_identical(ans, expected)
+})

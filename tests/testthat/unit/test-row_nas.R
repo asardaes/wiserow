@@ -475,3 +475,13 @@ test_that("row_nas for factor columns works.", {
     ans <- row_nas(df, "any", rows = 4001:5000, output_class = "list", factor_mode = "int")
     expect_identical(ans, as.list(expected))
 })
+
+test_that("which_first in row_nas works.", {
+    expected <- sapply(4001:5000, df = df, function(i, df) { Position(is.na, df[i, , drop = FALSE]) })
+    ans <- row_nas(df, "which_first", rows = 4001:5000)
+    expect_identical(ans, expected)
+
+    expected <- lapply(4001:5000, df = df, function(i, df) { Position(is.na, df[i, -1L, drop = FALSE]) })
+    ans <- row_nas(df, "which_first", rows = 4001:5000, cols = -1L, output_class = "list")
+    expect_identical(ans, expected)
+})

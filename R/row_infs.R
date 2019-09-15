@@ -1,35 +1,42 @@
 #' Check if a row's columns have infinite values
 #'
-#' For each desired row, check if all/any/none of the columns have infinite values (`Inf`).
+#' For each desired row, check if all/any/none of the columns have infinite values (`Inf`), or
+#' return the index of the first column containing `Inf`.
 #'
 #' @export
-#' @templateVar par which_cols
-#' @templateVar choices ("all", "any", "none")
+#' @templateVar par match_type
+#' @templateVar choices ("all", "any", "none", "which_first")
 #'
 #' @template data-param
 #' @template generic-choices
 #' @inheritDotParams op_ctrl -output_mode -na_action -factor_mode
 #'
-row_infs <- function(.data, which_cols = "none", ...) {
+#' @details
+#'
+#' Note that `match_type = "which_first"` will result in an integer output, whereas the other
+#' options result in a logical output.
+#'
+row_infs <- function(.data, match_type = "none", ...) {
     UseMethod("row_infs")
 }
 
 #' @rdname row_infs
 #' @export
 #'
-row_infs.matrix <- function(.data, which_cols = "none", ...) {
-    which_cols <- match.arg(which_cols, c("all", "any", "none"))
+row_infs.matrix <- function(.data, match_type = "none", ...) {
+    match_type <- match.arg(match_type, c("all", "any", "none", "which_first"))
+    output_mode <- if (match_type == "which_first") "integer" else "logical"
 
     metadata <- op_ctrl(input_class = "matrix",
                         input_modes = typeof(.data),
-                        output_mode = "logical",
+                        output_mode = output_mode,
                         ...)
 
     metadata <- validate_metadata(.data, metadata)
     ans <- prepare_output(.data, metadata)
 
     extras <- list(
-        bulk_bool_op = which_cols
+        match_type = match_type
     )
 
     if (nrow(.data) > 0L) {
@@ -42,8 +49,9 @@ row_infs.matrix <- function(.data, which_cols = "none", ...) {
 #' @rdname row_infs
 #' @export
 #'
-row_infs.data.frame <- function(.data, which_cols = "none", ...) {
-    which_cols <- match.arg(which_cols, c("all", "any", "none"))
+row_infs.data.frame <- function(.data, match_type = "none", ...) {
+    match_type <- match.arg(match_type, c("all", "any", "none", "which_first"))
+    output_mode <- if (match_type == "which_first") "integer" else "logical"
 
     dots <- list(...)
     if (is.null(dots$input_modes)) {
@@ -52,7 +60,7 @@ row_infs.data.frame <- function(.data, which_cols = "none", ...) {
 
     dots <- c(dots, list(
         input_class = "data.frame",
-        output_mode = "logical",
+        output_mode = output_mode,
         na_action = "pass",
         factor_mode = "integer"
     ))
@@ -62,7 +70,7 @@ row_infs.data.frame <- function(.data, which_cols = "none", ...) {
     ans <- prepare_output(.data, metadata)
 
     extras <- list(
-        bulk_bool_op = which_cols
+        match_type = match_type
     )
 
     if (nrow(.data) > 0L) {

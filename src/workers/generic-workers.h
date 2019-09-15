@@ -96,7 +96,7 @@ public:
             }
         }
 
-        ans_[out_id] = thread_local_strategy->output(col_collection_.ncol(), any_na);
+        ans_[out_id] = thread_local_strategy->output(metadata, col_collection_.ncol(), any_na);
         return thread_local_strategy;
     }
 

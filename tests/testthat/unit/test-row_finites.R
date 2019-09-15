@@ -26,6 +26,10 @@ test_that("row_finites works as expected.", {
     ans <- row_finites(dt, "any", rows = 4001:5000, output_class = "list")
     expect_identical(ans, as.list(expected))
 
+    expected <- sapply(4001:5000, df = df, function(i, df) { Position(is.finite, df[i, , drop = FALSE]) })
+    ans <- row_finites(df, "which_first", rows = 4001:5000)
+    expect_identical(ans, expected)
+
     expect_true(all(row_finites(int_mat, "all")))
     expect_true(all(row_finites(dbl_mat, "all")))
     expect_true(all(row_finites(bool_mat, "all")))

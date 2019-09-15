@@ -7,18 +7,18 @@
 \alias{row_nas.data.table}
 \title{Check if a row's columns have missing values}
 \usage{
-row_nas(.data, which_cols = "none", ...)
+row_nas(.data, match_type = "none", ...)
 
-\method{row_nas}{matrix}(.data, which_cols = "none", ...)
+\method{row_nas}{matrix}(.data, match_type = "none", ...)
 
-\method{row_nas}{data.frame}(.data, which_cols = "none", ...)
+\method{row_nas}{data.frame}(.data, match_type = "none", ...)
 
 \method{row_nas}{data.table}(.data, ...)
 }
 \arguments{
 \item{.data}{A two-dimensional data structure.}
 
-\item{which_cols}{One of ("all", "any", "none"). Possibly abbreviated.}
+\item{match_type}{One of ("all", "any", "none", "which_first"). Possibly abbreviated.}
 
 \item{...}{Arguments passed on to \code{op_ctrl}
 \describe{
@@ -33,5 +33,10 @@ character values from its levels.}
 }}
 }
 \description{
-For each desired row, check if all/any/none of the columns have missing values (\code{NA}).
+For each desired row, check if all/any/none of the columns have missing values (\code{NA}), or return
+the index of the first column containing \code{NA}.
+}
+\details{
+Note that \code{match_type = "which_first"} will result in an integer output, whereas the other
+options result in a logical output.
 }

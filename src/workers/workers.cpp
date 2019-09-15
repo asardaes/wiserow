@@ -35,7 +35,7 @@ ParallelWorker::thread_local_ptr BoolTestWorker::work_row(std::size_t in_id, std
         }
     }
 
-    ans_[out_id] = thread_local_strategy->output(col_collection_.ncol(), false);
+    ans_[out_id] = thread_local_strategy->output(metadata, col_collection_.ncol(), false);
     return thread_local_strategy;
 }
 
@@ -121,11 +121,11 @@ bool BulkBoolStrategy::short_circuit() {
     return false;
 }
 
-void BulkBoolStrategy::apply(const std::size_t, const supported_col_t&, const int match_flag) {
-    flag_ = logical_operator_.apply(flag_, static_cast<bool>(match_flag));
+void BulkBoolStrategy::apply(const std::size_t, const supported_col_t&, const bool match_flag) {
+    flag_ = logical_operator_.apply(flag_, match_flag);
 }
 
-int BulkBoolStrategy::output(const std::size_t ncol, const bool any_na) {
+int BulkBoolStrategy::output(const OperationMetadata&, const std::size_t ncol, const bool any_na) {
     switch(bb_op_) {
     case BulkBoolOp::ALL: {
         if (ncol > 0) {
@@ -163,6 +163,42 @@ int BulkBoolStrategy::output(const std::size_t ncol, const bool any_na) {
 
 std::shared_ptr<OutputStrategy<int>> BulkBoolStrategy::clone() {
     return std::make_shared<BulkBoolStrategy>(this->bb_op_, this->na_action_);
+}
+
+// =================================================================================================
+
+WhichFirstStrategy::WhichFirstStrategy()
+    : which_(-1)
+{ }
+
+void WhichFirstStrategy::reinit() {
+    which_ = -1;
+}
+
+bool WhichFirstStrategy::short_circuit() {
+    return which_ >= 0;
+}
+
+void WhichFirstStrategy::apply(const std::size_t col, const supported_col_t&, const bool match_flag) {
+    if (match_flag) {
+        which_ = col;
+    }
+}
+
+int WhichFirstStrategy::output(const OperationMetadata& metadata, const std::size_t, const bool) {
+    if (which_ < 0) {
+        return NA_INTEGER;
+    }
+    /*else if (metadata.cols.ptr) {
+        return metadata.cols.ptr[which_]; TODO
+    }*/
+    else {
+        return static_cast<int>(which_ + 1);
+    }
+}
+
+std::shared_ptr<OutputStrategy<int>> WhichFirstStrategy::clone() {
+    return std::make_shared<WhichFirstStrategy>();
 }
 
 } // namespace wiserow

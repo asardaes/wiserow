@@ -26,6 +26,10 @@ test_that("row_infs works as expected.", {
     ans <- row_infs(dt, "any", rows = 4001:5000, output_class = "list")
     expect_identical(ans, as.list(expected))
 
+    expected <- sapply(4001:5000, df = df, function(i, df) { Position(is.infinite, df[i, , drop = FALSE]) })
+    ans <- row_infs(df, "which_first", rows = 4001:5000)
+    expect_identical(ans, expected)
+
     expect_true(all(row_infs(int_na_mat, "none")))
     expect_true(all(row_infs(dbl_na_mat, "none")))
     expect_true(all(row_infs(bool_na_mat, "none")))

@@ -7,13 +7,13 @@
 \alias{row_compare.data.table}
 \title{Check if a row's columns fulfill a given comparison}
 \usage{
-row_compare(.data, which_cols = "none", operator = "==", values = 0L,
+row_compare(.data, match_type = "none", operator = "==", values = 0L,
   ...)
 
-\method{row_compare}{matrix}(.data, which_cols = "none",
+\method{row_compare}{matrix}(.data, match_type = "none",
   operator = "==", values = 0L, ...)
 
-\method{row_compare}{data.frame}(.data, which_cols = "none",
+\method{row_compare}{data.frame}(.data, match_type = "none",
   operator = "==", values = 0L, ...)
 
 \method{row_compare}{data.table}(.data, ...)
@@ -21,7 +21,7 @@ row_compare(.data, which_cols = "none", operator = "==", values = 0L,
 \arguments{
 \item{.data}{A two-dimensional data structure.}
 
-\item{which_cols}{One of ("all", "any", "none"). Possibly abbreviated.}
+\item{match_type}{One of ("all", "any", "none", "which_first"). Possibly abbreviated.}
 
 \item{operator}{A character indicating the comparison operator. See details.}
 
@@ -41,7 +41,8 @@ character values from its levels.}
 }}
 }
 \description{
-For each desired row, check if all/any/none of the columns fulfill a given comparison.
+For each desired row, check if all/any/none of the columns fulfill a given comparison, or return
+the index of the first column that fulfills the comparison.
 }
 \details{
 The character in \code{operator} should match one of the \link[base:Comparison]{base::Comparison} operators. You can also
@@ -55,6 +56,10 @@ in \code{.data}.
 Type promotion/conversion will follow normal R rules.
 
 The \code{na_action} from \code{\link[=op_ctrl]{op_ctrl()}} is only relevant when a value from \code{values} is \emph{not} \code{NA}.
+}
+\note{
+Note that \code{match_type = "which_first"} will result in an integer output, whereas the other
+options result in a logical output.
 }
 \examples{
 
