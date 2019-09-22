@@ -185,7 +185,7 @@ SurrogateColumn<Rcpp::StringMatrix>::SurrogateColumn(const Rcpp::StringMatrix& m
     for (std::size_t i = 0; i < size_; i++) {
         // https://stackoverflow.com/a/7875438/5793905
         Rcpp::CharacterVector one_string = Rcpp::as<Rcpp::CharacterVector>(mat[i + j * size_]);
-        data_ptr_[i] = (char *)(one_string[0]);
+        data_ptr_[i] = static_cast<char *>(one_string[0]);
     }
 }
 
@@ -209,7 +209,7 @@ SurrogateColumn<Rcpp::StringVector>::SurrogateColumn(const Rcpp::StringVector& v
     for (std::size_t i = 0; i < size_; i++) {
         // https://stackoverflow.com/a/7875438/5793905
         Rcpp::CharacterVector one_string = Rcpp::as<Rcpp::CharacterVector>(vec[i]);
-        data_ptr_[i] = (char *)(one_string[0]);
+        data_ptr_[i] = static_cast<char *>(one_string[0]);
     }
 }
 

@@ -86,7 +86,7 @@ BooleanVisitorBuilder& BooleanVisitorBuilder::compare(const CompOp comp_op, cons
         }
         else {
             Rcpp::CharacterVector val = Rcpp::as<Rcpp::CharacterVector>(vec[0]);
-            char *val_ptr = (char *)(val[0]);
+            char *val_ptr = static_cast<char *>(val[0]);
             boost::string_ref str_ref(val_ptr);
             visitor_ = std::make_shared<ComparisonVisitor<boost::string_ref>>(op_, comp_op, str_ref, visitor_);
         }
