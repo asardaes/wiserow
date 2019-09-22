@@ -2,19 +2,19 @@ context("  Row sums")
 
 test_that("row_sums can handle errors and edge cases appropriately.", {
     suppressWarnings(
-        expect_error(regexp = "not support", row_sums(char_mat, "integer"))
+        expect_error(regexp = "not support", row_sums(char_mat, output_mode = "integer"))
     )
 
     suppressWarnings(
-        expect_error(regexp = "not support", row_sums(char_mat, "integer", cols = -2L))
+        expect_error(regexp = "not support", row_sums(char_mat, output_mode = "integer", cols = -2L))
     )
 
     suppressWarnings(
-        expect_error(regexp = "not support", row_sums(char_mat, "complex"))
+        expect_error(regexp = "not support", row_sums(char_mat, output_mode = "complex"))
     )
 
-    expect_error(regexp = "row_sums can only return", row_sums(int_mat, "character"))
-    expect_error(regexp = "row_sums can only return", row_sums(int_mat, "character", output_class = "list"))
+    expect_error(regexp = "row_sums can only return", row_sums(int_mat, output_mode = "character"))
+    expect_error(regexp = "row_sums can only return", row_sums(int_mat, output_mode = "character", output_class = "list"))
 
     expect_identical(row_sums(as.matrix(data.frame())), vector("integer"))
     expect_identical(row_sums(data.frame()), vector("integer"))

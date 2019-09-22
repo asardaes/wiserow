@@ -3,8 +3,7 @@
 #' @export
 #'
 #' @template data-param
-#' @inheritDotParams op_ctrl -output_mode -factor_mode
-#' @param output_mode Output's [base::storage.mode()]. If missing, it will be inferred.
+#' @param ... Arguments for [row_arith()] (except `operator`).
 #'
 row_sums <- function(.data, ...) {
     UseMethod("row_sums")
@@ -12,18 +11,16 @@ row_sums <- function(.data, ...) {
 
 #' @rdname row_sums
 #' @export
-#' @importFrom rlang maybe_missing
 #'
-row_sums.matrix <- function(.data, output_mode, ...) {
-    row_arith.matrix(.data, "+", output_mode = rlang::maybe_missing(output_mode), ...)
+row_sums.matrix <- function(.data, ...) {
+    row_arith.matrix(.data, operator = "+", ...)
 }
 
 #' @rdname row_sums
 #' @export
-#' @importFrom rlang maybe_missing
 #'
-row_sums.data.frame <- function(.data, output_mode, ...) {
-    row_arith.data.frame(.data, "+", output_mode = rlang::maybe_missing(output_mode), ...)
+row_sums.data.frame <- function(.data, ...) {
+    row_arith.data.frame(.data, operator = "+", ...)
 }
 
 #' @rdname row_sums

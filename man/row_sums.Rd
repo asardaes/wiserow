@@ -9,26 +9,16 @@
 \usage{
 row_sums(.data, ...)
 
-\method{row_sums}{matrix}(.data, output_mode, ...)
+\method{row_sums}{matrix}(.data, ...)
 
-\method{row_sums}{data.frame}(.data, output_mode, ...)
+\method{row_sums}{data.frame}(.data, ...)
 
 \method{row_sums}{data.table}(.data, ...)
 }
 \arguments{
 \item{.data}{A two-dimensional data structure.}
 
-\item{...}{Arguments passed on to \code{op_ctrl}
-\describe{
-  \item{output_class}{One of ("vector", "list", "data.frame", "matrix"), possibly abbreviated.}
-  \item{na_action}{One of ("exclude", "pass"), possibly abbreviated.}
-  \item{cols}{A vector indicating which columns to consider for the operation. If \code{NULL}, all
-columns are used. If its length is 0, no columns are considered. Negative numbers, logical
-values, and character vectors representing column names are supported.}
-  \item{rows}{Like \code{cols} but for row indices.}
-}}
-
-\item{output_mode}{Output's \code{\link[base:storage.mode]{base::storage.mode()}}. If missing, it will be inferred.}
+\item{...}{Arguments for \code{\link[=row_arith]{row_arith()}} (except \code{operator}).}
 }
 \description{
 Row-wise sum

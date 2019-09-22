@@ -21,17 +21,16 @@ row_arith <- function(.data, ...) {
 
 #' @rdname row_arith
 #' @export
-#' @importFrom rlang is_missing
 #'
 row_arith.matrix <- function(.data, operator = c("+", "-", "*", "/"), cumulative = FALSE, output_mode, output_class, ...) {
     operator <- match.arg(operator)
 
-    out_mode_missing <- rlang::is_missing(output_mode)
+    out_mode_missing <- missing(output_mode)
     if (out_mode_missing) {
         output_mode <- typeof(.data)
     }
 
-    if (rlang::is_missing(output_class)) {
+    if (missing(output_class)) {
         output_class <- if (cumulative) "matrix" else "vector"
     }
 
@@ -65,7 +64,6 @@ row_arith.matrix <- function(.data, operator = c("+", "-", "*", "/"), cumulative
 
 #' @rdname row_arith
 #' @export
-#' @importFrom rlang is_missing
 #'
 row_arith.data.frame <- function(.data, operator = c("+", "-", "*", "/"), cumulative = FALSE, output_mode, output_class, ...) {
     operator <- match.arg(operator)
@@ -75,12 +73,12 @@ row_arith.data.frame <- function(.data, operator = c("+", "-", "*", "/"), cumula
         dots$input_modes <- sapply(.data, typeof)
     }
 
-    out_mode_missing <- rlang::is_missing(output_mode)
+    out_mode_missing <- missing(output_mode)
     if (out_mode_missing) {
         output_mode <- "integer"
     }
 
-    if (rlang::is_missing(output_class)) {
+    if (missing(output_class)) {
         output_class <- if (cumulative) "data.frame" else "vector"
     }
 

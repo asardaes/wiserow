@@ -9,8 +9,7 @@ Imports:
     data.table,
     glue,
     Rcpp (>= 1.0.1),
-    RcppParallel (>= 4.4.0),
-    rlang
+    RcppParallel (>= 4.4.0)
 LinkingTo:
     BH,
     Rcpp,
