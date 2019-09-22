@@ -1,6 +1,8 @@
 .supported_output_classes <- c(
     "vector",
-    "list"
+    "list",
+    "data.frame",
+    "matrix"
 )
 
 .supported_modes <- c(
@@ -91,8 +93,15 @@ handle_subset_ids <- function(.data, ids, which_dim) {
 
 #' @importFrom glue glue
 #'
-prepare_output <- function(.data, metadata) {
+prepare_output <- function(.data, metadata, allow_cols = FALSE) {
     ans_len <- if (is.null(metadata$rows)) nrow(.data) else length(metadata$rows)
+
+    if (allow_cols) {
+        ncol <- if (is.null(metadata$cols)) ncol(.data) else length(metadata$cols)
+    }
+    else {
+        ncol <- 1L
+    }
 
     if (metadata$output_class == "vector") {
         ans <- vector(metadata$output_mode, ans_len)
@@ -100,6 +109,14 @@ prepare_output <- function(.data, metadata) {
     else if (metadata$output_class == "list") {
         # no rep()! that only does shallow copies
         ans <- lapply(1L:ans_len, function(ignored) { vector(metadata$output_mode, 1L) })
+    }
+    else if (metadata$output_class == "data.frame") {
+        ans <- as.data.frame(lapply(seq_len(ncol), function(ignored) { vector(metadata$output_mode, ans_len) }))
+        names(ans) <- paste0("V", 1:ncol(ans))
+    }
+    else if (metadata$output_class == "matrix") {
+        ans <- vector(metadata$output_mode, ans_len * ncol)
+        dim(ans) <- c(ans_len, ncol)
     }
     else { # nocov start
         stop(glue::glue("Unsupported output class: {metadata$output_class}"))

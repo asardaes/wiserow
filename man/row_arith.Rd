@@ -10,10 +10,10 @@
 row_arith(.data, ...)
 
 \method{row_arith}{matrix}(.data, operator = c("+", "-", "*", "/"),
-  output_mode, ...)
+  cumulative = FALSE, output_mode, output_class, ...)
 
 \method{row_arith}{data.frame}(.data, operator = c("+", "-", "*", "/"),
-  output_mode, ...)
+  cumulative = FALSE, output_mode, output_class, ...)
 
 \method{row_arith}{data.table}(.data, ...)
 }
@@ -22,7 +22,6 @@ row_arith(.data, ...)
 
 \item{...}{Arguments passed on to \code{op_ctrl}
 \describe{
-  \item{output_class}{One of ("vector", "list"), possibly abbreviated.}
   \item{na_action}{One of ("exclude", "pass"), possibly abbreviated.}
   \item{cols}{A vector indicating which columns to consider for the operation. If \code{NULL}, all
 columns are used. If its length is 0, no columns are considered. Negative numbers, logical
@@ -32,13 +31,17 @@ values, and character vectors representing column names are supported.}
 
 \item{operator}{One of ("+", "-", "*", "/").}
 
-\item{output_mode}{Output's \code{\link[base:storage.mode]{base::storage.mode()}}. If missing, it will be inferred.}
+\item{cumulative}{Logical. Whether to return the cumulative operation.}
+
+\item{output_mode}{Passed to \code{\link[=op_ctrl]{op_ctrl()}}. If missing, it will be inferred.}
+
+\item{output_class}{Passed to \code{\link[=op_ctrl]{op_ctrl()}}. If missing, it will be inferred.}
 }
 \description{
 Row-wise arithmetic operations
 }
 \details{
 Conceptually, this function takes each row, say \code{x}, and executes \code{Reduce(operator, unlist(x))}.
-\code{x} may be a list of values with different non-character types (like a \code{data.frame} row), and
-\code{NA} values can be excluded.
+\code{x} may be a list of values with different non-character types (like a \code{data.frame} row), \code{NA}
+values can be excluded, and results can be accumulated.
 }

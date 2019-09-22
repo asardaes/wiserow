@@ -67,6 +67,12 @@ SEXP visit_into_numeric(const char* fun_name, SEXP m, SEXP data, SEXP output, SE
     case OutputClass::LIST:
         visit_into_numeric<Worker, ListOutputWrapper>(fun_name, metadata, data, output, extras);
         break;
+    case OutputClass::DATAFRAME:
+        visit_into_numeric<Worker, DataFrameOutputWrapper>(fun_name, metadata, data, output, extras);
+        break;
+    case OutputClass::MATRIX:
+        visit_into_numeric<Worker, MatrixOutputWrapper>(fun_name, metadata, data, output, extras);
+        break;
     default: // nocov start
         Rcpp::stop("[wiserow] (visit_into_numeric) this should never happen."); // nocov end
     }

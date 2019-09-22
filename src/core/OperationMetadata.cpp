@@ -35,6 +35,12 @@ OutputClass parse_output_class(const Rcpp::List& metadata) {
     else if (str == "list") {
         return OutputClass::LIST;
     }
+    else if (str == "data.frame") {
+        return OutputClass::DATAFRAME;
+    }
+    else if (str == "matrix") {
+        return OutputClass::MATRIX;
+    }
     else {
         Rcpp::stop("[wiserow] unsupported output class: " + str);
     }

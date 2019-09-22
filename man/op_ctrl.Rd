@@ -10,7 +10,7 @@ op_ctrl(output_mode, output_class = "vector", na_action = "exclude",
 \arguments{
 \item{output_mode}{Desired \code{\link[base:storage.mode]{base::storage.mode()}} for the result.}
 
-\item{output_class}{One of ("vector", "list"), possibly abbreviated.}
+\item{output_class}{One of ("vector", "list", "data.frame", "matrix"), possibly abbreviated.}
 
 \item{na_action}{One of ("exclude", "pass"), possibly abbreviated.}
 

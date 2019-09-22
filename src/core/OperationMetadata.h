@@ -22,7 +22,9 @@ enum class InputClass {
 
 enum class OutputClass {
     VECTOR,
-    LIST
+    LIST,
+    DATAFRAME,
+    MATRIX
 };
 
 struct surrogate_vector {

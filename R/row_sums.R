@@ -15,7 +15,7 @@ row_sums <- function(.data, ...) {
 #' @importFrom rlang maybe_missing
 #'
 row_sums.matrix <- function(.data, output_mode, ...) {
-    row_arith.matrix(.data, "+", rlang::maybe_missing(output_mode), ...)
+    row_arith.matrix(.data, "+", output_mode = rlang::maybe_missing(output_mode), ...)
 }
 
 #' @rdname row_sums
@@ -23,7 +23,7 @@ row_sums.matrix <- function(.data, output_mode, ...) {
 #' @importFrom rlang maybe_missing
 #'
 row_sums.data.frame <- function(.data, output_mode, ...) {
-    row_arith.data.frame(.data, "+", rlang::maybe_missing(output_mode), ...)
+    row_arith.data.frame(.data, "+", output_mode = rlang::maybe_missing(output_mode), ...)
 }
 
 #' @rdname row_sums

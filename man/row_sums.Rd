@@ -20,7 +20,7 @@ row_sums(.data, ...)
 
 \item{...}{Arguments passed on to \code{op_ctrl}
 \describe{
-  \item{output_class}{One of ("vector", "list"), possibly abbreviated.}
+  \item{output_class}{One of ("vector", "list", "data.frame", "matrix"), possibly abbreviated.}
   \item{na_action}{One of ("exclude", "pass"), possibly abbreviated.}
   \item{cols}{A vector indicating which columns to consider for the operation. If \code{NULL}, all
 columns are used. If its length is 0, no columns are considered. Negative numbers, logical
