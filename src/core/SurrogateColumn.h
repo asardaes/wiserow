@@ -52,13 +52,14 @@ template<>
 class SurrogateColumn<Rcpp::StringMatrix> : public VariantColumn
 {
 public:
-    SurrogateColumn(const Rcpp::StringMatrix& mat, const int j);
+    SurrogateColumn(SEXP mat, const int j);
 
     const supported_col_t operator[](const std::size_t id) const override;
 
 private:
-    std::vector<char *> data_ptr_;
+    const SEXP *data_ptr_;
     const std::size_t size_;
+    const std::size_t offset_;
 };
 
 // -------------------------------------------------------------------------------------------------
@@ -68,12 +69,12 @@ template<>
 class SurrogateColumn<Rcpp::StringVector> : public VariantColumn
 {
 public:
-    SurrogateColumn(const Rcpp::StringVector& vec);
+    SurrogateColumn(SEXP vec);
 
     const supported_col_t operator[](const std::size_t id) const override;
 
 private:
-    std::vector<char *> data_ptr_;
+    const SEXP *data_ptr_;
     const std::size_t size_;
 };
 
