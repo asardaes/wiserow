@@ -501,3 +501,13 @@ test_that("row_nas supports different output classes.", {
     ans <- row_nas(df, "all", rows = 4001:5000, output_class = "matrix")
     expect_identical(ans, as.matrix(expected))
 })
+
+test_that("row_nas for match_type='count' works.", {
+    expected <- apply(int_na_mat, 1L, function(row) { sum(is.na(row)) })
+    ans <- row_nas(int_na_mat, "count")
+    expect_identical(ans, expected)
+
+    expected <- sapply(4001:5000, df = df, function(i, df) { sum(is.na(df[i, , drop = FALSE])) })
+    ans <- row_nas(df, "count", rows = 4001:5000)
+    expect_identical(ans, expected)
+})

@@ -21,7 +21,7 @@ row_compare(.data, match_type = "none", operator = "==", values = 0L,
 \arguments{
 \item{.data}{A two-dimensional data structure.}
 
-\item{match_type}{One of ("all", "any", "none", "which_first"). Possibly abbreviated.}
+\item{match_type}{One of ("all", "any", "none", "which_first", "count"). Possibly abbreviated.}
 
 \item{operator}{A character indicating the comparison operator. See details.}
 
@@ -41,8 +41,8 @@ character values from its levels.}
 }}
 }
 \description{
-For each desired row, check if all/any/none of the columns fulfill a given comparison, or return
-the index of the first column that fulfills the comparison.
+For each desired row, check if all/any/none of the columns fulfill a given comparison, return the
+index of the first column that fulfills the comparison, or the number of columns that do.
 }
 \details{
 The character in \code{operator} should match one of the \link[base:Comparison]{base::Comparison} operators. You can also
@@ -58,8 +58,7 @@ Type promotion/conversion will follow normal R rules.
 The \code{na_action} from \code{\link[=op_ctrl]{op_ctrl()}} is only relevant when a value from \code{values} is \emph{not} \code{NA}.
 }
 \note{
-Note that \code{match_type = "which_first"} will result in an integer output, whereas the other
-options result in a logical output.
+Note that string comparison follows C++ rules.
 }
 \examples{
 

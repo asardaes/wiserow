@@ -1,20 +1,12 @@
-#' Check if a row's columns have missing values
-#'
-#' For each desired row, check if all/any/none of the columns have missing values (`NA`), or return
-#' the index of the first column containing `NA`.
+#' Conditions related to missing values
 #'
 #' @export
 #' @templateVar par match_type
-#' @templateVar choices ("all", "any", "none", "which_first")
+#' @templateVar choices ("all", "any", "none", "which_first", "count")
 #'
 #' @template data-param
 #' @template generic-choices
 #' @inheritDotParams op_ctrl -output_mode -na_action
-#'
-#' @details
-#'
-#' Note that `match_type = "which_first"` will result in an integer output, whereas the other
-#' options result in a logical output.
 #'
 row_nas <- function(.data, match_type = "none", ...) {
     UseMethod("row_nas")
@@ -24,8 +16,8 @@ row_nas <- function(.data, match_type = "none", ...) {
 #' @export
 #'
 row_nas.matrix <- function(.data, match_type = "none", ...) {
-    match_type <- match.arg(match_type, c("all", "any", "none", "which_first"))
-    output_mode <- if (match_type == "which_first") "integer" else "logical"
+    match_type <- match.arg(match_type, c("all", "any", "none", "which_first", "count"))
+    output_mode <- if (match_type %in% c("which_first", "count")) "integer" else "logical"
 
     metadata <- op_ctrl(input_class = "matrix",
                         input_modes = typeof(.data),
@@ -51,8 +43,8 @@ row_nas.matrix <- function(.data, match_type = "none", ...) {
 #' @export
 #'
 row_nas.data.frame <- function(.data, match_type = "none", ...) {
-    match_type <- match.arg(match_type, c("all", "any", "none", "which_first"))
-    output_mode <- if (match_type == "which_first") "integer" else "logical"
+    match_type <- match.arg(match_type, c("all", "any", "none", "which_first", "count"))
+    output_mode <- if (match_type %in% c("which_first", "count")) "integer" else "logical"
 
     dots <- list(...)
     if (is.null(dots$input_modes)) {

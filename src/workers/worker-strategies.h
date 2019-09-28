@@ -16,7 +16,7 @@ public:
     virtual ~OutputStrategy() {}
 
     virtual void reinit() = 0;
-    virtual bool short_circuit() = 0;
+    virtual bool short_circuit() { return false; }
 
     virtual void apply(const std::size_t col, const supported_col_t& variant, const bool match_flag) = 0;
     virtual T output(const OperationMetadata& metadata, const std::size_t ncol, const bool any_na) = 0;
@@ -64,6 +64,24 @@ public:
 
 private:
     int which_;
+};
+
+// -------------------------------------------------------------------------------------------------
+
+class CountStrategy : public OutputStrategy<int>
+{
+public:
+    CountStrategy();
+
+    virtual void reinit() override;
+
+    virtual void apply(const std::size_t, const supported_col_t&, const bool match_flag) override;
+    virtual int output(const OperationMetadata&, const std::size_t, const bool any_na) override;
+
+    virtual std::shared_ptr<OutputStrategy<int>> clone() override;
+
+private:
+    int count_;
 };
 
 } // namespace wiserow

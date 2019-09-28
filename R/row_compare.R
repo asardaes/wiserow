@@ -1,11 +1,11 @@
 #' Check if a row's columns fulfill a given comparison
 #'
-#' For each desired row, check if all/any/none of the columns fulfill a given comparison, or return
-#' the index of the first column that fulfills the comparison.
+#' For each desired row, check if all/any/none of the columns fulfill a given comparison, return the
+#' index of the first column that fulfills the comparison, or the number of columns that do.
 #'
 #' @export
 #' @templateVar par match_type
-#' @templateVar choices ("all", "any", "none", "which_first")
+#' @templateVar choices ("all", "any", "none", "which_first", "count")
 #'
 #' @template data-param
 #' @template generic-choices
@@ -29,8 +29,7 @@
 #'
 #' @note
 #'
-#' Note that `match_type = "which_first"` will result in an integer output, whereas the other
-#' options result in a logical output.
+#' Note that string comparison follows C++ rules.
 #'
 #' @examples
 #'
@@ -48,7 +47,7 @@ row_compare <- function(.data, match_type = "none", operator = "==", values = 0L
 #' @export
 #'
 row_compare.matrix <- function(.data, match_type = "none", operator = "==", values = 0L, ...) {
-    match_type <- match.arg(match_type, c("all", "any", "none", "which_first"))
+    match_type <- match.arg(match_type, c("all", "any", "none", "which_first", "count"))
     operator <- match.arg(operator, .supported_comp_operators)
     if (operator == "is") operator <- "=="
 
@@ -59,7 +58,7 @@ row_compare.matrix <- function(.data, match_type = "none", operator = "==", valu
 
     metadata <- op_ctrl(input_class = "matrix",
                         input_modes = typeof(.data),
-                        output_mode = if (match_type == "which_first") "integer" else "logical",
+                        output_mode = if (match_type %in% c("which_first", "count")) "integer" else "logical",
                         ...)
 
     metadata <- validate_metadata(.data, metadata)
@@ -82,7 +81,7 @@ row_compare.matrix <- function(.data, match_type = "none", operator = "==", valu
 #' @export
 #'
 row_compare.data.frame <- function(.data, match_type = "none", operator = "==", values = 0L, ...) {
-    match_type <- match.arg(match_type, c("all", "any", "none", "which_first"))
+    match_type <- match.arg(match_type, c("all", "any", "none", "which_first", "count"))
     operator <- match.arg(operator, .supported_comp_operators)
     if (operator == "is") operator <- "=="
 
@@ -98,7 +97,7 @@ row_compare.data.frame <- function(.data, match_type = "none", operator = "==", 
 
     dots <- c(dots, list(
         input_class = "data.frame",
-        output_mode = if (match_type == "which_first") "integer" else "logical"
+        output_mode = if (match_type %in% c("which_first", "count")) "integer" else "logical"
     ))
 
     metadata <- do.call(op_ctrl, dots)

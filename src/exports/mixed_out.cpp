@@ -93,15 +93,21 @@ template<typename Worker>
 void visit_with_match_type(SEXP metadata, SEXP data, SEXP output, const Rcpp::List extras) {
     std::string match_type = Rcpp::as<std::string>(extras["match_type"]);
 
+    OperationMetadata metadata_(metadata);
+
+    ColumnCollection col_collection = ColumnCollection::coerce(metadata_, data);
+    std::size_t out_len = output_length(metadata_, col_collection);
+    if (out_len == 0) return;
+
+    std::shared_ptr<OutputWrapper<int>> wrapper_ptr = get_wrapper_ptr(metadata_, output);
+
     if (match_type == "which_first") {
-        OperationMetadata metadata_(metadata);
-
-        ColumnCollection col_collection = ColumnCollection::coerce(metadata_, data);
-        std::size_t out_len = output_length(metadata_, col_collection);
-        if (out_len == 0) return;
-
-        std::shared_ptr<OutputWrapper<int>> wrapper_ptr = get_wrapper_ptr(metadata_, output);
         auto out_strategy = std::make_shared<WhichFirstStrategy>();
+        Worker worker(metadata_, col_collection, *wrapper_ptr, out_strategy);
+        parallel_for(worker);
+    }
+    else if (match_type == "count") {
+        auto out_strategy = std::make_shared<CountStrategy>();
         Worker worker(metadata_, col_collection, *wrapper_ptr, out_strategy);
         parallel_for(worker);
     }
@@ -171,6 +177,11 @@ extern "C" SEXP row_compare(SEXP metadata, SEXP data, SEXP output, SEXP extras) 
     }
     else if (match_type == "which_first") {
         auto out_strategy = std::make_shared<WhichFirstStrategy>();
+        CompBasedWorker<int> worker(metadata_, col_collection, *wrapper_ptr, comp_op, target_val, out_strategy);
+        parallel_for(worker);
+    }
+    else if (match_type == "count") {
+        auto out_strategy = std::make_shared<CountStrategy>();
         CompBasedWorker<int> worker(metadata_, col_collection, *wrapper_ptr, comp_op, target_val, out_strategy);
         parallel_for(worker);
     }

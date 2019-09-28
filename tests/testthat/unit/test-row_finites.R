@@ -40,3 +40,21 @@ test_that("row_finites behaves like in R for NA/NaN values.", {
     df <- data.frame(NaN, NA_real_, NA_complex_, NA_integer_, NA_character_, NA)
     expect_true(row_finites(df, "none"))
 })
+
+test_that("row_finites for match_type='count' works.", {
+    mat <- apply(dbl_na_mat, 2L, function(x) { replace(x, is.na(x), -Inf) })
+
+    expected <- apply(mat, 1L, function(row) { sum(is.finite(row)) })
+    ans <- row_finites(mat, "count")
+    expect_identical(ans, expected)
+
+    dbl_cols <- sapply(df, is.double)
+    cplx_cols <- sapply(df, is.complex)
+
+    df[, dbl_cols] <- lapply(df[, dbl_cols], function(x) { replace(x, is.na(x), Inf) })
+    df[, cplx_cols] <- lapply(df[, cplx_cols], function(x) { replace(x, is.na(x), as.complex(Inf)) })
+
+    expected <- sapply(4001:5000, df = df, function(i, df) { sum(sapply(df[i, , drop = FALSE], is.finite)) })
+    ans <- row_finites(df, "count", rows = 4001:5000)
+    expect_identical(ans, expected)
+})

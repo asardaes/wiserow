@@ -14,6 +14,10 @@
 #'   character values from its levels.
 #' @param ... Internal.
 #'
+#' @details
+#'
+#' Abbreviations are supported in accordance to the rules from [base::match.arg()].
+#'
 op_ctrl <- function(output_mode,
                     output_class = "vector",
                     na_action = "exclude",

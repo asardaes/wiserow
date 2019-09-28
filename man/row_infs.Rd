@@ -5,7 +5,7 @@
 \alias{row_infs.matrix}
 \alias{row_infs.data.frame}
 \alias{row_infs.data.table}
-\title{Check if a row's columns have infinite values}
+\title{Conditions related to infinite values}
 \usage{
 row_infs(.data, match_type = "none", ...)
 
@@ -18,7 +18,7 @@ row_infs(.data, match_type = "none", ...)
 \arguments{
 \item{.data}{A two-dimensional data structure.}
 
-\item{match_type}{One of ("all", "any", "none", "which_first"). Possibly abbreviated.}
+\item{match_type}{One of ("all", "any", "none", "which_first", "count"). Possibly abbreviated.}
 
 \item{...}{Arguments passed on to \code{op_ctrl}
 \describe{
@@ -30,10 +30,5 @@ values, and character vectors representing column names are supported.}
 }}
 }
 \description{
-For each desired row, check if all/any/none of the columns have infinite values (\code{Inf}), or
-return the index of the first column containing \code{Inf}.
-}
-\details{
-Note that \code{match_type = "which_first"} will result in an integer output, whereas the other
-options result in a logical output.
+Conditions related to infinite values
 }

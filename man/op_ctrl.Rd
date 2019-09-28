@@ -29,3 +29,6 @@ character values from its levels.}
 \description{
 Operation's control parameters
 }
+\details{
+Abbreviations are supported in accordance to the rules from \code{\link[base:match.arg]{base::match.arg()}}.
+}

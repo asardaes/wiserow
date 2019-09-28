@@ -201,4 +201,33 @@ std::shared_ptr<OutputStrategy<int>> WhichFirstStrategy::clone() {
     return std::make_shared<WhichFirstStrategy>();
 }
 
+// =================================================================================================
+
+CountStrategy::CountStrategy()
+    : count_(0)
+{ }
+
+void CountStrategy::reinit() {
+    count_ = 0;
+}
+
+void CountStrategy::apply(const std::size_t col, const supported_col_t&, const bool match_flag) {
+    if (match_flag) {
+        count_++;
+    }
+}
+
+int CountStrategy::output(const OperationMetadata&, const std::size_t, const bool any_na) {
+    if (any_na) {
+        return NA_INTEGER;
+    }
+    else {
+        return count_;
+    }
+}
+
+std::shared_ptr<OutputStrategy<int>> CountStrategy::clone() {
+    return std::make_shared<CountStrategy>();
+}
+
 } // namespace wiserow

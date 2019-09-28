@@ -226,3 +226,22 @@ test_that("row_compare can support which_first.", {
     ans <- row_compare(int_mat, "which_first", ">", 500)
     expect_identical(ans, expected)
 })
+
+test_that("row_compare for match_type='count' works.", {
+    mat <- apply(dbl_na_mat, 2L, function(x) { replace(x, is.na(x), -Inf) })
+
+    expected <- apply(mat, 1L, function(row) { sum(is.finite(row)) })
+    ans <- row_compare(mat, "count", ">", -Inf)
+    expect_identical(ans, expected)
+
+    dbl_cols <- sapply(df, is.double)
+    ignore_cols <- which(sapply(df, function(x) { is.complex(x) | is.character(x) }))
+
+    df[, dbl_cols] <- lapply(df[, dbl_cols], function(x) { replace(x, is.na(x), Inf) })
+
+    expected <- sapply(4001:5000, df = df[, -ignore_cols], function(i, df) {
+        sum(sapply(df[i, , drop = FALSE], "<", Inf), na.rm = TRUE)
+    })
+    ans <- row_compare(df, "count", "<", Inf, rows = 4001:5000, cols = -ignore_cols)
+    expect_identical(ans, expected)
+})

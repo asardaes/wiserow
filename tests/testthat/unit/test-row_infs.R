@@ -41,3 +41,21 @@ test_that("row_infs behaves like in R for infinite/NaN values.", {
     expect_true(row_infs(df, "none"))
     expect_true(row_infs(data.frame(Inf, -Inf, as.complex(Inf), as.complex(-Inf)), "all"))
 })
+
+test_that("row_infs for match_type='count' works.", {
+    mat <- apply(dbl_na_mat, 2L, function(x) { replace(x, is.na(x), -Inf) })
+
+    expected <- apply(mat, 1L, function(row) { sum(is.infinite(row)) })
+    ans <- row_infs(mat, "count")
+    expect_identical(ans, expected)
+
+    dbl_cols <- sapply(df, is.double)
+    cplx_cols <- sapply(df, is.complex)
+
+    df[, dbl_cols] <- lapply(df[, dbl_cols], function(x) { replace(x, is.na(x), Inf) })
+    df[, cplx_cols] <- lapply(df[, cplx_cols], function(x) { replace(x, is.na(x), as.complex(Inf)) })
+
+    expected <- sapply(4001:5000, df = df, function(i, df) { sum(sapply(df[i, , drop = FALSE], is.infinite)) })
+    ans <- row_infs(df, "count", rows = 4001:5000)
+    expect_identical(ans, expected)
+})
