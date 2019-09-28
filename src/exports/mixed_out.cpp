@@ -34,9 +34,25 @@ std::shared_ptr<OutputWrapper<int>> get_wrapper_ptr(const OperationMetadata& met
             return std::make_shared<ListOutputWrapper<INTSXP, int>>(ans);
         }
     }
+    case OutputClass::DATAFRAME: {
+        if (metadata.output_mode == LGLSXP) {
+            return std::make_shared<DataFrameOutputWrapper<LGLSXP, int>>(output);
+        }
+        else {
+            return std::make_shared<DataFrameOutputWrapper<INTSXP, int>>(output);
+        }
     }
-
-    return nullptr; // nocov
+    case OutputClass::MATRIX: {
+        if (metadata.output_mode == LGLSXP) {
+            return std::make_shared<MatrixOutputWrapper<LGLSXP, int>>(output);
+        }
+        else {
+            return std::make_shared<MatrixOutputWrapper<INTSXP, int>>(output);
+        }
+    }
+    default:
+        Rcpp::stop("This operation does not support the chosen output class."); // nocov
+    }
 }
 
 // =================================================================================================

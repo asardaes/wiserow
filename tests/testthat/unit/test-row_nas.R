@@ -485,3 +485,19 @@ test_that("which_first in row_nas works.", {
     ans <- row_nas(df, "which_first", rows = 4001:5000, cols = -1L, output_class = "list")
     expect_identical(ans, expected)
 })
+
+test_that("row_nas supports different output classes.", {
+    expected <- sapply(4001:5000, df = df, function(i, df) { all(is.na(df[i, , drop = FALSE])) })
+
+    ans <- row_nas(df, "all", rows = 4001:5000)
+    expect_identical(ans, expected)
+
+    ans <- row_nas(df, "all", rows = 4001:5000, output_class = "list")
+    expect_identical(ans, as.list(expected))
+
+    ans <- row_nas(df, "all", rows = 4001:5000, output_class = "data.frame")
+    expect_identical(ans, data.frame(V1 = expected))
+
+    ans <- row_nas(df, "all", rows = 4001:5000, output_class = "matrix")
+    expect_identical(ans, as.matrix(expected))
+})
