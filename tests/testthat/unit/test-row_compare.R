@@ -233,6 +233,10 @@ test_that("row_compare for match_type='count' works.", {
     expected <- apply(mat, 1L, function(row) { sum(is.finite(row)) })
     ans <- row_compare(mat, "count", ">", -Inf)
     expect_identical(ans, expected)
+    ans <- row_compare(mat, "count", ">", -Inf, output_class = "data.frame")
+    expect_identical(ans, data.frame(V1 = expected))
+    ans <- row_compare(mat, "count", ">", -Inf, output_class = "matrix")
+    expect_identical(ans, as.matrix(expected))
 
     dbl_cols <- sapply(df, is.double)
     ignore_cols <- which(sapply(df, function(x) { is.complex(x) | is.character(x) }))
@@ -244,4 +248,8 @@ test_that("row_compare for match_type='count' works.", {
     })
     ans <- row_compare(df, "count", "<", Inf, rows = 4001:5000, cols = -ignore_cols)
     expect_identical(ans, expected)
+
+    # ----------------------------------------------------------------------------------------------
+
+    expect_true(is.na(row_compare(data.frame(1), "count", ">", NA_integer_)))
 })
