@@ -59,14 +59,21 @@ public:
     { }
 
     bool operator()(const int val) const override {
+        bool super_ans = super(val);
+        if (short_circuit(super_ans)) return super_ans;
         return comp_op_.apply(val, target_val_);
     }
 
     bool operator()(const double val) const override {
+        bool super_ans = super(val);
+        if (short_circuit(super_ans)) return super_ans;
         return comp_op_.apply(val, target_val_);
     }
 
     bool operator()(const boost::string_ref val) const override {
+        bool super_ans = super(val);
+        if (short_circuit(super_ans)) return super_ans;
+
         if (std::is_same<T, boost::string_ref>::value) {
             return comp_op_.apply(val, target_val_);
         }
@@ -78,6 +85,8 @@ public:
     }
 
     bool operator()(const std::complex<double>& val) const override {
+        bool super_ans = super(val);
+        if (short_circuit(super_ans)) return super_ans;
         return comp_op_.apply(val, target_val_);
     }
 
@@ -102,20 +111,28 @@ public:
     { }
 
     bool operator()(const int val) const override {
+        bool super_ans = super(val);
+        if (short_circuit(super_ans)) return super_ans;
         return comp_op_.apply(val, static_cast<int>(target_val_));
     }
 
     bool operator()(const double val) const override {
+        bool super_ans = super(val);
+        if (short_circuit(super_ans)) return super_ans;
         return comp_op_.apply(val, static_cast<int>(target_val_));
     }
 
     bool operator()(const boost::string_ref val) const override {
+        bool super_ans = super(val);
+        if (short_circuit(super_ans)) return super_ans;
         std::string str = ::wiserow::to_string(target_val_);
         boost::string_ref str_ref(str);
         return comp_op_.apply(val, str_ref);
     }
 
     bool operator()(const std::complex<double>& val) const override {
+        bool super_ans = super(val);
+        if (short_circuit(super_ans)) return super_ans;
         return comp_op_.apply(val, static_cast<int>(target_val_));
     }
 
