@@ -409,42 +409,42 @@ test_that("row_nas for complex matrices with row subset works.", {
 })
 
 test_that("row_nas for data frames works.", {
-    expected <- sapply(4001:5000, df = df, function(i, df) { all(is.na(df[i, , drop = FALSE])) })
-    ans <- row_nas(df, "all", rows = 4001:5000)
+    expected <- sapply(3001:5000, df = df, function(i, df) { all(is.na(df[i, , drop = FALSE])) })
+    ans <- row_nas(df, "all", rows = 3001:5000)
     expect_identical(ans, expected)
-    ans <- row_nas(df, "all", rows = 4001:5000, output_class = "list")
+    ans <- row_nas(df, "all", rows = 3001:5000, output_class = "list")
     expect_identical(ans, as.list(expected))
 
-    expected <- sapply(4001:5000, df = df, function(i, df) { all(!is.na(df[i, , drop = FALSE])) })
-    ans <- row_nas(df, "none", rows = 4001:5000)
+    expected <- sapply(3001:5000, df = df, function(i, df) { all(!is.na(df[i, , drop = FALSE])) })
+    ans <- row_nas(df, "none", rows = 3001:5000)
     expect_identical(ans, expected)
-    ans <- row_nas(df, "none", rows = 4001:5000, output_class = "list")
+    ans <- row_nas(df, "none", rows = 3001:5000, output_class = "list")
     expect_identical(ans, as.list(expected))
 
-    expected <- sapply(4001:5000, df = df, function(i, df) { anyNA(df[i, , drop = FALSE]) })
-    ans <- row_nas(df, "any", rows = 4001:5000)
+    expected <- sapply(3001:5000, df = df, function(i, df) { anyNA(df[i, , drop = FALSE]) })
+    ans <- row_nas(df, "any", rows = 3001:5000)
     expect_identical(ans, expected)
-    ans <- row_nas(df, "any", rows = 4001:5000, output_class = "list")
+    ans <- row_nas(df, "any", rows = 3001:5000, output_class = "list")
     expect_identical(ans, as.list(expected))
 })
 
 test_that("row_nas for data tables works.", {
-    expected <- sapply(4001:5000, df = df, function(i, df) { all(is.na(df[i, , drop = FALSE])) })
-    ans <- row_nas(dt, "all", rows = 4001:5000)
+    expected <- sapply(3001:5000, df = df, function(i, df) { all(is.na(df[i, , drop = FALSE])) })
+    ans <- row_nas(dt, "all", rows = 3001:5000)
     expect_identical(ans, expected)
-    ans <- row_nas(dt, "all", rows = 4001:5000, output_class = "list")
+    ans <- row_nas(dt, "all", rows = 3001:5000, output_class = "list")
     expect_identical(ans, as.list(expected))
 
-    expected <- sapply(4001:5000, df = df, function(i, df) { all(!is.na(df[i, , drop = FALSE])) })
-    ans <- row_nas(dt, "none", rows = 4001:5000)
+    expected <- sapply(3001:5000, df = df, function(i, df) { all(!is.na(df[i, , drop = FALSE])) })
+    ans <- row_nas(dt, "none", rows = 3001:5000)
     expect_identical(ans, expected)
-    ans <- row_nas(dt, "none", rows = 4001:5000, output_class = "list")
+    ans <- row_nas(dt, "none", rows = 3001:5000, output_class = "list")
     expect_identical(ans, as.list(expected))
 
-    expected <- sapply(4001:5000, df = df, function(i, df) { anyNA(df[i, , drop = FALSE]) })
-    ans <- row_nas(dt, "any", rows = 4001:5000)
+    expected <- sapply(3001:5000, df = df, function(i, df) { anyNA(df[i, , drop = FALSE]) })
+    ans <- row_nas(dt, "any", rows = 3001:5000)
     expect_identical(ans, expected)
-    ans <- row_nas(dt, "any", rows = 4001:5000, output_class = "list")
+    ans <- row_nas(dt, "any", rows = 3001:5000, output_class = "list")
     expect_identical(ans, as.list(expected))
 })
 
@@ -457,48 +457,48 @@ test_that("row_nas behaves like in R for infinite/NaN values.", {
 test_that("row_nas for factor columns works.", {
     df <- as.data.frame(lapply(df[, paste0("char.V", 1:3)], as.factor))
 
-    expected <- sapply(4001:5000, df = df, function(i, df) { all(is.na(df[i, , drop = FALSE])) })
-    ans <- row_nas(df, "all", rows = 4001:5000)
+    expected <- sapply(3001:5000, df = df, function(i, df) { all(is.na(df[i, , drop = FALSE])) })
+    ans <- row_nas(df, "all", rows = 3001:5000)
     expect_identical(ans, expected)
-    ans <- row_nas(df, "all", rows = 4001:5000, output_class = "list", factor_mode = "int")
+    ans <- row_nas(df, "all", rows = 3001:5000, output_class = "list", factor_mode = "int")
     expect_identical(ans, as.list(expected))
 
-    expected <- sapply(4001:5000, df = df, function(i, df) { all(!is.na(df[i, , drop = FALSE])) })
-    ans <- row_nas(df, "none", rows = 4001:5000)
+    expected <- sapply(3001:5000, df = df, function(i, df) { all(!is.na(df[i, , drop = FALSE])) })
+    ans <- row_nas(df, "none", rows = 3001:5000)
     expect_identical(ans, expected)
-    ans <- row_nas(df, "none", rows = 4001:5000, output_class = "list", factor_mode = "int")
+    ans <- row_nas(df, "none", rows = 3001:5000, output_class = "list", factor_mode = "int")
     expect_identical(ans, as.list(expected))
 
-    expected <- sapply(4001:5000, df = df, function(i, df) { anyNA(df[i, , drop = FALSE]) })
-    ans <- row_nas(df, "any", rows = 4001:5000)
+    expected <- sapply(3001:5000, df = df, function(i, df) { anyNA(df[i, , drop = FALSE]) })
+    ans <- row_nas(df, "any", rows = 3001:5000)
     expect_identical(ans, expected)
-    ans <- row_nas(df, "any", rows = 4001:5000, output_class = "list", factor_mode = "int")
+    ans <- row_nas(df, "any", rows = 3001:5000, output_class = "list", factor_mode = "int")
     expect_identical(ans, as.list(expected))
 })
 
 test_that("which_first in row_nas works.", {
-    expected <- sapply(4001:5000, df = df, function(i, df) { Position(is.na, df[i, , drop = FALSE]) })
-    ans <- row_nas(df, "which_first", rows = 4001:5000)
+    expected <- sapply(3001:5000, df = df, function(i, df) { Position(is.na, df[i, , drop = FALSE]) })
+    ans <- row_nas(df, "which_first", rows = 3001:5000)
     expect_identical(ans, expected)
 
-    expected <- lapply(4001:5000, df = df, function(i, df) { Position(is.na, df[i, -1L, drop = FALSE]) })
-    ans <- row_nas(df, "which_first", rows = 4001:5000, cols = -1L, output_class = "list")
+    expected <- lapply(3001:5000, df = df, function(i, df) { Position(is.na, df[i, -1L, drop = FALSE]) })
+    ans <- row_nas(df, "which_first", rows = 3001:5000, cols = -1L, output_class = "list")
     expect_identical(ans, expected)
 })
 
 test_that("row_nas supports different output classes.", {
-    expected <- sapply(4001:5000, df = df, function(i, df) { all(is.na(df[i, , drop = FALSE])) })
+    expected <- sapply(3001:5000, df = df, function(i, df) { all(is.na(df[i, , drop = FALSE])) })
 
-    ans <- row_nas(df, "all", rows = 4001:5000)
+    ans <- row_nas(df, "all", rows = 3001:5000)
     expect_identical(ans, expected)
 
-    ans <- row_nas(df, "all", rows = 4001:5000, output_class = "list")
+    ans <- row_nas(df, "all", rows = 3001:5000, output_class = "list")
     expect_identical(ans, as.list(expected))
 
-    ans <- row_nas(df, "all", rows = 4001:5000, output_class = "data.frame")
+    ans <- row_nas(df, "all", rows = 3001:5000, output_class = "data.frame")
     expect_identical(ans, data.frame(V1 = expected))
 
-    ans <- row_nas(df, "all", rows = 4001:5000, output_class = "matrix")
+    ans <- row_nas(df, "all", rows = 3001:5000, output_class = "matrix")
     expect_identical(ans, as.matrix(expected))
 })
 
@@ -507,7 +507,7 @@ test_that("row_nas for match_type='count' works.", {
     ans <- row_nas(int_na_mat, "count")
     expect_identical(ans, expected)
 
-    expected <- sapply(4001:5000, df = df, function(i, df) { sum(is.na(df[i, , drop = FALSE])) })
-    ans <- row_nas(df, "count", rows = 4001:5000)
+    expected <- sapply(3001:5000, df = df, function(i, df) { sum(is.na(df[i, , drop = FALSE])) })
+    ans <- row_nas(df, "count", rows = 3001:5000)
     expect_identical(ans, expected)
 })

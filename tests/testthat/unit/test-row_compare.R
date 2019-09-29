@@ -136,18 +136,18 @@ test_that("values converted to characters are correctly formatted for row_compar
 test_that("row_compare respects na_action.", {
     cols <- which(sapply(df, typeof) != "complex")
 
-    expected <- sapply(4001:5000, df = df[, cols], function(i, df) { all(sapply(df[i, , drop = FALSE], ">", 0)) })
+    expected <- sapply(3001:5000, df = df[, cols], function(i, df) { all(sapply(df[i, , drop = FALSE], ">", 0)) })
 
-    ans <- row_compare(df, "all", ">", values = 0, na_action = "pass", rows = 4001:5000, cols = cols)
+    ans <- row_compare(df, "all", ">", values = 0, na_action = "pass", rows = 3001:5000, cols = cols)
     expect_identical(ans, expected)
-    ans <- row_compare(dt, "all", ">", values = 0, na_action = "pass", rows = 4001:5000, cols = cols)
+    ans <- row_compare(dt, "all", ">", values = 0, na_action = "pass", rows = 3001:5000, cols = cols)
     expect_identical(ans, expected)
 
-    expected <- sapply(4001:5000, df = df[, cols], function(i, df) { all(sapply(df[i, , drop = FALSE], ">", 0), na.rm = TRUE) })
+    expected <- sapply(3001:5000, df = df[, cols], function(i, df) { all(sapply(df[i, , drop = FALSE], ">", 0), na.rm = TRUE) })
 
-    ans <- row_compare(df, "all", ">", values = 0, na_action = "exclude", rows = 4001:5000, cols = cols)
+    ans <- row_compare(df, "all", ">", values = 0, na_action = "exclude", rows = 3001:5000, cols = cols)
     expect_identical(ans, expected)
-    ans <- row_compare(dt, "all", ">", values = 0, na_action = "exclude", rows = 4001:5000, cols = cols)
+    ans <- row_compare(dt, "all", ">", values = 0, na_action = "exclude", rows = 3001:5000, cols = cols)
     expect_identical(ans, expected)
 })
 
@@ -243,10 +243,10 @@ test_that("row_compare for match_type='count' works.", {
 
     df[, dbl_cols] <- lapply(df[, dbl_cols], function(x) { replace(x, is.na(x), Inf) })
 
-    expected <- sapply(4001:5000, df = df[, -ignore_cols], function(i, df) {
+    expected <- sapply(3001:5000, df = df[, -ignore_cols], function(i, df) {
         sum(sapply(df[i, , drop = FALSE], "<", Inf), na.rm = TRUE)
     })
-    ans <- row_compare(df, "count", "<", Inf, rows = 4001:5000, cols = -ignore_cols)
+    ans <- row_compare(df, "count", "<", Inf, rows = 3001:5000, cols = -ignore_cols)
     expect_identical(ans, expected)
 
     # ----------------------------------------------------------------------------------------------
