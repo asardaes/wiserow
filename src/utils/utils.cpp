@@ -54,7 +54,7 @@ bool LogicalOperator::apply(bool a, bool b) const {
 
 // dummy for some templates, shouldn't be used after optimizations
 std::string to_string(const boost::string_ref val) { // nocov start
-    return std::string(val.data());
+    throw std::runtime_error("Unwanted conversion between boost::string_ref and std::string.");
 } // nocov end
 
 std::string to_string(const bool val) {
