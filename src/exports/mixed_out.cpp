@@ -162,27 +162,27 @@ extern "C" SEXP row_compare(SEXP metadata, SEXP data, SEXP output, SEXP extras) 
 
     if (match_type == "all") {
         auto out_strategy = std::make_shared<BulkBoolStrategy>(BulkBoolOp::ALL, metadata_.na_action);
-        CompBasedWorker<int> worker(metadata_, col_collection, *wrapper_ptr, comp_op, target_val, out_strategy);
+        CompBasedWorker worker(metadata_, col_collection, *wrapper_ptr, comp_op, target_val, out_strategy);
         parallel_for(worker);
     }
     else if (match_type == "any") {
         auto out_strategy = std::make_shared<BulkBoolStrategy>(BulkBoolOp::ANY, metadata_.na_action);
-        CompBasedWorker<int> worker(metadata_, col_collection, *wrapper_ptr, comp_op, target_val, out_strategy);
+        CompBasedWorker worker(metadata_, col_collection, *wrapper_ptr, comp_op, target_val, out_strategy);
         parallel_for(worker);
     }
     else if (match_type == "none") {
         auto out_strategy = std::make_shared<BulkBoolStrategy>(BulkBoolOp::NONE, metadata_.na_action);
-        CompBasedWorker<int> worker(metadata_, col_collection, *wrapper_ptr, comp_op, target_val, out_strategy);
+        CompBasedWorker worker(metadata_, col_collection, *wrapper_ptr, comp_op, target_val, out_strategy);
         parallel_for(worker);
     }
     else if (match_type == "which_first") {
         auto out_strategy = std::make_shared<WhichFirstStrategy>();
-        CompBasedWorker<int> worker(metadata_, col_collection, *wrapper_ptr, comp_op, target_val, out_strategy);
+        CompBasedWorker worker(metadata_, col_collection, *wrapper_ptr, comp_op, target_val, out_strategy);
         parallel_for(worker);
     }
     else if (match_type == "count") {
         auto out_strategy = std::make_shared<CountStrategy>();
-        CompBasedWorker<int> worker(metadata_, col_collection, *wrapper_ptr, comp_op, target_val, out_strategy);
+        CompBasedWorker worker(metadata_, col_collection, *wrapper_ptr, comp_op, target_val, out_strategy);
         parallel_for(worker);
     }
 
