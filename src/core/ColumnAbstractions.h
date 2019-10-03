@@ -50,6 +50,10 @@ protected:
     const std::size_t nrow_;
 };
 
+// =================================================================================================
+
+std::size_t output_length(const OperationMetadata& metadata, const ColumnCollection& col_collection);
+
 } // namespace wiserow
 
 #endif // WISEROW_COLUMNABSTRACTIONS_H_

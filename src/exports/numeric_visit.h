@@ -8,7 +8,6 @@
 
 #include "../core.h"
 #include "../workers.h"
-#include "helpers.h"
 
 namespace wiserow {
 
