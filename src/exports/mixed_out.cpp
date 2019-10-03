@@ -50,9 +50,9 @@ std::shared_ptr<OutputWrapper<int>> get_wrapper_ptr(const OperationMetadata& met
             return std::make_shared<MatrixOutputWrapper<INTSXP, int>>(output);
         }
     }
-    default:
-        Rcpp::stop("This operation does not support the chosen output class."); // nocov
-    }
+    default: // nocov start
+        Rcpp::stop("This operation does not support the chosen output class.");
+    } // nocov end
 }
 
 // =================================================================================================
@@ -183,6 +183,53 @@ extern "C" SEXP row_compare(SEXP metadata, SEXP data, SEXP output, SEXP extras) 
     else if (match_type == "count") {
         auto out_strategy = std::make_shared<CountStrategy>();
         CompBasedWorker worker(metadata_, col_collection, *wrapper_ptr, comp_op, target_val, out_strategy);
+        parallel_for(worker);
+    }
+
+    return R_NilValue;
+    END_RCPP
+}
+
+// =================================================================================================
+
+extern "C" SEXP row_in(SEXP metadata, SEXP data, SEXP output, SEXP extras) {
+    BEGIN_RCPP
+    OperationMetadata metadata_(metadata);
+
+    ColumnCollection col_collection = ColumnCollection::coerce(metadata_, data);
+    std::size_t out_len = output_length(metadata_, col_collection);
+    if (out_len == 0) return R_NilValue;
+
+    Rcpp::List extras_(extras);
+    std::string match_type = Rcpp::as<std::string>(extras_["match_type"]);
+    SEXP target_sets = extras_["target_sets"];
+    bool negate = Rcpp::as<bool>(extras_["negate"]);
+
+    std::shared_ptr<OutputWrapper<int>> wrapper_ptr = get_wrapper_ptr(metadata_, output);
+
+    if (match_type == "all") {
+        auto out_strategy = std::make_shared<BulkBoolStrategy>(BulkBoolOp::ALL, metadata_.na_action);
+        InSetWorker worker(metadata_, col_collection, *wrapper_ptr, target_sets, negate, out_strategy);
+        parallel_for(worker);
+    }
+    else if (match_type == "any") {
+        auto out_strategy = std::make_shared<BulkBoolStrategy>(BulkBoolOp::ANY, metadata_.na_action);
+        InSetWorker worker(metadata_, col_collection, *wrapper_ptr, target_sets, negate, out_strategy);
+        parallel_for(worker);
+    }
+    else if (match_type == "none") {
+        auto out_strategy = std::make_shared<BulkBoolStrategy>(BulkBoolOp::NONE, metadata_.na_action);
+        InSetWorker worker(metadata_, col_collection, *wrapper_ptr, target_sets, negate, out_strategy);
+        parallel_for(worker);
+    }
+    else if (match_type == "which_first") {
+        auto out_strategy = std::make_shared<WhichFirstStrategy>();
+        InSetWorker worker(metadata_, col_collection, *wrapper_ptr, target_sets, negate, out_strategy);
+        parallel_for(worker);
+    }
+    else if (match_type == "count") {
+        auto out_strategy = std::make_shared<CountStrategy>();
+        InSetWorker worker(metadata_, col_collection, *wrapper_ptr, target_sets, negate, out_strategy);
         parallel_for(worker);
     }
 

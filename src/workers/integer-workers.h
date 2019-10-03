@@ -43,6 +43,28 @@ private:
     const ComparisonOperator comp_operator_;
 };
 
+// =================================================================================================
+
+class InSetWorker : public ParallelWorker
+{
+public:
+    InSetWorker(const OperationMetadata& metadata,
+                const ColumnCollection& cc,
+                OutputWrapper<int>& ans,
+                const Rcpp::List& target_sets,
+                const bool negate,
+                const std::shared_ptr<OutputStrategy<int>>& out_strategy);
+
+    virtual thread_local_ptr work_row(std::size_t in_id, std::size_t out_id, thread_local_ptr t_local) override;
+
+private:
+    OutputWrapper<int>& ans_;
+    const std::shared_ptr<OutputStrategy<int>> out_strategy_;
+
+    std::vector<std::shared_ptr<BooleanVisitor>> visitors_;
+    std::vector<bool> char_targets_;
+};
+
 } // namespace wiserow
 
 #endif // WISEROW_INTEGERWORKERS_H_

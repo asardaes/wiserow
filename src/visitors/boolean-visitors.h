@@ -5,6 +5,8 @@
 #include <memory> // shared_ptr
 #include <string>
 #include <type_traits> // is_same
+#include <unordered_set>
+#include <vector>
 
 #include <boost/utility/string_ref.hpp>
 
@@ -96,6 +98,8 @@ private:
 };
 
 // -------------------------------------------------------------------------------------------------
+// Specialization needed because explicit casts to int are needed, comparison doesn't have overload
+// for bool.
 
 template<>
 class ComparisonVisitor<bool> : public BooleanVisitorDecorator
@@ -139,6 +143,122 @@ public:
 private:
     const ComparisonOperator comp_op_;
     const bool target_val_;
+};
+
+// =================================================================================================
+// Primary template will be for int and double
+
+template<typename T>
+class InSetVisitor : public BooleanVisitorDecorator
+{
+public:
+    InSetVisitor(const BoolOp bool_op,
+                 const std::shared_ptr<BooleanVisitor>& visitor,
+                 const bool negate,
+                 const T * const target_vals,
+                 const std::size_t n_target_vals)
+        : BooleanVisitorDecorator(bool_op, visitor, negate)
+        , any_target_na_(false)
+    {
+        for (std::size_t i = 0; i < n_target_vals; i++) {
+            if (na_visitor_(target_vals[i])) {
+                any_target_na_ = true;
+            }
+            else {
+                target_vals_.insert(target_vals[i]);
+                target_string_vals_.insert(::wiserow::to_string(target_vals[i]));
+            }
+        }
+    }
+
+    bool operator()(const int val) const override {
+        bool super_ans = super(val);
+        if (short_circuit(super_ans)) return super_ans;
+
+        if (na_visitor_(val)) return forward(any_target_na_);
+
+        return forward(target_vals_.find(val) != target_vals_.end());
+    }
+
+    bool operator()(const double val) const override {
+        bool super_ans = super(val);
+        if (short_circuit(super_ans)) return super_ans;
+
+        if (na_visitor_(val)) return forward(any_target_na_);
+        // if set has integers but value is not whole, return false
+        if (std::is_same<T, int>::value && val != static_cast<int>(val)) return forward(false);
+
+        return forward(target_vals_.find(val) != target_vals_.end());
+    }
+
+    bool operator()(const boost::string_ref val) const override {
+        bool super_ans = super(val);
+        if (short_circuit(super_ans)) return super_ans;
+        if (na_visitor_(val)) return forward(any_target_na_);
+        return forward(target_string_vals_.find(val.to_string()) != target_string_vals_.end());
+    }
+
+    bool operator()(const std::complex<double>& val) const override {
+        bool super_ans = super(val);
+        if (short_circuit(super_ans)) return super_ans;
+
+        if (na_visitor_(val)) return forward(any_target_na_);
+        if (val.imag() != 0) return forward(false);
+        return forward((*this)(val.real()));
+    }
+
+private:
+    bool any_target_na_;
+    std::unordered_set<T> target_vals_;
+    std::unordered_set<std::string> target_string_vals_;
+    const NAVisitor na_visitor_;
+};
+
+// -------------------------------------------------------------------------------------------------
+
+template<>
+class InSetVisitor<std::complex<double>> : public BooleanVisitorDecorator
+{
+public:
+    InSetVisitor(const BoolOp bool_op,
+                 const std::shared_ptr<BooleanVisitor>& visitor,
+                 const bool negate,
+                 const std::complex<double> * const target_vals,
+                 const std::size_t n_target_vals);
+
+    bool operator()(const int val) const override;
+    bool operator()(const double val) const override;
+    bool operator()(const boost::string_ref val) const override;
+    bool operator()(const std::complex<double>& val) const override;
+
+private:
+    bool any_target_na_;
+    std::vector<std::complex<double>> target_vals_;
+    std::unordered_set<std::string> target_string_vals_;
+    const NAVisitor na_visitor_;
+};
+
+// -------------------------------------------------------------------------------------------------
+
+template<>
+class InSetVisitor<std::string> : public BooleanVisitorDecorator
+{
+public:
+    InSetVisitor(const BoolOp bool_op,
+                 const std::shared_ptr<BooleanVisitor>& visitor,
+                 const bool negate,
+                 std::unordered_set<std::string>&& target_vals,
+                 const bool include_na);
+
+    bool operator()(const int val) const override;
+    bool operator()(const double val) const override;
+    bool operator()(const boost::string_ref val) const override;
+    bool operator()(const std::complex<double>& val) const override;
+
+private:
+    const std::unordered_set<std::string> target_vals_;
+    const bool include_na_;
+    const NAVisitor na_visitor_;
 };
 
 } // namespace wiserow

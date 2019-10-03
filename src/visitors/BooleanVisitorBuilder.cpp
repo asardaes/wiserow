@@ -1,5 +1,8 @@
 #include "BooleanVisitorBuilder.h"
 
+#include <unordered_set>
+#include <utility> // move
+
 #include <Rcpp.h>
 
 #include "boolean-visitors.h"
@@ -92,6 +95,63 @@ BooleanVisitorBuilder& BooleanVisitorBuilder::compare(const CompOp comp_op, cons
             visitor_ = std::make_shared<ComparisonVisitor<boost::string_ref>>(op_, comp_op, str_ref, visitor_);
         }
 
+        break;
+    }
+    }
+
+    return *this;
+}
+
+BooleanVisitorBuilder& BooleanVisitorBuilder::in_set(const SEXP& target_vals, const bool negate) {
+    switch(TYPEOF(target_vals)) {
+    case INTSXP: {
+        Rcpp::IntegerVector vec(target_vals);
+        if (vec.size() > 0) {
+            visitor_ = std::make_shared<InSetVisitor<int>>(op_, visitor_, negate, &vec[0], vec.size());
+        }
+        break;
+    }
+    case REALSXP: {
+        Rcpp::NumericVector vec(target_vals);
+        if (vec.size() > 0) {
+            visitor_ = std::make_shared<InSetVisitor<double>>(op_, visitor_, negate, &vec[0], vec.size());
+        }
+        break;
+    }
+    case LGLSXP: {
+        Rcpp::LogicalVector vec(target_vals);
+        if (vec.size() > 0) {
+            visitor_ = std::make_shared<InSetVisitor<int>>(op_, visitor_, negate, &vec[0], vec.size());
+        }
+        break;
+    }
+    case CPLXSXP: {
+        Rcpp::ComplexVector vec(target_vals);
+        if (vec.size() > 0) {
+            visitor_ = std::make_shared<InSetVisitor<std::complex<double>>>(
+                op_, visitor_, negate, reinterpret_cast<std::complex<double> *>(&vec[0]), vec.size());
+        }
+        break;
+    }
+    case STRSXP: {
+        Rcpp::StringVector vec(target_vals);
+        if (vec.size() > 0) {
+            std::unordered_set<std::string> set;
+            bool any_na = false;
+
+            for (R_xlen_t i = 0; i < vec.size(); i++) {
+                if (Rcpp::traits::is_na<STRSXP>(vec[i])) {
+                    if (!any_na) any_na = true;
+                }
+                else {
+                    Rcpp::CharacterVector val = Rcpp::as<Rcpp::CharacterVector>(vec[i]);
+                    const char *val_ptr = static_cast<char *>(val[0]);
+                    set.insert(std::string(val_ptr));
+                }
+            }
+
+            visitor_ = std::make_shared<InSetVisitor<std::string>>(op_, visitor_, negate, std::move(set), any_na);
+        }
         break;
     }
     }

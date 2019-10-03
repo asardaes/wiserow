@@ -19,6 +19,7 @@ public:
     BooleanVisitorBuilder& is_na(const bool negate = false);
     BooleanVisitorBuilder& is_inf(const bool negate = false);
     BooleanVisitorBuilder& compare(const CompOp comp_op, const SEXP& target_val);
+    BooleanVisitorBuilder& in_set(const SEXP& target_vals, const bool negate = false);
 
     std::shared_ptr<BooleanVisitor> build();
 
