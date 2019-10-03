@@ -40,3 +40,8 @@ test_that("row_in works for any combination of types.", {
     ans <- row_in(df, "any", list("e"))
     expect_identical(ans, expected)
 })
+
+test_that("row_in can handle complex numbers against int/double.", {
+    expect_true(row_in(data.frame(-1 + 0i, 1/3 + 0i), "all", list(-1L, 1/3)))
+    expect_true(row_in(data.frame(-1 + 1i, 1/3 - 1i), "none", list(-1L, 1/3)))
+})

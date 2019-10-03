@@ -204,7 +204,9 @@ public:
 
         if (na_visitor_(val)) return forward(any_target_na_);
         if (val.imag() != 0) return forward(false);
-        return forward((*this)(val.real()));
+        if (std::is_same<T, int>::value && val.real() != static_cast<int>(val.real())) return forward(false);
+
+        return forward(target_vals_.find(val.real()) != target_vals_.end());
     }
 
 private:
