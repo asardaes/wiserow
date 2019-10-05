@@ -57,38 +57,6 @@ std::shared_ptr<OutputWrapper<int>> get_wrapper_ptr(const OperationMetadata& met
 // =================================================================================================
 
 template<typename Worker>
-void visit_with_bulk_bool_op(SEXP metadata, SEXP data, SEXP output, const Rcpp::List& extras) {
-    OperationMetadata metadata_(metadata);
-
-    ColumnCollection col_collection = ColumnCollection::coerce(metadata_, data);
-    std::size_t out_len = output_length(metadata_, col_collection);
-    if (out_len == 0) return;
-
-    std::string bulk_bool_op = Rcpp::as<std::string>(extras["match_type"]);
-
-    std::shared_ptr<OutputWrapper<int>> wrapper_ptr = get_wrapper_ptr(metadata_, output);
-
-    // always NaAction::Exclude to force short-circuit if appropriate
-    if (bulk_bool_op == "all") {
-        auto out_strategy = std::make_shared<BulkBoolStrategy>(BulkBoolOp::ALL, NaAction::EXCLUDE);
-        Worker worker(metadata_, col_collection, *wrapper_ptr, out_strategy);
-        parallel_for(worker);
-    }
-    else if (bulk_bool_op == "any") {
-        auto out_strategy = std::make_shared<BulkBoolStrategy>(BulkBoolOp::ANY, NaAction::EXCLUDE);
-        Worker worker(metadata_, col_collection, *wrapper_ptr, out_strategy);
-        parallel_for(worker);
-    }
-    else if (bulk_bool_op == "none") {
-        auto out_strategy = std::make_shared<BulkBoolStrategy>(BulkBoolOp::NONE, NaAction::EXCLUDE);
-        Worker worker(metadata_, col_collection, *wrapper_ptr, out_strategy);
-        parallel_for(worker);
-    }
-}
-
-// -------------------------------------------------------------------------------------------------
-
-template<typename Worker>
 void visit_with_match_type(SEXP metadata, SEXP data, SEXP output, const Rcpp::List extras) {
     std::string match_type = Rcpp::as<std::string>(extras["match_type"]);
 
@@ -100,6 +68,7 @@ void visit_with_match_type(SEXP metadata, SEXP data, SEXP output, const Rcpp::Li
 
     std::shared_ptr<OutputWrapper<int>> wrapper_ptr = get_wrapper_ptr(metadata_, output);
 
+    // always NaAction::Exclude to force short-circuit if appropriate
     if (match_type == "which_first") {
         auto out_strategy = std::make_shared<WhichFirstStrategy>();
         Worker worker(metadata_, col_collection, *wrapper_ptr, out_strategy);
@@ -110,9 +79,24 @@ void visit_with_match_type(SEXP metadata, SEXP data, SEXP output, const Rcpp::Li
         Worker worker(metadata_, col_collection, *wrapper_ptr, out_strategy);
         parallel_for(worker);
     }
-    else {
-        visit_with_bulk_bool_op<Worker>(metadata, data, output, extras);
+    else if (match_type == "all") {
+        auto out_strategy = std::make_shared<BulkBoolStrategy>(BulkBoolOp::ALL, NaAction::EXCLUDE);
+        Worker worker(metadata_, col_collection, *wrapper_ptr, out_strategy);
+        parallel_for(worker);
     }
+    else if (match_type == "any") {
+        auto out_strategy = std::make_shared<BulkBoolStrategy>(BulkBoolOp::ANY, NaAction::EXCLUDE);
+        Worker worker(metadata_, col_collection, *wrapper_ptr, out_strategy);
+        parallel_for(worker);
+    }
+    else if (match_type == "none") {
+        auto out_strategy = std::make_shared<BulkBoolStrategy>(BulkBoolOp::NONE, NaAction::EXCLUDE);
+        Worker worker(metadata_, col_collection, *wrapper_ptr, out_strategy);
+        parallel_for(worker);
+    }
+    else { // nocov start
+        Rcpp::stop("Match type [" + match_type + "] not supported.");
+    } // nocov end
 }
 
 // -------------------------------------------------------------------------------------------------
@@ -184,6 +168,9 @@ extern "C" SEXP row_compare(SEXP metadata, SEXP data, SEXP output, SEXP extras) 
         CompBasedWorker worker(metadata_, col_collection, *wrapper_ptr, comp_op, target_val, out_strategy);
         parallel_for(worker);
     }
+    else { // nocov start
+        Rcpp::stop("Match type [" + match_type + "] not supported.");
+    } // nocov end
 
     return R_NilValue;
     END_RCPP
@@ -231,6 +218,9 @@ extern "C" SEXP row_in(SEXP metadata, SEXP data, SEXP output, SEXP extras) {
         InSetWorker worker(metadata_, col_collection, *wrapper_ptr, target_sets, negate, out_strategy);
         parallel_for(worker);
     }
+    else { // nocov start
+        Rcpp::stop("Match type [" + match_type + "] not supported.");
+    } // nocov end
 
     return R_NilValue;
     END_RCPP
