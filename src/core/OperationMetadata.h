@@ -15,12 +15,7 @@ enum class NaAction {
     PASS
 };
 
-enum class InputClass {
-    MATRIX,
-    DATAFRAME
-};
-
-enum class OutputClass {
+enum class RClass {
     VECTOR,
     LIST,
     DATAFRAME,
@@ -43,10 +38,10 @@ public:
 
     const int num_workers;
 
-    const InputClass input_class;
+    const RClass input_class;
     const std::vector<R_vec_t> input_modes;
 
-    const OutputClass output_class;
+    const RClass output_class;
     const R_vec_t output_mode;
 
     const NaAction na_action;

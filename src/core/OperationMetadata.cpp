@@ -12,34 +12,34 @@ std::string get_string(const Rcpp::List& metadata, const std::string& key) {
     return Rcpp::as<std::string>(metadata[key]);
 }
 
-InputClass parse_input_class(const Rcpp::List& metadata) {
+RClass parse_input_class(const Rcpp::List& metadata) {
     std::string str = get_string(metadata, "input_class");
 
     if (str == "matrix") {
-        return InputClass::MATRIX;
+        return RClass::MATRIX;
     }
     else if (str == "data.frame") {
-        return InputClass::DATAFRAME;
+        return RClass::DATAFRAME;
     }
     else {
         Rcpp::stop("[wiserow] unsupported input class: " + str);
     }
 }
 
-OutputClass parse_output_class(const Rcpp::List& metadata) {
+RClass parse_output_class(const Rcpp::List& metadata) {
     std::string str = get_string(metadata, "output_class");
 
     if (str == "vector") {
-        return OutputClass::VECTOR;
+        return RClass::VECTOR;
     }
     else if (str == "list") {
-        return OutputClass::LIST;
+        return RClass::LIST;
     }
     else if (str == "data.frame") {
-        return OutputClass::DATAFRAME;
+        return RClass::DATAFRAME;
     }
     else if (str == "matrix") {
-        return OutputClass::MATRIX;
+        return RClass::MATRIX;
     }
     else {
         Rcpp::stop("[wiserow] unsupported output class: " + str);

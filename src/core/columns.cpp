@@ -26,7 +26,7 @@ std::size_t output_length(const OperationMetadata& metadata, const ColumnCollect
 
 ColumnCollection ColumnCollection::coerce(const OperationMetadata& metadata, SEXP data) {
     switch(metadata.input_class) {
-    case InputClass::MATRIX: {
+    case RClass::MATRIX: {
         switch(metadata.input_modes[0]) {
         case INTSXP: {
             return MatrixColumnCollection<INTSXP, int>(data, metadata.cols);
@@ -49,7 +49,7 @@ ColumnCollection ColumnCollection::coerce(const OperationMetadata& metadata, SEX
         } // nocov end
         }
     }
-    case InputClass::DATAFRAME: {
+    case RClass::DATAFRAME: {
         return DataFrameColumnCollection(data, metadata);
     }
     default: { // nocov start

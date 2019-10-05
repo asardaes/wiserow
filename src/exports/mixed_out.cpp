@@ -13,7 +13,7 @@ namespace wiserow {
 
 std::shared_ptr<OutputWrapper<int>> get_wrapper_ptr(const OperationMetadata& metadata, SEXP output) {
     switch(metadata.output_class) {
-    case OutputClass::VECTOR: {
+    case RClass::VECTOR: {
         if (metadata.output_mode == LGLSXP) {
             Rcpp::LogicalVector ans(output);
             return std::make_shared<VectorOutputWrapper<LGLSXP, int>>(ans);
@@ -23,7 +23,7 @@ std::shared_ptr<OutputWrapper<int>> get_wrapper_ptr(const OperationMetadata& met
             return std::make_shared<VectorOutputWrapper<INTSXP, int>>(ans);
         }
     }
-    case OutputClass::LIST: {
+    case RClass::LIST: {
         Rcpp::List ans(output);
 
         if (metadata.output_mode == LGLSXP) {
@@ -33,7 +33,7 @@ std::shared_ptr<OutputWrapper<int>> get_wrapper_ptr(const OperationMetadata& met
             return std::make_shared<ListOutputWrapper<INTSXP, int>>(ans);
         }
     }
-    case OutputClass::DATAFRAME: {
+    case RClass::DATAFRAME: {
         if (metadata.output_mode == LGLSXP) {
             return std::make_shared<DataFrameOutputWrapper<LGLSXP, int>>(output);
         }
@@ -41,7 +41,7 @@ std::shared_ptr<OutputWrapper<int>> get_wrapper_ptr(const OperationMetadata& met
             return std::make_shared<DataFrameOutputWrapper<INTSXP, int>>(output);
         }
     }
-    case OutputClass::MATRIX: {
+    case RClass::MATRIX: {
         if (metadata.output_mode == LGLSXP) {
             return std::make_shared<MatrixOutputWrapper<LGLSXP, int>>(output);
         }

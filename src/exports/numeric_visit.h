@@ -60,16 +60,16 @@ SEXP visit_into_numeric(const char* fun_name, SEXP m, SEXP data, SEXP output, SE
     OperationMetadata metadata(m);
 
     switch(metadata.output_class) {
-    case OutputClass::VECTOR:
+    case RClass::VECTOR:
         visit_into_numeric<Worker, VectorOutputWrapper>(fun_name, metadata, data, output, extras);
         break;
-    case OutputClass::LIST:
+    case RClass::LIST:
         visit_into_numeric<Worker, ListOutputWrapper>(fun_name, metadata, data, output, extras);
         break;
-    case OutputClass::DATAFRAME:
+    case RClass::DATAFRAME:
         visit_into_numeric<Worker, DataFrameOutputWrapper>(fun_name, metadata, data, output, extras);
         break;
-    case OutputClass::MATRIX:
+    case RClass::MATRIX:
         visit_into_numeric<Worker, MatrixOutputWrapper>(fun_name, metadata, data, output, extras);
         break;
     default: // nocov start
