@@ -36,7 +36,6 @@ class ColumnCollection
 public:
     static ColumnCollection coerce(const OperationMetadata& metadata, SEXP data);
 
-    ColumnCollection(const std::size_t nrow);
     virtual ~ColumnCollection() {}
 
     std::size_t nrow() const;
@@ -46,6 +45,8 @@ public:
     const supported_col_t operator()(const std::size_t i, const std::size_t j) const;
 
 protected:
+    ColumnCollection(const std::size_t nrow);
+
     std::vector<std::shared_ptr<const VariantColumn>> columns_;
     const std::size_t nrow_;
 };

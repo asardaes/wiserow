@@ -1,12 +1,13 @@
-#include "ColumnAbstractions.h"
+#include "../core.h"
+
+#include <stdexcept> // out_of_range
+#include <string>
+
+#include <Rcpp.h>
+
 #include "DataFrameColumnCollection.h"
 #include "MatrixColumnCollection.h"
 #include "SurrogateColumn.h"
-
-#include <stdexcept> // out_of_range
-#include <string> // to_string
-
-#include <Rcpp.h>
 
 namespace wiserow {
 
@@ -58,6 +59,8 @@ ColumnCollection ColumnCollection::coerce(const OperationMetadata& metadata, SEX
     } // nocov end
     }
 }
+
+// -------------------------------------------------------------------------------------------------
 
 ColumnCollection::ColumnCollection(const std::size_t nrow)
     : nrow_(nrow)
@@ -269,6 +272,182 @@ const supported_col_t SurrogateColumn<Rcpp::ComplexVector>::operator[](const std
     } // nocov end
 
     return supported_col_t(data_ptr_[id]);
+}
+
+// =================================================================================================
+
+int get_int(const Rcpp::List& metadata, const std::string& key) {
+    return Rcpp::as<int>(metadata[key]);
+}
+
+std::string get_string(const Rcpp::List& metadata, const std::string& key) {
+    return Rcpp::as<std::string>(metadata[key]);
+}
+
+RClass parse_input_class(const Rcpp::List& metadata) {
+    std::string str = get_string(metadata, "input_class");
+
+    if (str == "matrix") {
+        return RClass::MATRIX;
+    }
+    else if (str == "data.frame") {
+        return RClass::DATAFRAME;
+    }
+    else {
+        Rcpp::stop("[wiserow] unsupported input class: " + str);
+    }
+}
+
+RClass parse_output_class(const Rcpp::List& metadata) {
+    std::string str = get_string(metadata, "output_class");
+
+    if (str == "vector") {
+        return RClass::VECTOR;
+    }
+    else if (str == "list") {
+        return RClass::LIST;
+    }
+    else if (str == "data.frame") {
+        return RClass::DATAFRAME;
+    }
+    else if (str == "matrix") {
+        return RClass::MATRIX;
+    }
+    else {
+        Rcpp::stop("[wiserow] unsupported output class: " + str);
+    }
+}
+
+R_vec_t parse_mode(const std::string& mode_str) {
+    if (mode_str == "integer") {
+        return INTSXP;
+    }
+    else if (mode_str == "double") {
+        return REALSXP;
+    }
+    else if (mode_str == "logical") {
+        return LGLSXP;
+    }
+    else if (mode_str == "character") {
+        return STRSXP;
+    }
+    else if (mode_str == "complex") {
+        return CPLXSXP;
+    }
+    else {
+        Rcpp::stop("[wiserow] unsupported mode: " + mode_str);
+    }
+}
+
+std::vector<R_vec_t> parse_modes(const Rcpp::StringVector& in_modes) {
+    std::vector<R_vec_t> input_modes;
+
+    for (R_xlen_t i = 0; i < in_modes.length(); i++) {
+        std::string in_mode = Rcpp::as<std::string>(in_modes(i));
+        input_modes.push_back(parse_mode(in_mode));
+    }
+
+    return input_modes;
+}
+
+NaAction parse_na_action(const Rcpp::List& metadata) {
+    std::string str = get_string(metadata, "na_action");
+
+    if (str == "pass") {
+        return NaAction::PASS;
+    }
+    else {
+        return NaAction::EXCLUDE;
+    }
+}
+
+surrogate_vector coerce_subset_indices(SEXP ids) {
+    if (Rf_isNull(ids)) {
+        return surrogate_vector(nullptr, 0, true);
+    }
+    else {
+        Rcpp::IntegerVector vec(ids);
+
+        if (vec.length() > 0) {
+            return surrogate_vector(&vec[0], vec.length(), false);
+        }
+        else {
+            return surrogate_vector(nullptr, 0, false);
+        }
+    }
+}
+
+// -------------------------------------------------------------------------------------------------
+
+OperationMetadata::OperationMetadata(const Rcpp::List& metadata)
+    : num_workers(get_int(metadata, "num_workers"))
+    , input_class(parse_input_class(metadata))
+    , input_modes(parse_modes(metadata["input_modes"]))
+    , output_class(parse_output_class(metadata))
+    , output_mode(parse_mode(get_string(metadata, "output_mode")))
+    , na_action(parse_na_action(metadata))
+    , cols(coerce_subset_indices(metadata["cols"]))
+    , rows(coerce_subset_indices(metadata["rows"]))
+    , factor_mode(parse_mode(get_string(metadata, "factor_mode")))
+{ }
+
+// =================================================================================================
+
+ParallelWorker::ParallelWorker(const OperationMetadata& metadata, const ColumnCollection& cc)
+    : metadata(metadata)
+    , col_collection_(cc)
+    , interrupt_grain_(interrupt_grain(this->num_ops() / metadata.num_workers, 1000, 10000))
+{ }
+
+std::size_t ParallelWorker::num_ops() const {
+    if (metadata.rows.ptr) {
+        return metadata.rows.len;
+    }
+    else if (metadata.rows.is_null) {
+        return col_collection_.nrow();
+    }
+    else {
+        return 0;
+    }
+}
+
+void ParallelWorker::operator()(std::size_t begin, std::size_t end) {
+    if (eptr) return;
+
+    try {
+        thread_local_ptr t_local(nullptr);
+
+        for (std::size_t id = begin; id < end; id++) {
+            if (eptr || is_interrupted(id)) break;
+
+            t_local = work_row(corresponding_row(id), id, t_local);
+        }
+    }
+    catch(...) {
+        mutex_.lock();
+        if (!eptr) eptr = std::current_exception();
+        mutex_.unlock();
+    }
+
+    // make sure this is called at least once per thread call
+    RcppThread::isInterrupted();
+}
+
+std::size_t ParallelWorker::corresponding_row(std::size_t id) const {
+    return metadata.rows.ptr ? metadata.rows.ptr[id] - 1 : id;
+}
+
+bool ParallelWorker::is_interrupted(const std::size_t i) const {
+    return RcppThread::isInterrupted(i % interrupt_grain_ == 0);
+}
+
+// how often to check for user interrupt inside a thread
+int ParallelWorker::interrupt_grain(const int interrupt_check_grain, const int min, const int max) const {
+    int result = interrupt_check_grain / 10;
+    if (result < min) return min;
+    if (result > max) return max;
+    if (result < 1) return 1;
+    return result;
 }
 
 } // namespace wiserow
