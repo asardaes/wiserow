@@ -4,10 +4,9 @@
 #define R_NO_REMAP
 #include <Rinternals.h> // SEXP
 
-#include "BooleanVisitorDecorator.h" // BooleanVisitor
-
 #include "../utils.h"
 #include "boolean-visitors.h"
+#include "BooleanVisitorDecorator.h" // BooleanVisitor
 
 namespace wiserow {
 
