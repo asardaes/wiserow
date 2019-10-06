@@ -263,6 +263,41 @@ private:
     const NAVisitor na_visitor_;
 };
 
+// =================================================================================================
+
+class DuplicatedVisitor : public boost::static_visitor<bool>
+{
+public:
+    bool operator()(const bool val);
+    bool operator()(const int val);
+    bool operator()(const double val);
+    bool operator()(const std::complex<double>& val);
+    bool operator()(const boost::string_ref val);
+
+private:
+    const NAVisitor na_visitor_;
+
+    enum class Type {
+        BOOL,
+        INT,
+        DOUBLE,
+        COMPLEX,
+        STRING
+    };
+
+    Type current_type_ = Type::BOOL;
+    bool seen_na_ = false;
+
+    std::unordered_set<bool> bools_;
+    std::unordered_set<int> ints_;
+    std::unordered_set<double> doubles_;
+    std::vector<std::complex<double>> complexs_;
+    std::unordered_set<std::string> strings_;
+
+    void promote_to(Type type);
+    bool handle_na();
+};
+
 } // namespace wiserow
 
 #endif // WISEROW_BOOLEANVISITORS_H_

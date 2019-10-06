@@ -9,6 +9,7 @@ namespace wiserow {
 extern "C" {
     SEXP row_arith(SEXP metadata, SEXP data, SEXP output, SEXP extras);
     SEXP row_compare(SEXP metadata, SEXP data, SEXP output, SEXP extras);
+    SEXP row_duplicated(SEXP metadata, SEXP data, SEXP output, SEXP extras);
     SEXP row_finites(SEXP metadata, SEXP data, SEXP output, SEXP extras);
     SEXP row_in(SEXP metadata, SEXP data, SEXP output, SEXP extras);
     SEXP row_infs(SEXP metadata, SEXP data, SEXP output, SEXP extras);

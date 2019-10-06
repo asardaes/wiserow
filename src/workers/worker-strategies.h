@@ -15,13 +15,23 @@ class OutputStrategy : public WorkerThreadLocal
 public:
     virtual ~OutputStrategy() {}
 
-    virtual void reinit() = 0;
+    virtual void reinit() {} // nocov
     virtual bool short_circuit() { return false; }
 
     virtual void apply(const std::size_t col, const supported_col_t& variant, const bool match_flag) = 0;
     virtual T output(const OperationMetadata& metadata, const std::size_t ncol, const bool any_na) = 0;
 
     virtual std::shared_ptr<OutputStrategy<T>> clone() = 0;
+};
+
+// -------------------------------------------------------------------------------------------------
+
+class IdentityStrategy : public OutputStrategy<int>
+{
+    virtual void apply(const std::size_t, const supported_col_t&, const bool) override;
+    virtual int output(const OperationMetadata&, const std::size_t, const bool) override;
+
+    virtual std::shared_ptr<OutputStrategy<int>> clone() override;
 };
 
 // -------------------------------------------------------------------------------------------------

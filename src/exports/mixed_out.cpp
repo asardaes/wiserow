@@ -226,4 +226,52 @@ extern "C" SEXP row_in(SEXP metadata, SEXP data, SEXP output, SEXP extras) {
     END_RCPP
 }
 
+// =================================================================================================
+
+extern "C" SEXP row_duplicated(SEXP metadata, SEXP data, SEXP output, SEXP extras) {
+    BEGIN_RCPP
+    OperationMetadata metadata_(metadata);
+
+    ColumnCollection col_collection = ColumnCollection::coerce(metadata_, data);
+    std::size_t out_len = output_length(metadata_, col_collection);
+    if (out_len == 0) return R_NilValue;
+
+    Rcpp::List extras_(extras);
+    std::string match_type = Rcpp::as<std::string>(extras_["match_type"]);
+
+    std::shared_ptr<OutputWrapper<int>> wrapper_ptr = get_wrapper_ptr(metadata_, output);
+
+    if (match_type == "NULL") {
+        auto out_strategy = std::make_shared<IdentityStrategy>();
+        DuplicatedWorker worker(metadata_, col_collection, *wrapper_ptr, out_strategy);
+        parallel_for(worker);
+    }
+    else if (match_type == "any") {
+        auto out_strategy = std::make_shared<BulkBoolStrategy>(BulkBoolOp::ANY, metadata_.na_action);
+        DuplicatedWorker worker(metadata_, col_collection, *wrapper_ptr, out_strategy);
+        parallel_for(worker);
+    }
+    else if (match_type == "none") {
+        auto out_strategy = std::make_shared<BulkBoolStrategy>(BulkBoolOp::NONE, metadata_.na_action);
+        DuplicatedWorker worker(metadata_, col_collection, *wrapper_ptr, out_strategy);
+        parallel_for(worker);
+    }
+    else if (match_type == "which_first") {
+        auto out_strategy = std::make_shared<WhichFirstStrategy>();
+        DuplicatedWorker worker(metadata_, col_collection, *wrapper_ptr, out_strategy);
+        parallel_for(worker);
+    }
+    else if (match_type == "count") {
+        auto out_strategy = std::make_shared<CountStrategy>();
+        DuplicatedWorker worker(metadata_, col_collection, *wrapper_ptr, out_strategy);
+        parallel_for(worker);
+    }
+    else { // nocov start
+        Rcpp::stop("Match type [" + match_type + "] not supported.");
+    } // nocov end
+
+    return R_NilValue;
+    END_RCPP
+}
+
 } // namespace wiserow

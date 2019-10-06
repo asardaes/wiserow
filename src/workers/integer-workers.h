@@ -117,6 +117,23 @@ private:
     std::vector<bool> char_targets_;
 };
 
+// =================================================================================================
+
+class DuplicatedWorker : public ParallelWorker
+{
+public:
+    DuplicatedWorker(const OperationMetadata& metadata,
+                     const ColumnCollection& cc,
+                     OutputWrapper<int>& ans,
+                     const std::shared_ptr<OutputStrategy<int>>& out_strategy);
+
+    virtual thread_local_ptr work_row(std::size_t in_id, std::size_t out_id, thread_local_ptr t_local) override;
+
+private:
+    OutputWrapper<int>& ans_;
+    const std::shared_ptr<OutputStrategy<int>> out_strategy_;
+};
+
 } // namespace wiserow
 
 #endif // WISEROW_INTEGERWORKERS_H_
