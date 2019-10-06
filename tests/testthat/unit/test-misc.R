@@ -2,6 +2,12 @@ context("  Miscellaneous")
 
 # some of these use row_sums as gateway because it was the first R function
 
+test_that("tidyselect support works.", {
+    .data <- data.frame(a = 1, b = 2)
+    metadata <- op_ctrl(output_mode = "integer", cols = tidyselect::last_col())
+    expect_identical(metadata$cols, 2L)
+})
+
 test_that("validate_metadata throws for invalid subset indices.", {
     expect_error(wiserow:::validate_metadata(int_mat, list(rows = "foo")), regexp = "no row names")
     expect_error(wiserow:::validate_metadata(int_mat, list(cols = "foo")), regexp = "no column names")

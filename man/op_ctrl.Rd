@@ -16,9 +16,10 @@ op_ctrl(output_mode, output_class = "vector", na_action = "exclude",
 
 \item{cols}{A vector indicating which columns to consider for the operation. If \code{NULL}, all
 columns are used. If its length is 0, no columns are considered. Negative numbers, logical
-values, and character vectors representing column names are supported.}
+values, character vectors representing column names, and \link[tidyselect:select_helpers]{tidyselect::select_helpers} are
+supported.}
 
-\item{rows}{Like \code{cols} but for row indices.}
+\item{rows}{Like \code{cols} but for row indices, and without \code{tidyselect} support.}
 
 \item{factor_mode}{One of ("integer", "character"), possibly abbreviated. If a column is a
 factor, this determines whether the operation uses its internal integer values, or the

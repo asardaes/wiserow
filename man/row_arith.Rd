@@ -22,8 +22,9 @@ row_arith(.data, ...)
   \item{na_action}{One of ("exclude", "pass"), possibly abbreviated.}
   \item{cols}{A vector indicating which columns to consider for the operation. If \code{NULL}, all
 columns are used. If its length is 0, no columns are considered. Negative numbers, logical
-values, and character vectors representing column names are supported.}
-  \item{rows}{Like \code{cols} but for row indices.}
+values, character vectors representing column names, and \link[tidyselect:select_helpers]{tidyselect::select_helpers} are
+supported.}
+  \item{rows}{Like \code{cols} but for row indices, and without \code{tidyselect} support.}
 }}
 
 \item{operator}{One of ("+", "-", "*", "/").}
