@@ -4,7 +4,6 @@
 \alias{row_compare}
 \alias{row_compare.matrix}
 \alias{row_compare.data.frame}
-\alias{row_compare.data.table}
 \title{Check if a row's columns fulfill a given comparison}
 \usage{
 row_compare(.data, match_type = "none", operator = "==", values = 0L,
@@ -15,8 +14,6 @@ row_compare(.data, match_type = "none", operator = "==", values = 0L,
 
 \method{row_compare}{data.frame}(.data, match_type = "none",
   operator = "==", values = 0L, ...)
-
-\method{row_compare}{data.table}(.data, ...)
 }
 \arguments{
 \item{.data}{A two-dimensional data structure.}

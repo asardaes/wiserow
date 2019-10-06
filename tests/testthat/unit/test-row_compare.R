@@ -3,7 +3,7 @@ context("  Row Compare")
 test_that("row_compare throws if an element of values has length != 0", {
     expect_error(row_compare(dbl_mat, values = list(1:2)), "length equal to 1")
     expect_error(row_compare(df, values = list(1:2)), "length equal to 1")
-    expect_error(row_compare(dt, values = list(1:2)), "length equal to 1")
+    expect_error(row_compare(df, values = list(1:2)), "length equal to 1")
 })
 
 test_that("row_compare throws for invalid types in values.", {
@@ -140,14 +140,10 @@ test_that("row_compare respects na_action.", {
 
     ans <- row_compare(df, "all", ">", values = 0, na_action = "pass", rows = 3001:5000, cols = cols)
     expect_identical(ans, expected)
-    ans <- row_compare(dt, "all", ">", values = 0, na_action = "pass", rows = 3001:5000, cols = cols)
-    expect_identical(ans, expected)
 
     expected <- sapply(3001:5000, df = df[, cols], function(i, df) { all(sapply(df[i, , drop = FALSE], ">", 0), na.rm = TRUE) })
 
     ans <- row_compare(df, "all", ">", values = 0, na_action = "exclude", rows = 3001:5000, cols = cols)
-    expect_identical(ans, expected)
-    ans <- row_compare(dt, "all", ">", values = 0, na_action = "exclude", rows = 3001:5000, cols = cols)
     expect_identical(ans, expected)
 })
 

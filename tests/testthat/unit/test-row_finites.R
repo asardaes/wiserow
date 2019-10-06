@@ -6,16 +6,15 @@ test_that("row_finites works as expected.", {
 
     df[2001:4000, dbl_cols] <- lapply(df[2001:4000, dbl_cols], function(x) { replace(x, is.na(x), Inf) })
     df[2001:4000, cplx_cols] <- lapply(df[2001:4000, cplx_cols], function(x) { replace(x, is.na(x), as.complex(Inf)) })
-    dt <- data.table::as.data.table(df)
 
     expected <- sapply(3001:5000, df = df, function(i, df) { all(sapply(df[i, , drop = FALSE], is.finite)) })
     ans <- row_finites(df, "all", rows = 3001:5000)
     expect_identical(ans, expected)
-    ans <- row_finites(dt, "all", rows = 3001:5000, output_class = "list")
+    ans <- row_finites(df, "all", rows = 3001:5000, output_class = "list")
     expect_identical(ans, as.list(expected))
 
     expected <- sapply(3001:5000, df = df, function(i, df) { all(!sapply(df[i, , drop = FALSE], is.finite)) })
-    ans <- row_finites(dt, "none", rows = 3001:5000)
+    ans <- row_finites(df, "none", rows = 3001:5000)
     expect_identical(ans, expected)
     ans <- row_finites(df, "none", rows = 3001:5000, output_class = "list")
     expect_identical(ans, as.list(expected))
@@ -23,7 +22,7 @@ test_that("row_finites works as expected.", {
     expected <- sapply(3001:5000, df = df, function(i, df) { any(sapply(df[i, , drop = FALSE], is.finite)) })
     ans <- row_finites(df, "any", rows = 3001:5000)
     expect_identical(ans, expected)
-    ans <- row_finites(dt, "any", rows = 3001:5000, output_class = "list")
+    ans <- row_finites(df, "any", rows = 3001:5000, output_class = "list")
     expect_identical(ans, as.list(expected))
 
     expected <- sapply(3001:5000, df = df, function(i, df) { Position(is.finite, df[i, , drop = FALSE]) })

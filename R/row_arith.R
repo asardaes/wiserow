@@ -68,11 +68,6 @@ row_arith.matrix <- function(.data, operator = c("+", "-", "*", "/"), cumulative
 row_arith.data.frame <- function(.data, operator = c("+", "-", "*", "/"), cumulative = FALSE, output_mode, output_class, ...) {
     operator <- match.arg(operator)
 
-    dots <- list(...)
-    if (is.null(dots$input_modes)) {
-        dots$input_modes <- sapply(.data, typeof)
-    }
-
     out_mode_missing <- missing(output_mode)
     if (out_mode_missing) {
         output_mode <- "integer"
@@ -82,14 +77,13 @@ row_arith.data.frame <- function(.data, operator = c("+", "-", "*", "/"), cumula
         output_class <- if (cumulative) "data.frame" else "vector"
     }
 
-    dots <- c(dots, list(
-        input_class = "data.frame",
-        output_mode = output_mode,
-        output_class = output_class,
-        factor_mode = "integer"
-    ))
+    metadata <- op_ctrl(input_class = "data.frame",
+                        input_modes = sapply(.data, typeof),
+                        output_class = output_class,
+                        output_mode = output_mode,
+                        factor_mode = "integer",
+                        ...)
 
-    metadata <- do.call(op_ctrl, dots)
     metadata <- validate_metadata(.data, metadata)
 
     if (out_mode_missing) {
@@ -119,13 +113,4 @@ row_arith.data.frame <- function(.data, operator = c("+", "-", "*", "/"), cumula
     }
 
     ans
-}
-
-#' @rdname row_arith
-#' @export
-#' @importFrom data.table .SD
-#'
-row_arith.data.table <- function(.data, ...) {
-    input_modes <- unlist(.data[, lapply(.SD, typeof)])
-    NextMethod("row_arith", .data, input_modes = input_modes)
 }

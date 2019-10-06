@@ -4,7 +4,6 @@
 \alias{row_infs}
 \alias{row_infs.matrix}
 \alias{row_infs.data.frame}
-\alias{row_infs.data.table}
 \title{Conditions related to infinite values}
 \usage{
 row_infs(.data, match_type = "none", ...)
@@ -12,8 +11,6 @@ row_infs(.data, match_type = "none", ...)
 \method{row_infs}{matrix}(.data, match_type = "none", ...)
 
 \method{row_infs}{data.frame}(.data, match_type = "none", ...)
-
-\method{row_infs}{data.table}(.data, ...)
 }
 \arguments{
 \item{.data}{A two-dimensional data structure.}

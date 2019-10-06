@@ -4,7 +4,6 @@
 \alias{row_in}
 \alias{row_in.matrix}
 \alias{row_in.data.frame}
-\alias{row_in.data.table}
 \title{Check if a row's columns' values are present in a set of known values}
 \usage{
 row_in(.data, match_type = "none", sets = list(), negate = FALSE,
@@ -15,8 +14,6 @@ row_in(.data, match_type = "none", sets = list(), negate = FALSE,
 
 \method{row_in}{data.frame}(.data, match_type = "none", sets = list(),
   negate = FALSE, ...)
-
-\method{row_in}{data.table}(.data, ...)
 }
 \arguments{
 \item{.data}{A two-dimensional data structure.}

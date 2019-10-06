@@ -4,7 +4,6 @@
 \alias{row_sums}
 \alias{row_sums.matrix}
 \alias{row_sums.data.frame}
-\alias{row_sums.data.table}
 \title{Row-wise sum}
 \usage{
 row_sums(.data, ...)
@@ -12,8 +11,6 @@ row_sums(.data, ...)
 \method{row_sums}{matrix}(.data, ...)
 
 \method{row_sums}{data.frame}(.data, ...)
-
-\method{row_sums}{data.table}(.data, ...)
 }
 \arguments{
 \item{.data}{A two-dimensional data structure.}
@@ -21,5 +18,5 @@ row_sums(.data, ...)
 \item{...}{Arguments for \code{\link[=row_arith]{row_arith()}} (except \code{operator}).}
 }
 \description{
-Row-wise sum
+Wrapper for \code{\link[=row_arith]{row_arith()}}.
 }

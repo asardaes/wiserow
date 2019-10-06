@@ -22,6 +22,7 @@ row_infs.matrix <- function(.data, match_type = "none", ...) {
     metadata <- op_ctrl(input_class = "matrix",
                         input_modes = typeof(.data),
                         output_mode = output_mode,
+                        na_action = "pass",
                         ...)
 
     metadata <- validate_metadata(.data, metadata)
@@ -45,19 +46,13 @@ row_infs.data.frame <- function(.data, match_type = "none", ...) {
     match_type <- match.arg(match_type, c("all", "any", "none", "which_first", "count"))
     output_mode <- if (match_type %in% c("which_first", "count")) "integer" else "logical"
 
-    dots <- list(...)
-    if (is.null(dots$input_modes)) {
-        dots$input_modes <- sapply(.data, typeof)
-    }
+    metadata <- op_ctrl(input_class = "data.frame",
+                        input_modes = sapply(.data, typeof),
+                        output_mode = output_mode,
+                        na_action = "pass",
+                        factor_mode = "integer",
+                        ...)
 
-    dots <- c(dots, list(
-        input_class = "data.frame",
-        output_mode = output_mode,
-        na_action = "pass",
-        factor_mode = "integer"
-    ))
-
-    metadata <- do.call(op_ctrl, dots)
     metadata <- validate_metadata(.data, metadata)
     ans <- prepare_output(.data, metadata)
 
@@ -70,13 +65,4 @@ row_infs.data.frame <- function(.data, match_type = "none", ...) {
     }
 
     ans
-}
-
-#' @rdname row_infs
-#' @export
-#' @importFrom data.table .SD
-#'
-row_infs.data.table <- function(.data, ...) {
-    input_modes <- unlist(.data[, lapply(.SD, typeof)])
-    NextMethod("row_infs", .data, input_modes = input_modes)
 }

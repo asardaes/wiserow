@@ -328,7 +328,7 @@ test_that("row_sums for data frames works.", {
 })
 
 test_that("row_sums for data tables works.", {
-    dt <- data.table::as.data.table(df[, sapply(df, typeof) != "character"])
+    df <- df[, sapply(df, typeof) != "character"]
 
     considered_cols <- list(
         1:3,
@@ -339,19 +339,19 @@ test_that("row_sums for data tables works.", {
     )
 
     for (cols in considered_cols) {
-        expected <- rowSums(dt[1001:5000, ..cols], na.rm = TRUE)
+        expected <- rowSums(df[1001:5000, cols], na.rm = TRUE)
         names(expected) <- NULL
 
-        ans <- row_sums(dt, rows = 1001:5000, cols = cols, na_action = "exclude")
+        ans <- row_sums(df, rows = 1001:5000, cols = cols, na_action = "exclude")
         expect_equal(ans, expected)
 
-        ans <- row_sums(dt, rows = 1001:5000, cols = cols, na_action = "exclude", output_class = "list")
+        ans <- row_sums(df, rows = 1001:5000, cols = cols, na_action = "exclude", output_class = "list")
         expect_equal(ans, as.list(expected))
     }
 
     # ----------------------------------------------------------------------------------------------
 
-    expected <- as.logical(rowSums(dt[-10L, 7:9]))
-    ans <- row_sums(dt, rows = -10L, cols = 7:9, na_action = "pass", output_mode = "logical")
+    expected <- as.logical(rowSums(df[-10L, 7:9]))
+    ans <- row_sums(df, rows = -10L, cols = 7:9, na_action = "pass", output_mode = "logical")
     expect_identical(ans, expected)
 })

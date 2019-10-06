@@ -4,7 +4,6 @@
 \alias{row_finites}
 \alias{row_finites.matrix}
 \alias{row_finites.data.frame}
-\alias{row_finites.data.table}
 \title{Conditions related to finite values}
 \usage{
 row_finites(.data, match_type = "none", ...)
@@ -12,8 +11,6 @@ row_finites(.data, match_type = "none", ...)
 \method{row_finites}{matrix}(.data, match_type = "none", ...)
 
 \method{row_finites}{data.frame}(.data, match_type = "none", ...)
-
-\method{row_finites}{data.table}(.data, ...)
 }
 \arguments{
 \item{.data}{A two-dimensional data structure.}

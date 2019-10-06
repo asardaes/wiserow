@@ -4,7 +4,6 @@
 \alias{row_nas}
 \alias{row_nas.matrix}
 \alias{row_nas.data.frame}
-\alias{row_nas.data.table}
 \title{Conditions related to missing values}
 \usage{
 row_nas(.data, match_type = "none", ...)
@@ -12,8 +11,6 @@ row_nas(.data, match_type = "none", ...)
 \method{row_nas}{matrix}(.data, match_type = "none", ...)
 
 \method{row_nas}{data.frame}(.data, match_type = "none", ...)
-
-\method{row_nas}{data.table}(.data, ...)
 }
 \arguments{
 \item{.data}{A two-dimensional data structure.}

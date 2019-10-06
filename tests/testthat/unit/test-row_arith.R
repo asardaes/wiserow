@@ -27,8 +27,8 @@ test_that("row_arith correctly infers output mode.", {
     expect_equal(ans, apply(bool_mat[, 3:2], 1L, function(row) { Reduce("/", row) }))
 })
 
-test_that("row_arith behaves as expected for data frames/tables.", {
-    df <- dt[, sapply(df, typeof) != "character", with = FALSE]
+test_that("row_arith behaves as expected for data frames.", {
+    df <- df[, sapply(df, typeof) != "character"]
 
     considered_cols <- list(
         paste0("int.V", 1:3),
@@ -43,7 +43,7 @@ test_that("row_arith behaves as expected for data frames/tables.", {
     for (operator in c("-", "*", "/")) {
         for (cols in considered_cols) {
             expected <- sapply(considered_rows, function(i) {
-                row <- unlist(df[i, cols, with = FALSE])
+                row <- unlist(df[i, cols])
                 row <- row[!is.na(row)]
                 ans <- Reduce(operator, row)
                 if (is.null(ans)) 0 else ans
@@ -54,7 +54,7 @@ test_that("row_arith behaves as expected for data frames/tables.", {
             expect_equal(ans, expected)
 
             expected <- sapply(considered_rows, function(i) {
-                row <- unlist(df[i, cols, with = FALSE])
+                row <- unlist(df[i, cols])
                 ans <- Reduce(operator, row)
                 if (is.null(ans)) FALSE else ans
             })
@@ -72,7 +72,7 @@ test_that("row_arith can accumulate.", {
     expect_error(row_arith(int_mat, cumulative = TRUE, output_class = "vector"), "cumulative")
     expect_error(row_arith(int_mat, cumulative = TRUE, output_class = "list"), "cumulative")
     expect_error(row_arith(df, cumulative = TRUE, output_class = "vector"), "cumulative")
-    expect_error(row_arith(dt, cumulative = TRUE, output_class = "list"), "cumulative")
+    expect_error(row_arith(df, cumulative = TRUE, output_class = "list"), "cumulative")
 
     # ----------------------------------------------------------------------------------------------
 

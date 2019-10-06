@@ -4,7 +4,6 @@
 \alias{row_arith}
 \alias{row_arith.matrix}
 \alias{row_arith.data.frame}
-\alias{row_arith.data.table}
 \title{Row-wise arithmetic operations}
 \usage{
 row_arith(.data, ...)
@@ -14,8 +13,6 @@ row_arith(.data, ...)
 
 \method{row_arith}{data.frame}(.data, operator = c("+", "-", "*", "/"),
   cumulative = FALSE, output_mode, output_class, ...)
-
-\method{row_arith}{data.table}(.data, ...)
 }
 \arguments{
 \item{.data}{A two-dimensional data structure.}

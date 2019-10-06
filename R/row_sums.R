@@ -1,5 +1,7 @@
 #' Row-wise sum
 #'
+#' Wrapper for [row_arith()].
+#'
 #' @export
 #'
 #' @template data-param
@@ -21,13 +23,4 @@ row_sums.matrix <- function(.data, ...) {
 #'
 row_sums.data.frame <- function(.data, ...) {
     row_arith.data.frame(.data, operator = "+", ...)
-}
-
-#' @rdname row_sums
-#' @export
-#' @importFrom data.table .SD
-#'
-row_sums.data.table <- function(.data, ...) {
-    input_modes <- unlist(.data[, lapply(.SD, typeof)])
-    NextMethod("row_sums", .data, input_modes = input_modes)
 }

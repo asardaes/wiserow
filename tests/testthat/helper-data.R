@@ -17,5 +17,3 @@ df <- cbind(
     char = as.data.frame(char_na_mat, stringsAsFactors = FALSE),
     cplx = as.data.frame(cplx_na_mat)
 )
-
-dt <- data.table::as.data.table(df)

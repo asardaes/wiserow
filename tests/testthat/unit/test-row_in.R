@@ -12,8 +12,6 @@ test_that("row_in works for any combination of types.", {
         expected <- row_nas(df, "count")
         ans <- row_in(df, "count", list(na))
         expect_identical(ans, expected)
-        ans <- row_in(dt, "count", list(na))
-        expect_identical(ans, expected)
 
         expected <- row_nas(int_na_mat, "none")
         ans <- row_in(int_na_mat, "none", list(na))

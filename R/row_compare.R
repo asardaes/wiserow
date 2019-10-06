@@ -90,17 +90,11 @@ row_compare.data.frame <- function(.data, match_type = "none", operator = "==", 
         stop("Each value in 'values' must have length equal to 1.")
     }
 
-    dots <- list(...)
-    if (is.null(dots$input_modes)) {
-        dots$input_modes <- sapply(.data, typeof)
-    }
+    metadata <- op_ctrl(input_class = "data.frame",
+                        input_modes = sapply(.data, typeof),
+                        output_mode = if (match_type %in% c("which_first", "count")) "integer" else "logical",
+                        ...)
 
-    dots <- c(dots, list(
-        input_class = "data.frame",
-        output_mode = if (match_type %in% c("which_first", "count")) "integer" else "logical"
-    ))
-
-    metadata <- do.call(op_ctrl, dots)
     metadata <- validate_metadata(.data, metadata)
     ans <- prepare_output(.data, metadata)
 
@@ -115,13 +109,4 @@ row_compare.data.frame <- function(.data, match_type = "none", operator = "==", 
     }
 
     ans
-}
-
-#' @rdname row_compare
-#' @export
-#' @importFrom data.table .SD
-#'
-row_compare.data.table <- function(.data, ...) {
-    input_modes <- unlist(.data[, lapply(.SD, typeof)])
-    NextMethod("row_compare", .data, input_modes = input_modes)
 }

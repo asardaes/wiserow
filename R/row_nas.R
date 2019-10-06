@@ -46,18 +46,12 @@ row_nas.data.frame <- function(.data, match_type = "none", ...) {
     match_type <- match.arg(match_type, c("all", "any", "none", "which_first", "count"))
     output_mode <- if (match_type %in% c("which_first", "count")) "integer" else "logical"
 
-    dots <- list(...)
-    if (is.null(dots$input_modes)) {
-        dots$input_modes <- sapply(.data, typeof)
-    }
+    metadata <- op_ctrl(input_class = "data.frame",
+                        input_modes = sapply(.data, typeof),
+                        output_mode = output_mode,
+                        na_action = "pass",
+                        ...)
 
-    dots <- c(dots, list(
-        input_class = "data.frame",
-        output_mode = output_mode,
-        na_action = "pass"
-    ))
-
-    metadata <- do.call(op_ctrl, dots)
     metadata <- validate_metadata(.data, metadata)
     ans <- prepare_output(.data, metadata)
 
@@ -70,13 +64,4 @@ row_nas.data.frame <- function(.data, match_type = "none", ...) {
     }
 
     ans
-}
-
-#' @rdname row_nas
-#' @export
-#' @importFrom data.table .SD
-#'
-row_nas.data.table <- function(.data, ...) {
-    input_modes <- unlist(.data[, lapply(.SD, typeof)])
-    NextMethod("row_nas", .data, input_modes = input_modes)
 }
