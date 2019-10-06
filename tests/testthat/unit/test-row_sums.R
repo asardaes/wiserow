@@ -41,15 +41,15 @@ test_that("row_sums for integer matrices works.", {
 test_that("row_sums for integer matrices with NAs works.", {
     expected <- rowSums(int_na_mat, na.rm = TRUE)
     ans <- row_sums(int_na_mat, output_mode = "double")
-    expect_identical(ans, expected)
+    expect_equal(ans, expected)
 
     expected <- as.integer(expected)
     ans <- row_sums(int_na_mat)
-    expect_identical(ans, expected)
+    expect_equal(ans, expected)
 
     expected <- rowSums(int_na_mat)
     ans <- row_sums(int_na_mat, output_mode = "double", na_action = "pass")
-    expect_identical(ans, expected)
+    expect_equal(ans, expected)
 })
 
 test_that("row_sums for integer matrices with column subset works.", {
@@ -109,15 +109,15 @@ test_that("row_sums for double matrices works.", {
 test_that("row_sums for double matrices with NAs works.", {
     expected <- rowSums(dbl_na_mat, na.rm = TRUE)
     ans <- row_sums(dbl_na_mat)
-    expect_identical(ans, expected)
+    expect_equal(ans, expected)
 
     expected <- as.integer(expected)
     ans <- row_sums(dbl_na_mat, output_mode = "integer")
-    expect_identical(ans, expected)
+    expect_equal(ans, expected)
 
     expected <- rowSums(dbl_na_mat)
     ans <- row_sums(dbl_na_mat, na_action = "pass")
-    expect_identical(ans, expected)
+    expect_equal(ans, expected)
 })
 
 test_that("row_sums for double matrices with column subset works.", {
@@ -177,15 +177,15 @@ test_that("row_sums for logical matrices works.", {
 test_that("row_sums for logical matrices with NAs works.", {
     expected <- rowSums(bool_na_mat, na.rm = TRUE)
     ans <- row_sums(bool_na_mat, output_mode = "double")
-    expect_identical(ans, expected)
+    expect_equal(ans, expected)
 
     expected <- as.integer(expected)
     ans <- row_sums(bool_na_mat)
-    expect_identical(ans, expected)
+    expect_equal(ans, expected)
 
     expected <- rowSums(bool_na_mat)
     ans <- row_sums(bool_na_mat, output_mode = "double", na_action = "pass")
-    expect_identical(ans, expected)
+    expect_equal(ans, expected)
 })
 
 test_that("row_sums for logical matrices with column subset works.", {
