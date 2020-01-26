@@ -24,9 +24,9 @@ public:
                    OutputWrapper<T>& ans,
                    const Rcpp::List extras)
         : ParallelWorker(metadata, cc)
+        , cumulative_(Rcpp::as<bool>(extras["cumulative"]))
         , ans_(ans)
         , arith_opr_(parse_arith_op(Rcpp::as<std::string>(extras["arith_op"])))
-        , cumulative_(Rcpp::as<bool>(extras["cumulative"]))
     { }
 
     virtual thread_local_ptr work_row(std::size_t in_id, std::size_t out_id, thread_local_ptr) override {
@@ -67,14 +67,26 @@ public:
 
         return nullptr;
     }
+protected:
+    RowArithWorker(const OperationMetadata& metadata,
+                   const ColumnCollection& cc,
+                   OutputWrapper<T>& ans,
+                   const Rcpp::List extras,
+                   const ArithmeticOperator& arith_opr)
+        : ParallelWorker(metadata, cc)
+        , cumulative_(Rcpp::as<bool>(extras["cumulative"]))
+        , ans_(ans)
+        , arith_opr_(arith_opr)
+    { }
 
-private:
-    OutputWrapper<T>& ans_;
-    const ArithmeticOperator arith_opr_;
     const bool cumulative_;
+    OutputWrapper<T>& ans_;
 
     const T na_value_ = NA_REAL;
     const NAVisitor na_visitor_;
+
+private:
+    const ArithmeticOperator arith_opr_;
     const NumericVisitor<T> visitor_;
 };
 
@@ -90,9 +102,9 @@ public:
                    OutputWrapper<int>& ans,
                    const Rcpp::List extras)
         : ParallelWorker(metadata, cc)
+        , cumulative_(Rcpp::as<bool>(extras["cumulative"]))
         , ans_(ans)
         , arith_opr_(parse_arith_op(Rcpp::as<std::string>(extras["arith_op"])))
-        , cumulative_(Rcpp::as<bool>(extras["cumulative"]))
     { }
 
     virtual thread_local_ptr work_row(std::size_t in_id, std::size_t out_id, thread_local_ptr) override {
@@ -142,14 +154,82 @@ public:
         return nullptr;
     }
 
-private:
-    OutputWrapper<int>& ans_;
-    const ArithmeticOperator arith_opr_;
+protected:
+    RowArithWorker(const OperationMetadata& metadata,
+                   const ColumnCollection& cc,
+                   OutputWrapper<int>& ans,
+                   const Rcpp::List extras,
+                   const ArithmeticOperator& arith_opr)
+        : ParallelWorker(metadata, cc)
+        , cumulative_(Rcpp::as<bool>(extras["cumulative"]))
+        , ans_(ans)
+        , arith_opr_(arith_opr)
+    { }
+
     const bool cumulative_;
+    OutputWrapper<int>& ans_;
 
     const int na_value_ = NA_INTEGER;
     const NAVisitor na_visitor_;
+
+private:
+    const ArithmeticOperator arith_opr_;
     const NumericVisitor<int> visitor_;
+};
+
+// =================================================================================================
+
+template<typename T>
+class RowMeansWorker : public RowArithWorker<T>
+{
+public:
+    RowMeansWorker(const OperationMetadata& metadata,
+                   const ColumnCollection& cc,
+                   OutputWrapper<T>& ans,
+                   Rcpp::List extras)
+        : RowArithWorker<T>(metadata, cc, ans, extras, ArithmeticOperator(ArithOp::ADD))
+    { }
+
+    virtual ParallelWorker::thread_local_ptr work_row(std::size_t in_id, std::size_t out_id, ParallelWorker::thread_local_ptr) override {
+        RowArithWorker<T>::work_row(in_id, out_id, nullptr);
+
+        if (this->cumulative_) {
+            double n = 1;
+            for (std::size_t j = 0; j < this->col_collection_.ncol(); j++) {
+                bool is_na = boost::apply_visitor(this->na_visitor_, this->col_collection_(in_id, j));
+                T ans = this->ans_(out_id, j);
+
+                if (!is_na) {
+                    if (this->metadata.output_mode == LGLSXP) {
+                        this->ans_(out_id, j) = (ans / n != 0.0) ? 1 : 0;
+                    }
+                    else {
+                        this->ans_(out_id, j) = ans / n;
+                    }
+
+                    n += 1;
+                }
+                else if (this->metadata.na_action == NaAction::PASS) {
+                    n += 1;
+                }
+            }
+        }
+        else {
+            T ans = this->ans_(out_id, 0);
+            if (ans != this->na_value_) {
+                double n = static_cast<double>(this->col_collection_.ncol());
+
+                if (this->metadata.output_mode == LGLSXP) {
+                    this->ans_(out_id, 0) = ((ans / n) != 0.0) ? 1 : 0;
+                }
+                else {
+                    this->ans_(out_id, 0) = ans / n;
+                }
+            }
+        }
+
+        return nullptr;
+    }
 };
 
 } // namespace wiserow
