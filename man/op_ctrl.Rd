@@ -4,8 +4,15 @@
 \alias{op_ctrl}
 \title{Operation's control parameters}
 \usage{
-op_ctrl(output_mode, output_class = "vector", na_action = "exclude",
-  cols = NULL, rows = NULL, factor_mode = "character", ...)
+op_ctrl(
+  output_mode,
+  output_class = "vector",
+  na_action = "exclude",
+  cols = NULL,
+  rows = NULL,
+  factor_mode = "character",
+  ...
+)
 }
 \arguments{
 \item{output_mode}{Desired \code{\link[base:storage.mode]{base::storage.mode()}} for the result.}

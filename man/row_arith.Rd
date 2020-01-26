@@ -8,24 +8,37 @@
 \usage{
 row_arith(.data, ...)
 
-\method{row_arith}{matrix}(.data, operator = c("+", "-", "*", "/"),
-  cumulative = FALSE, output_mode, output_class, ...)
+\method{row_arith}{matrix}(
+  .data,
+  operator = c("+", "-", "*", "/"),
+  cumulative = FALSE,
+  output_mode,
+  output_class,
+  ...
+)
 
-\method{row_arith}{data.frame}(.data, operator = c("+", "-", "*", "/"),
-  cumulative = FALSE, output_mode, output_class, ...)
+\method{row_arith}{data.frame}(
+  .data,
+  operator = c("+", "-", "*", "/"),
+  cumulative = FALSE,
+  output_mode,
+  output_class,
+  ...
+)
 }
 \arguments{
 \item{.data}{A two-dimensional data structure.}
 
-\item{...}{Arguments passed on to \code{op_ctrl}
-\describe{
-  \item{na_action}{One of ("exclude", "pass"), possibly abbreviated.}
-  \item{cols}{A vector indicating which columns to consider for the operation. If \code{NULL}, all
+\item{...}{
+  Arguments passed on to \code{\link[=op_ctrl]{op_ctrl}}
+  \describe{
+    \item{\code{na_action}}{One of ("exclude", "pass"), possibly abbreviated.}
+    \item{\code{cols}}{A vector indicating which columns to consider for the operation. If \code{NULL}, all
 columns are used. If its length is 0, no columns are considered. Negative numbers, logical
 values, character vectors representing column names, and \link[tidyselect:select_helpers]{tidyselect::select_helpers} are
 supported.}
-  \item{rows}{Like \code{cols} but for row indices, and without \code{tidyselect} support.}
-}}
+    \item{\code{rows}}{Like \code{cols} but for row indices, and without \code{tidyselect} support.}
+  }}
 
 \item{operator}{One of ("+", "-", "*", "/").}
 

@@ -6,14 +6,11 @@
 \alias{row_in.data.frame}
 \title{Check if a row's columns' values are present in a set of known values}
 \usage{
-row_in(.data, match_type = "none", sets = list(), negate = FALSE,
-  ...)
+row_in(.data, match_type = "none", sets = list(), negate = FALSE, ...)
 
-\method{row_in}{matrix}(.data, match_type = "none", sets = list(),
-  negate = FALSE, ...)
+\method{row_in}{matrix}(.data, match_type = "none", sets = list(), negate = FALSE, ...)
 
-\method{row_in}{data.frame}(.data, match_type = "none", sets = list(),
-  negate = FALSE, ...)
+\method{row_in}{data.frame}(.data, match_type = "none", sets = list(), negate = FALSE, ...)
 }
 \arguments{
 \item{.data}{A two-dimensional data structure.}
@@ -24,18 +21,19 @@ row_in(.data, match_type = "none", sets = list(), negate = FALSE,
 
 \item{negate}{Logical. If \code{TRUE}, values that are \emph{not} in the \code{sets} are sought.}
 
-\item{...}{Arguments passed on to \code{op_ctrl}
-\describe{
-  \item{output_class}{One of ("vector", "list", "data.frame", "matrix"), possibly abbreviated.}
-  \item{cols}{A vector indicating which columns to consider for the operation. If \code{NULL}, all
+\item{...}{
+  Arguments passed on to \code{\link[=op_ctrl]{op_ctrl}}
+  \describe{
+    \item{\code{output_class}}{One of ("vector", "list", "data.frame", "matrix"), possibly abbreviated.}
+    \item{\code{cols}}{A vector indicating which columns to consider for the operation. If \code{NULL}, all
 columns are used. If its length is 0, no columns are considered. Negative numbers, logical
 values, character vectors representing column names, and \link[tidyselect:select_helpers]{tidyselect::select_helpers} are
 supported.}
-  \item{rows}{Like \code{cols} but for row indices, and without \code{tidyselect} support.}
-  \item{factor_mode}{One of ("integer", "character"), possibly abbreviated. If a column is a
+    \item{\code{rows}}{Like \code{cols} but for row indices, and without \code{tidyselect} support.}
+    \item{\code{factor_mode}}{One of ("integer", "character"), possibly abbreviated. If a column is a
 factor, this determines whether the operation uses its internal integer values, or the
 character values from its levels.}
-}}
+  }}
 }
 \description{
 Check if a row's columns' values are present in a set of known values

@@ -8,11 +8,9 @@
 \usage{
 row_duplicated(.data, match_type = NULL, output_class, ...)
 
-\method{row_duplicated}{matrix}(.data, match_type = NULL, output_class,
-  ...)
+\method{row_duplicated}{matrix}(.data, match_type = NULL, output_class, ...)
 
-\method{row_duplicated}{data.frame}(.data, match_type = NULL,
-  output_class, ...)
+\method{row_duplicated}{data.frame}(.data, match_type = NULL, output_class, ...)
 }
 \arguments{
 \item{.data}{A two-dimensional data structure.}
@@ -21,17 +19,18 @@ row_duplicated(.data, match_type = NULL, output_class, ...)
 
 \item{output_class}{Passed to \code{\link[=op_ctrl]{op_ctrl()}}. If missing, it will be inferred.}
 
-\item{...}{Arguments passed on to \code{op_ctrl}
-\describe{
-  \item{cols}{A vector indicating which columns to consider for the operation. If \code{NULL}, all
+\item{...}{
+  Arguments passed on to \code{\link[=op_ctrl]{op_ctrl}}
+  \describe{
+    \item{\code{cols}}{A vector indicating which columns to consider for the operation. If \code{NULL}, all
 columns are used. If its length is 0, no columns are considered. Negative numbers, logical
 values, character vectors representing column names, and \link[tidyselect:select_helpers]{tidyselect::select_helpers} are
 supported.}
-  \item{rows}{Like \code{cols} but for row indices, and without \code{tidyselect} support.}
-  \item{factor_mode}{One of ("integer", "character"), possibly abbreviated. If a column is a
+    \item{\code{rows}}{Like \code{cols} but for row indices, and without \code{tidyselect} support.}
+    \item{\code{factor_mode}}{One of ("integer", "character"), possibly abbreviated. If a column is a
 factor, this determines whether the operation uses its internal integer values, or the
 character values from its levels.}
-}}
+  }}
 }
 \description{
 Conditions related to duplicated values

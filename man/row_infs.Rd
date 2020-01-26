@@ -17,15 +17,16 @@ row_infs(.data, match_type = "none", ...)
 
 \item{match_type}{One of ("all", "any", "none", "which_first", "count"). Possibly abbreviated.}
 
-\item{...}{Arguments passed on to \code{op_ctrl}
-\describe{
-  \item{output_class}{One of ("vector", "list", "data.frame", "matrix"), possibly abbreviated.}
-  \item{cols}{A vector indicating which columns to consider for the operation. If \code{NULL}, all
+\item{...}{
+  Arguments passed on to \code{\link[=op_ctrl]{op_ctrl}}
+  \describe{
+    \item{\code{output_class}}{One of ("vector", "list", "data.frame", "matrix"), possibly abbreviated.}
+    \item{\code{cols}}{A vector indicating which columns to consider for the operation. If \code{NULL}, all
 columns are used. If its length is 0, no columns are considered. Negative numbers, logical
 values, character vectors representing column names, and \link[tidyselect:select_helpers]{tidyselect::select_helpers} are
 supported.}
-  \item{rows}{Like \code{cols} but for row indices, and without \code{tidyselect} support.}
-}}
+    \item{\code{rows}}{Like \code{cols} but for row indices, and without \code{tidyselect} support.}
+  }}
 }
 \description{
 Conditions related to infinite values
