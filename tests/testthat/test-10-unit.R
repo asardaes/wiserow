@@ -8,5 +8,6 @@ source("unit/test-row_compare.R", TRUE)
 source("unit/test-row_arith.R", TRUE)
 source("unit/test-row_in.R", TRUE)
 source("unit/test-row_duplicated.R", TRUE)
+source("unit/test-row_means.R", TRUE)
 
 source("unit/test-misc.R", TRUE)
