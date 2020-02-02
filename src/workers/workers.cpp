@@ -436,7 +436,7 @@ void CountStrategy::reinit() {
     count_ = 0;
 }
 
-void CountStrategy::apply(const std::size_t col, const supported_col_t&, const bool match_flag) {
+void CountStrategy::apply(const std::size_t, const supported_col_t&, const bool match_flag) {
     if (match_flag) {
         count_++;
     }

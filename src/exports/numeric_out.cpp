@@ -15,7 +15,7 @@ extern "C" SEXP row_arith(SEXP metadata, SEXP data, SEXP output, SEXP extras) {
 
 extern "C" SEXP row_means(SEXP metadata, SEXP data, SEXP output, SEXP extras) {
     BEGIN_RCPP
-    return visit_into_numeric<RowMeansWorker>("row_sums", metadata, data, output, extras);
+    return visit_into_numeric<RowMeansWorker>("row_means", metadata, data, output, extras);
     END_RCPP
 }
 

@@ -82,6 +82,9 @@ row_means.data.frame <- function(.data, cumulative = FALSE, output_mode, output_
 
             if (any(supported)) {
                 metadata$output_mode <- typeof(Reduce("+", sapply(input_modes[cols][supported], vector, length = 1L)))
+                if (out_mode_missing && metadata$output_mode %in% c("integer", "logical")) {
+                    metadata$output_mode <- "double"
+                }
             }
         }
     }
