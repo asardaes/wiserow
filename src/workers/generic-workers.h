@@ -58,10 +58,7 @@ public:
                 need_init = false;
                 supported_col_t variant = col_collection_(in_id, j);
                 ans_(out_id, cumulative_ ? j : 0) = boost::apply_visitor(visitor_, variant);
-
-                if (t_local) {
-                    std::static_pointer_cast<CountStrategy>(t_local)->apply(0, variant, true);
-                }
+                // this branch will never be reached from RowMeansWorker
             }
             else {
                 supported_col_t variant = col_collection_(in_id, j);
@@ -69,6 +66,7 @@ public:
                 std::size_t prev_j = cumulative_ ? (j > 0 ? j - 1 : 0) : 0;
                 ans_(out_id, cumulative_ ? j : 0) = arith_opr_.apply(ans_(out_id, prev_j), val);
 
+                // for RowMeansWorker
                 if (t_local) {
                     std::static_pointer_cast<CountStrategy>(t_local)->apply(0, variant, true);
                 }
@@ -144,10 +142,7 @@ public:
                 need_init = false;
                 supported_col_t variant = col_collection_(in_id, j);
                 ans_(out_id, cumulative_ ? j : 0) = boost::apply_visitor(visitor_, variant);
-
-                if (t_local) {
-                    std::static_pointer_cast<CountStrategy>(t_local)->apply(0, variant, true);
-                }
+                // this branch will never be reached from RowMeansWorker
             }
             else {
                 supported_col_t variant = col_collection_(in_id, j);
@@ -155,6 +150,7 @@ public:
                 std::size_t prev_j = cumulative_ ? (j > 0 ? j - 1 : 0) : 0;
                 ans_(out_id, cumulative_ ? j : 0) = arith_opr_.apply(ans_(out_id, prev_j), val);
 
+                // for RowMeansWorker
                 if (t_local) {
                     std::static_pointer_cast<CountStrategy>(t_local)->apply(0, variant, true);
                 }
