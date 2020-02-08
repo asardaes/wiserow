@@ -70,6 +70,7 @@ validate_metadata <- function(.data, metadata) {
 #'
 handle_subset_ids <- function(.data, ids, which_dim) {
     ans <- switch(typeof(ids),
+                  "integer" = ids,
                   "double" = as.integer(ids),
                   "logical" = which(ids),
                   "character" = {
@@ -82,7 +83,7 @@ handle_subset_ids <- function(.data, ids, which_dim) {
                       match(ids, nms)
                   },
                   # default
-                  ids)
+                  stop(glue::glue("Unsupported type for subset indices: { typeof(ids) }")))
 
     if (anyNA(ans)) {
         stop("Subsetting indices (rows/cols) cannot have NA values.")

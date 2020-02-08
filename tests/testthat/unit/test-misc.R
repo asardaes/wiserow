@@ -13,6 +13,8 @@ test_that("validate_metadata throws for invalid subset indices.", {
     expect_error(wiserow:::validate_metadata(int_mat, list(cols = "foo")), regexp = "no column names")
     expect_error(wiserow:::validate_metadata(df, list(rows = "foo")), regexp = "cannot have NA")
     expect_error(wiserow:::validate_metadata(df, list(cols = "foo")), regexp = "cannot have NA")
+    expect_error(wiserow:::validate_metadata(df, list(rows = 1+0i)), regexp = "Unsupported type")
+    expect_error(wiserow:::validate_metadata(df, list(cols = 1+0i)), regexp = "Unsupported type")
 })
 
 test_that("Functions will throw if control strings cannot be mapped to known enums.", {
