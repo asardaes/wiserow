@@ -4,6 +4,7 @@
 #include <memory>
 #include <stdexcept> // logic_error
 #include <string>
+#include <typeinfo>
 
 #include <boost/utility/string_ref.hpp>
 #include <boost/variant/get.hpp>
@@ -11,6 +12,8 @@
 #include <Rcpp.h>
 
 namespace wiserow {
+
+boost::string_ref RowExtremaWorker<boost::string_ref>::STRING_REF_NOT_SET = boost::string_ref("dummy");
 
 RowExtremaWorker<boost::string_ref>::RowExtremaWorker(const OperationMetadata& metadata,
                                                       const ColumnCollection& cc,
@@ -42,8 +45,7 @@ ParallelWorker::thread_local_ptr RowExtremaWorker<boost::string_ref>::work_row(s
                 continue;
             }
             else {
-                variant = na_string_;
-                variant_initialized = true;
+                variant_initialized = false;
                 break;
             }
         }
@@ -63,7 +65,7 @@ ParallelWorker::thread_local_ptr RowExtremaWorker<boost::string_ref>::work_row(s
         variant_initialized = true;
     }
 
-    if (variant_initialized) ans[out_id] = boost::get<boost::string_ref>(variant);
+    ans[out_id] = variant_initialized ? boost::get<boost::string_ref>(variant) : STRING_REF_NOT_SET;
     return nullptr;
 }
 

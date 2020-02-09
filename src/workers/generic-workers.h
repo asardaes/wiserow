@@ -5,7 +5,6 @@
 #include <memory>
 #include <stdexcept> // runtime_error
 #include <string>
-#include <type_traits>
 #include <typeinfo>
 #include <unordered_set>
 #include <utility>
@@ -292,15 +291,10 @@ public:
                 if (metadata.na_action == NaAction::EXCLUDE) {
                     continue;
                 }
-                else if (std::is_same<T, int>::value) {
-                    variant = NA_INTEGER;
-                }
                 else {
-                    variant = NA_REAL;
+                    variant_initialized = false;
+                    break;
                 }
-
-                variant_initialized = true;
-                break;
             }
             else if (!visitor) {
                 variant = coerce(next_variant);
@@ -360,6 +354,8 @@ public:
                      const Rcpp::List extras,
                      std::unordered_set<std::string>& temporary_strings);
 
+    static boost::string_ref STRING_REF_NOT_SET;
+
     virtual thread_local_ptr work_row(std::size_t in_id, std::size_t out_id, thread_local_ptr t_local) override;
 
     std::vector<boost::string_ref> ans;
@@ -372,7 +368,6 @@ private:
     const std::shared_ptr<BooleanVisitor> dummy_parent_visitor_;
 
     const BoolOp bool_op_ = BoolOp::AND;
-    const boost::string_ref na_string_ = boost::string_ref(CHAR(Rf_asChar(NA_STRING)));
     const NAVisitor na_visitor_;
     std::unordered_set<std::string>& temporary_strings_;
 };

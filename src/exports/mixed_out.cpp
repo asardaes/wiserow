@@ -339,15 +339,21 @@ extern "C" SEXP row_extrema(SEXP metadata, SEXP data, SEXP output, SEXP extras) 
         case RClass::VECTOR: {
             Rcpp::StringVector ans(output);
             for (R_xlen_t i = 0; i < ans.length(); i++) {
-                ans[i] = worker.ans[i].data();
+                const char * data = worker.ans[i].data();
+                if (data != worker.STRING_REF_NOT_SET.data()) {
+                    ans[i] = data;
+                }
             }
             break;
         }
         case RClass::LIST: {
             Rcpp::List list(output);
             for (R_xlen_t i = 0; i < list.length(); i++) {
-                Rcpp::StringVector ans(list[i]);
-                ans[0] = worker.ans[i].data();
+                const char * data = worker.ans[i].data();
+                if (data != worker.STRING_REF_NOT_SET.data()) {
+                    Rcpp::StringVector ans(list[i]);
+                    ans[0] = data;
+                }
             }
             break;
         }
@@ -355,14 +361,20 @@ extern "C" SEXP row_extrema(SEXP metadata, SEXP data, SEXP output, SEXP extras) 
             Rcpp::DataFrame df(output);
             Rcpp::StringVector ans(df[0]);
             for (R_xlen_t i = 0; i < ans.length(); i++) {
-                ans[i] = worker.ans[i].data();
+                const char * data = worker.ans[i].data();
+                if (data != worker.STRING_REF_NOT_SET.data()) {
+                    ans[i] = data;
+                }
             }
             break;
         }
         case RClass::MATRIX: {
             Rcpp::StringMatrix ans(output);
             for (int i = 0; i < ans.nrow(); i++) {
-                ans[i] = worker.ans[i].data();
+                const char * data = worker.ans[i].data();
+                if (data != worker.STRING_REF_NOT_SET.data()) {
+                    ans[i] = data;
+                }
             }
             break;
         }
