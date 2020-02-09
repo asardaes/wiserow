@@ -20,21 +20,7 @@ row_extrema_matrix <- function(.data, comp_op, ...) {
         }
     }
 
-    ans_len <- if (is.null(metadata$rows)) nrow(.data) else length(metadata$rows)
-    if (metadata$output_mode == "double") {
-        ans <- rep(-Inf, ans_len)
-    }
-    else {
-        ans <- rep(as(NA, metadata$output_mode), ans_len)
-    }
-
-    if (metadata$output_class == "data.frame") {
-        ans <- data.frame(V1 = ans, stringsAsFactors = FALSE)
-    }
-    else {
-        ans <- methods::as(ans, metadata$output_class)
-    }
-
+    ans <- prepare_output(.data, metadata)
     extras <- list(
         comp_op = comp_op
     )
@@ -76,21 +62,7 @@ row_extrema_df <- function(.data, comp_op, ...) {
         }
     }
 
-    ans_len <- if (is.null(metadata$rows)) nrow(.data) else length(metadata$rows)
-    if (metadata$output_mode == "double") {
-        ans <- rep(-Inf, ans_len)
-    }
-    else {
-        ans <- rep(as(NA, metadata$output_mode), ans_len)
-    }
-
-    if (metadata$output_class == "data.frame") {
-        ans <- data.frame(V1 = ans, stringsAsFactors = FALSE)
-    }
-    else {
-        ans <- methods::as(ans, metadata$output_class)
-    }
-
+    ans <- prepare_output(.data, metadata)
     extras <- list(
         comp_op = comp_op
     )

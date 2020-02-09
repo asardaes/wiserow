@@ -45,16 +45,17 @@ ParallelWorker::thread_local_ptr RowExtremaWorker<boost::string_ref>::work_row(s
                 continue;
             }
             else {
-                variant_initialized = false;
+                variant = STRING_REF_NOT_SET;
+                variant_initialized = true;
                 break;
             }
         }
         else if (!visitor) {
-            variant = coerce(next_variant);
+            variant = coerce(next_variant, col_collection_[j]->is_logical());
             visitor = instantiate_visitor(boost::get<boost::string_ref>(variant));
         }
         else {
-            const supported_col_t coerced_next = coerce(next_variant);
+            const supported_col_t coerced_next = coerce(next_variant, col_collection_[j]->is_logical());
             bool next_more_extreme = boost::apply_visitor(*visitor, coerced_next);
             if (next_more_extreme) {
                 variant = coerced_next;
@@ -80,11 +81,11 @@ std::shared_ptr<BooleanVisitor> RowExtremaWorker<boost::string_ref>::instantiate
 
 // -------------------------------------------------------------------------------------------------
 
-boost::string_ref RowExtremaWorker<boost::string_ref>::coerce(const supported_col_t& variant) {
+boost::string_ref RowExtremaWorker<boost::string_ref>::coerce(const supported_col_t& variant, const bool is_logical) {
     std::string val;
 
     if (variant.type() == typeid(int)) {
-        val = ::wiserow::to_string(boost::get<int>(variant));
+        val = is_logical ? ::wiserow::to_string(boost::get<int>(variant) != 0) :  ::wiserow::to_string(boost::get<int>(variant));
     }
     else if (variant.type() == typeid(double)) {
         val = ::wiserow::to_string(boost::get<double>(variant));

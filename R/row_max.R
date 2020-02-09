@@ -10,6 +10,10 @@
 #' For data frames, if the input columns have different modes, all of them will be promoted
 #' on-the-fly to the highest one in the R hierarchy.
 #'
+#' @note
+#'
+#' String comparison is done in C++, which can vary from what R does.
+#'
 row_max <- function(.data, ...) {
     UseMethod("row_max")
 }

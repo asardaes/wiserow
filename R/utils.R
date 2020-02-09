@@ -112,7 +112,8 @@ prepare_output <- function(.data, metadata, allow_cols = FALSE) {
         ans <- lapply(1L:ans_len, function(ignored) { vector(metadata$output_mode, 1L) })
     }
     else if (metadata$output_class == "data.frame") {
-        ans <- as.data.frame(lapply(seq_len(ncol), function(ignored) { vector(metadata$output_mode, ans_len) }))
+        ans <- as.data.frame(lapply(seq_len(ncol), function(ignored) { vector(metadata$output_mode, ans_len) }),
+                             stringsAsFactors = FALSE)
         names(ans) <- paste0("V", 1:ncol(ans))
     }
     else if (metadata$output_class == "matrix") {

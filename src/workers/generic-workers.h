@@ -5,6 +5,7 @@
 #include <memory>
 #include <stdexcept> // runtime_error
 #include <string>
+#include <type_traits>
 #include <typeinfo>
 #include <unordered_set>
 #include <utility>
@@ -292,7 +293,8 @@ public:
                     continue;
                 }
                 else {
-                    variant_initialized = false;
+                    variant = std::is_same<T, int>::value ? NA_INTEGER : NA_REAL;
+                    variant_initialized = true;
                     break;
                 }
             }
@@ -312,7 +314,16 @@ public:
             variant_initialized = true;
         }
 
-        if (variant_initialized) ans_[out_id] = coerce(variant);
+        if (variant_initialized) {
+            ans_[out_id] = coerce(variant);
+        }
+        else if (std::is_same<T, int>::value) {
+            ans_[out_id] = NA_INTEGER;
+        }
+        else {
+            ans_[out_id] = R_NegInf;
+        }
+
         return nullptr;
     }
 private:
@@ -362,7 +373,7 @@ public:
 
 private:
     std::shared_ptr<BooleanVisitor> instantiate_visitor(const boost::string_ref& str_ref);
-    boost::string_ref coerce(const supported_col_t& variant);
+    boost::string_ref coerce(const supported_col_t& variant, const bool is_logical);
 
     const CompOp comp_op_;
     const std::shared_ptr<BooleanVisitor> dummy_parent_visitor_;

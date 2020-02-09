@@ -343,6 +343,9 @@ extern "C" SEXP row_extrema(SEXP metadata, SEXP data, SEXP output, SEXP extras) 
                 if (data != worker.STRING_REF_NOT_SET.data()) {
                     ans[i] = data;
                 }
+                else {
+                    ans[i] = NA_STRING;
+                }
             }
             break;
         }
@@ -350,9 +353,12 @@ extern "C" SEXP row_extrema(SEXP metadata, SEXP data, SEXP output, SEXP extras) 
             Rcpp::List list(output);
             for (R_xlen_t i = 0; i < list.length(); i++) {
                 const char * data = worker.ans[i].data();
+                Rcpp::StringVector ans(list[i]);
                 if (data != worker.STRING_REF_NOT_SET.data()) {
-                    Rcpp::StringVector ans(list[i]);
                     ans[0] = data;
+                }
+                else {
+                    ans[0] = NA_STRING;
                 }
             }
             break;
@@ -365,6 +371,9 @@ extern "C" SEXP row_extrema(SEXP metadata, SEXP data, SEXP output, SEXP extras) 
                 if (data != worker.STRING_REF_NOT_SET.data()) {
                     ans[i] = data;
                 }
+                else {
+                    ans[i] = NA_STRING;
+                }
             }
             break;
         }
@@ -374,6 +383,9 @@ extern "C" SEXP row_extrema(SEXP metadata, SEXP data, SEXP output, SEXP extras) 
                 const char * data = worker.ans[i].data();
                 if (data != worker.STRING_REF_NOT_SET.data()) {
                     ans[i] = data;
+                }
+                else {
+                    ans[i] = NA_STRING;
                 }
             }
             break;
