@@ -12,6 +12,101 @@
 
 namespace wiserow {
 
+RowExtremaWorker<boost::string_ref>::RowExtremaWorker(const OperationMetadata& metadata,
+                                                      const ColumnCollection& cc,
+                                                      const Rcpp::List extras,
+                                                      std::unordered_set<std::string>& temporary_strings)
+    : ParallelWorker(metadata, cc)
+    , comp_op_(parse_comp_op(Rcpp::as<std::string>(extras["comp_op"])))
+    , dummy_parent_visitor_(std::make_shared<InitBooleanVisitor>(true))
+    , ans(cc.nrow())
+    , temporary_strings_(temporary_strings)
+{ }
+
+// -------------------------------------------------------------------------------------------------
+
+ParallelWorker::thread_local_ptr RowExtremaWorker<boost::string_ref>::work_row(std::size_t in_id,
+                                                                               std::size_t out_id,
+                                                                               ParallelWorker::thread_local_ptr t_local)
+{
+    supported_col_t variant;
+    bool variant_initialized = false;
+    std::shared_ptr<BooleanVisitor> visitor = nullptr;
+
+    for (std::size_t j = 0; j < col_collection_.ncol(); j++) {
+        const supported_col_t& next_variant = col_collection_(in_id, j);
+        bool is_na = boost::apply_visitor(na_visitor_, next_variant);
+
+        if (is_na) {
+            if (metadata.na_action == NaAction::EXCLUDE) {
+                continue;
+            }
+            else {
+                variant = na_string_;
+                variant_initialized = true;
+                break;
+            }
+        }
+        else if (!visitor) {
+            variant = coerce(next_variant);
+            visitor = instantiate_visitor(boost::get<boost::string_ref>(variant));
+        }
+        else {
+            const supported_col_t coerced_next = coerce(next_variant);
+            bool next_more_extreme = boost::apply_visitor(*visitor, coerced_next);
+            if (next_more_extreme) {
+                variant = coerced_next;
+                visitor = instantiate_visitor(boost::get<boost::string_ref>(variant));
+            }
+        }
+
+        variant_initialized = true;
+    }
+
+    if (variant_initialized) ans[out_id] = boost::get<boost::string_ref>(variant);
+    return nullptr;
+}
+
+// -------------------------------------------------------------------------------------------------
+
+std::shared_ptr<BooleanVisitor> RowExtremaWorker<boost::string_ref>::instantiate_visitor(const boost::string_ref& str_ref) {
+    return std::make_shared<ComparisonVisitor<boost::string_ref>>(bool_op_,
+                                                                  comp_op_,
+                                                                  str_ref,
+                                                                  dummy_parent_visitor_);
+}
+
+// -------------------------------------------------------------------------------------------------
+
+boost::string_ref RowExtremaWorker<boost::string_ref>::coerce(const supported_col_t& variant) {
+    std::string val;
+
+    if (variant.type() == typeid(int)) {
+        val = ::wiserow::to_string(boost::get<int>(variant));
+    }
+    else if (variant.type() == typeid(double)) {
+        val = ::wiserow::to_string(boost::get<double>(variant));
+    }
+    else if (variant.type() == typeid(boost::string_ref)) {
+        return boost::get<boost::string_ref>(variant);
+    }
+    else {
+        throw std::runtime_error("[wiserow] Invalid type passed to RowExtremaWorker. This should not happen."); // nocov
+    }
+
+    auto it = temporary_strings_.find(val);
+    if (it == temporary_strings_.end()) {
+        boost::string_ref str_ref(val);
+        temporary_strings_.insert(std::move(val));
+        return str_ref;
+    }
+    else {
+        return boost::string_ref(*it);
+    }
+}
+
+// =================================================================================================
+
 BoolTestWorker::BoolTestWorker(const OperationMetadata& metadata,
                                const ColumnCollection& cc,
                                OutputWrapper<int>& ans,

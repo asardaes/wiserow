@@ -3,6 +3,7 @@
 #include <cstddef> // size_t
 #include <memory>
 #include <string>
+#include <unordered_set>
 
 #include <Rcpp.h>
 
@@ -269,6 +270,106 @@ extern "C" SEXP row_duplicated(SEXP metadata, SEXP data, SEXP output, SEXP extra
     else { // nocov start
         Rcpp::stop("Match type [" + match_type + "] not supported.");
     } // nocov end
+
+    return R_NilValue;
+    END_RCPP
+}
+
+// =================================================================================================
+
+template<int RT, typename T>
+void numeric_row_extrema(const OperationMetadata& metadata,
+                         const ColumnCollection& col_collection,
+                         const Rcpp::List& extras,
+                         SEXP output) {
+    std::shared_ptr<OutputWrapper<T>> output_wrapper = nullptr;
+
+    switch(metadata.output_class) {
+    case RClass::VECTOR: {
+        Rcpp::Vector<RT> ans(output);
+        output_wrapper = std::make_shared<VectorOutputWrapper<RT, T>>(ans);
+        break;
+    }
+    case RClass::LIST: {
+        output_wrapper = std::make_shared<ListOutputWrapper<RT, T>>(output);
+        break;
+    }
+    case RClass::DATAFRAME: {
+        output_wrapper = std::make_shared<DataFrameOutputWrapper<RT, T>>(output);
+        break;
+    }
+    case RClass::MATRIX: {
+        Rcpp::Matrix<RT> ans(output);
+        output_wrapper = std::make_shared<MatrixOutputWrapper<RT, T>>(ans);
+        break;
+    }
+    default: // nocov start
+        Rcpp::stop("This operation does not support the chosen output class.");
+    } // nocov end
+
+    RowExtremaWorker<T> worker(metadata, col_collection, *output_wrapper, extras);
+    parallel_for(worker);
+}
+
+extern "C" SEXP row_extrema(SEXP metadata, SEXP data, SEXP output, SEXP extras) {
+    BEGIN_RCPP
+    OperationMetadata metadata_(metadata);
+
+    ColumnCollection col_collection = ColumnCollection::coerce(metadata_, data);
+    std::size_t out_len = output_length(metadata_, col_collection);
+    if (out_len == 0) return R_NilValue;
+
+    Rcpp::List extras_(extras);
+
+    if (metadata_.output_mode == LGLSXP) {
+        numeric_row_extrema<LGLSXP, int>(metadata_, col_collection, extras_, output);
+    }
+    else if (metadata_.output_mode == INTSXP) {
+        numeric_row_extrema<INTSXP, int>(metadata_, col_collection, extras_, output);
+    }
+    else if (metadata_.output_mode == REALSXP) {
+        numeric_row_extrema<REALSXP, double>(metadata_, col_collection, extras_, output);
+    }
+    else {
+        std::unordered_set<std::string> temp_strings;
+        RowExtremaWorker<boost::string_ref> worker(metadata_, col_collection, extras_, temp_strings);
+        parallel_for(worker);
+
+        switch(metadata_.output_class) {
+        case RClass::VECTOR: {
+            Rcpp::StringVector ans(output);
+            for (R_xlen_t i = 0; i < ans.length(); i++) {
+                ans[i] = worker.ans[i].data();
+            }
+            break;
+        }
+        case RClass::LIST: {
+            Rcpp::List list(output);
+            for (R_xlen_t i = 0; i < list.length(); i++) {
+                Rcpp::StringVector ans(list[i]);
+                ans[0] = worker.ans[i].data();
+            }
+            break;
+        }
+        case RClass::DATAFRAME: {
+            Rcpp::DataFrame df(output);
+            Rcpp::StringVector ans(df[0]);
+            for (R_xlen_t i = 0; i < ans.length(); i++) {
+                ans[i] = worker.ans[i].data();
+            }
+            break;
+        }
+        case RClass::MATRIX: {
+            Rcpp::StringMatrix ans(output);
+            for (int i = 0; i < ans.nrow(); i++) {
+                ans[i] = worker.ans[i].data();
+            }
+            break;
+        }
+        default: // nocov start
+            Rcpp::stop("This operation does not support the chosen output class.");
+        } // nocov end
+    }
 
     return R_NilValue;
     END_RCPP

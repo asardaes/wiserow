@@ -2,11 +2,20 @@
 #define WISEROW_GENERICWORKERS_H_
 
 #include <cstddef> // size_t
+#include <complex>
 #include <memory>
+#include <stdexcept> // runtime_error
 #include <string>
+#include <type_traits>
+#include <typeinfo>
+#include <unordered_set>
 #include <utility>
+#include <vector>
 
 #include <Rcpp.h>
+#include <boost/utility/string_ref.hpp>
+#include <boost/variant/get.hpp>
+#include <boost/variant/variant.hpp>
 
 #include "../core.h"
 #include "../utils.h"
@@ -251,6 +260,122 @@ public:
 
 private:
     const std::shared_ptr<CountStrategy> non_na_counter_;
+};
+
+// =================================================================================================
+
+// for logical, integer, and double. complex cannot be compared, character will require specialization
+// logical output can only happen if all inputs are logical
+template<typename T>
+class RowExtremaWorker : public ParallelWorker
+{
+public:
+    RowExtremaWorker(const OperationMetadata& metadata,
+                     const ColumnCollection& cc,
+                     OutputWrapper<T>& ans,
+                     const Rcpp::List extras)
+        : ParallelWorker(metadata, cc)
+        , ans_(ans)
+        , comp_op_(parse_comp_op(Rcpp::as<std::string>(extras["comp_op"])))
+        , dummy_parent_visitor_(std::make_shared<InitBooleanVisitor>(true))
+    { }
+
+    virtual thread_local_ptr work_row(std::size_t in_id, std::size_t out_id, thread_local_ptr t_local) override {
+        supported_col_t variant;
+        bool variant_initialized = false;
+        std::shared_ptr<BooleanVisitor> visitor = nullptr;
+
+        for (std::size_t j = 0; j < col_collection_.ncol(); j++) {
+            const supported_col_t& next_variant = col_collection_(in_id, j);
+            bool is_na = boost::apply_visitor(na_visitor_, next_variant);
+
+            if (is_na) {
+                if (metadata.na_action == NaAction::EXCLUDE) {
+                    continue;
+                }
+                else if (std::is_same<T, int>::value) {
+                    variant = NA_INTEGER;
+                }
+                else {
+                    variant = NA_REAL;
+                }
+
+                variant_initialized = true;
+                break;
+            }
+            else if (!visitor) {
+                variant = coerce(next_variant);
+                visitor = instantiate_visitor(variant);
+            }
+            else {
+                const supported_col_t coerced_next = coerce(next_variant);
+                bool next_more_extreme = boost::apply_visitor(*visitor, coerced_next);
+                if (next_more_extreme) {
+                    variant = coerced_next;
+                    visitor = instantiate_visitor(variant);
+                }
+            }
+
+            variant_initialized = true;
+        }
+
+        if (variant_initialized) ans_[out_id] = coerce(variant);
+        return nullptr;
+    }
+private:
+    std::shared_ptr<BooleanVisitor> instantiate_visitor(const supported_col_t& variant) const {
+        return std::make_shared<ComparisonVisitor<T>>(bool_op_,
+                                                      comp_op_,
+                                                      coerce(variant),
+                                                      dummy_parent_visitor_);
+    }
+
+    T coerce(const supported_col_t& variant) const {
+        if (variant.type() == typeid(int)) {
+            return boost::get<int>(variant);
+        }
+        else if (variant.type() == typeid(double)) {
+            return boost::get<double>(variant);
+        }
+
+        throw std::runtime_error("[wiserow] Invalid type passed to RowExtremaWorker. This should not happen."); // nocov
+    }
+
+    OutputWrapper<T>& ans_;
+    const CompOp comp_op_;
+    const std::shared_ptr<BooleanVisitor> dummy_parent_visitor_;
+
+    const BoolOp bool_op_ = BoolOp::AND;
+    const NAVisitor na_visitor_;
+};
+
+// -------------------------------------------------------------------------------------------------
+// SET_STRING_ELT doesn't seem to be thread safe :(
+
+template<>
+class RowExtremaWorker<boost::string_ref> : public ParallelWorker
+{
+public:
+    RowExtremaWorker(const OperationMetadata& metadata,
+                     const ColumnCollection& cc,
+                     const Rcpp::List extras,
+                     std::unordered_set<std::string>& temporary_strings);
+
+    virtual thread_local_ptr work_row(std::size_t in_id, std::size_t out_id, thread_local_ptr t_local) override;
+
+    std::vector<boost::string_ref> ans;
+
+private:
+    std::shared_ptr<BooleanVisitor> instantiate_visitor(const boost::string_ref& str_ref);
+    boost::string_ref coerce(const supported_col_t& variant);
+
+    const CompOp comp_op_;
+    const std::shared_ptr<BooleanVisitor> dummy_parent_visitor_;
+
+    const BoolOp bool_op_ = BoolOp::AND;
+    const boost::string_ref na_string_ = boost::string_ref(CHAR(Rf_asChar(NA_STRING)));
+    const NAVisitor na_visitor_;
+    std::unordered_set<std::string>& temporary_strings_;
 };
 
 } // namespace wiserow

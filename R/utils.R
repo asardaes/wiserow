@@ -125,3 +125,20 @@ prepare_output <- function(.data, metadata, allow_cols = FALSE) {
 
     ans
 }
+
+#' @importFrom glue glue
+#'
+compute_output_mode <- function(types, not_allowed = "", error_msg = "Unsupported types for this operation: { not_allowed }") {
+    if (any(types %in% not_allowed)) {
+        stop(glue::glue(error_msg))
+    }
+
+    unique_types <- unique(types)
+
+    if (length(unique_types) == 1L && unique_types == "logical") {
+        unique_types
+    }
+    else {
+        typeof(do.call(max, lapply(unique_types, function(type) { vector(type, 1L) })))
+    }
+}

@@ -55,7 +55,7 @@ row_arith.matrix <- function(.data, operator = c("+", "-", "*", "/"), cumulative
         cumulative = cumulative
     )
 
-    if (nrow(.data) > 0L) {
+    if (NROW(ans) > 0L) {
         .Call(C_row_arith, metadata, .data, ans, extras)
     }
 
@@ -108,7 +108,7 @@ row_arith.data.frame <- function(.data, operator = c("+", "-", "*", "/"), cumula
         cumulative = cumulative
     )
 
-    if (nrow(.data) > 0L) {
+    if (NROW(ans) > 0L) {
         .Call(C_row_arith, metadata, .data, ans, extras)
     }
 
