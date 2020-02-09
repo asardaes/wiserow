@@ -1,3 +1,5 @@
+#' @importFrom methods as
+#'
 row_extrema_matrix <- function(.data, comp_op, ...) {
     stopifnot(typeof(.data) %in% c("logical", "integer", "double", "character"))
 
@@ -14,7 +16,7 @@ row_extrema_matrix <- function(.data, comp_op, ...) {
             return(as.data.frame(.data[, cols, drop = FALSE]))
         }
         else {
-            return(as(.data[, cols], metadata$output_class))
+            return(methods::as(.data[, cols], metadata$output_class))
         }
     }
 
@@ -26,7 +28,13 @@ row_extrema_matrix <- function(.data, comp_op, ...) {
         ans <- rep(as(NA, metadata$output_mode), ans_len)
     }
 
-    ans <- if (metadata$output_class == "data.frame") data.frame(V1 = ans, stringsAsFactors = FALSE) else as(ans, metadata$output_class)
+    if (metadata$output_class == "data.frame") {
+        ans <- data.frame(V1 = ans, stringsAsFactors = FALSE)
+    }
+    else {
+        ans <- methods::as(ans, metadata$output_class)
+    }
+
     extras <- list(
         comp_op = comp_op
     )
@@ -38,6 +46,8 @@ row_extrema_matrix <- function(.data, comp_op, ...) {
     ans
 }
 
+#' @importFrom methods as
+#'
 row_extrema_df <- function(.data, comp_op, ...) {
     metadata <- op_ctrl(input_class = "data.frame",
                         input_modes = sapply(.data, typeof),
@@ -62,7 +72,7 @@ row_extrema_df <- function(.data, comp_op, ...) {
             return(.data[, cols, drop = FALSE])
         }
         else {
-            return(as(.data[, cols], metadata$output_class))
+            return(methods::as(.data[, cols], metadata$output_class))
         }
     }
 
@@ -74,7 +84,13 @@ row_extrema_df <- function(.data, comp_op, ...) {
         ans <- rep(as(NA, metadata$output_mode), ans_len)
     }
 
-    ans <- if (metadata$output_class == "data.frame") data.frame(V1 = ans, stringsAsFactors = FALSE) else as(ans, metadata$output_class)
+    if (metadata$output_class == "data.frame") {
+        ans <- data.frame(V1 = ans, stringsAsFactors = FALSE)
+    }
+    else {
+        ans <- methods::as(ans, metadata$output_class)
+    }
+
     extras <- list(
         comp_op = comp_op
     )
