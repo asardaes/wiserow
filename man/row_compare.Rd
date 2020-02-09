@@ -31,7 +31,7 @@ columns are used. If its length is 0, no columns are considered. Negative number
 values, character vectors representing column names, and \link[tidyselect:select_helpers]{tidyselect::select_helpers} are
 supported.}
     \item{\code{rows}}{Like \code{cols} but for row indices, and without \code{tidyselect} support.}
-    \item{\code{factor_mode}}{One of ("integer", "character"), possibly abbreviated. If a column is a
+    \item{\code{factor_mode}}{One of ("character", "integer"), possibly abbreviated. If a column is a
 factor, this determines whether the operation uses its internal integer values, or the
 character values from its levels.}
   }}

@@ -28,7 +28,7 @@ supported.}
 
 \item{rows}{Like \code{cols} but for row indices, and without \code{tidyselect} support.}
 
-\item{factor_mode}{One of ("integer", "character"), possibly abbreviated. If a column is a
+\item{factor_mode}{One of ("character", "integer"), possibly abbreviated. If a column is a
 factor, this determines whether the operation uses its internal integer values, or the
 character values from its levels.}
 

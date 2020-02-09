@@ -11,7 +11,7 @@
 #'   values, character vectors representing column names, and [tidyselect::select_helpers] are
 #'   supported.
 #' @param rows Like `cols` but for row indices, and without `tidyselect` support.
-#' @param factor_mode One of ("integer", "character"), possibly abbreviated. If a column is a
+#' @param factor_mode One of ("character", "integer"), possibly abbreviated. If a column is a
 #'   factor, this determines whether the operation uses its internal integer values, or the
 #'   character values from its levels.
 #' @param ... Internal.
