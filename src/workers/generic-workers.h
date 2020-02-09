@@ -367,9 +367,10 @@ private:
     const CompOp comp_op_;
     const std::shared_ptr<BooleanVisitor> dummy_parent_visitor_;
 
+    std::unordered_set<std::string>& temporary_strings_;
+
     const BoolOp bool_op_ = BoolOp::AND;
     const NAVisitor na_visitor_;
-    std::unordered_set<std::string>& temporary_strings_;
 };
 
 } // namespace wiserow

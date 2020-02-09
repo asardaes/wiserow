@@ -20,9 +20,9 @@ RowExtremaWorker<boost::string_ref>::RowExtremaWorker(const OperationMetadata& m
                                                       const Rcpp::List extras,
                                                       std::unordered_set<std::string>& temporary_strings)
     : ParallelWorker(metadata, cc)
+    , ans(cc.nrow())
     , comp_op_(parse_comp_op(Rcpp::as<std::string>(extras["comp_op"])))
     , dummy_parent_visitor_(std::make_shared<InitBooleanVisitor>(true))
-    , ans(cc.nrow())
     , temporary_strings_(temporary_strings)
 { }
 
