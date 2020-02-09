@@ -94,15 +94,10 @@ boost::string_ref RowExtremaWorker<boost::string_ref>::coerce(const supported_co
         throw std::runtime_error("[wiserow] Invalid type passed to RowExtremaWorker. This should not happen."); // nocov
     }
 
-    auto it = temporary_strings_.find(val);
-    if (it == temporary_strings_.end()) {
-        boost::string_ref str_ref(val);
-        temporary_strings_.insert(std::move(val));
-        return str_ref;
-    }
-    else {
-        return boost::string_ref(*it);
-    }
+    this->mutex_.lock();
+    auto it = temporary_strings_.insert(std::move(val));
+    this->mutex_.unlock();
+    return boost::string_ref(it.first->c_str());
 }
 
 // =================================================================================================

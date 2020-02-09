@@ -2,7 +2,6 @@
 #define WISEROW_GENERICWORKERS_H_
 
 #include <cstddef> // size_t
-#include <complex>
 #include <memory>
 #include <stdexcept> // runtime_error
 #include <string>
