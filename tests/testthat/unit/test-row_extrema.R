@@ -31,8 +31,8 @@ test_that("Single-column inputs are correctly early-terminated.", {
     ans <- wiserow:::row_extrema_df(df["int.V2"])
     expect_identical(ans, expected)
 
-    ans <- wiserow:::row_extrema_df(df["int.V2"], output_class = "list")
-    expect_identical(ans, as.list(expected))
+    ans <- wiserow:::row_extrema_df(df["int.V2"], output_class = "data.frame")
+    expect_identical(ans, data.frame(int.V2 = expected))
 
     ans <- wiserow:::row_extrema_df(df, cols = 2L)
     expect_identical(ans, expected)
