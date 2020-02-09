@@ -6,14 +6,16 @@
 \alias{row_max.data.frame}
 \title{Row-wise maxima}
 \usage{
-row_max(.data, ...)
+row_max(.data, which = NULL, ...)
 
-\method{row_max}{matrix}(.data, ...)
+\method{row_max}{matrix}(.data, which = NULL, ...)
 
-\method{row_max}{data.frame}(.data, ...)
+\method{row_max}{data.frame}(.data, which = NULL, ...)
 }
 \arguments{
 \item{.data}{A two-dimensional data structure.}
+
+\item{which}{If not \code{NULL}, one of ("first", "last") to return the index where maxima occurs.}
 
 \item{...}{
   Arguments passed on to \code{\link[=op_ctrl]{op_ctrl}}

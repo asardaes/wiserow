@@ -277,37 +277,40 @@ extern "C" SEXP row_duplicated(SEXP metadata, SEXP data, SEXP output, SEXP extra
 
 // =================================================================================================
 
-template<int RT, typename T>
+template<int RT, typename T, bool WHICH>
 void numeric_row_extrema(const OperationMetadata& metadata,
                          const ColumnCollection& col_collection,
                          const Rcpp::List& extras,
-                         SEXP output) {
-    std::shared_ptr<OutputWrapper<T>> output_wrapper = nullptr;
+                         SEXP output)
+{
+    typedef typename std::conditional<WHICH, int, T>::type OUT;
+
+    std::shared_ptr<OutputWrapper<OUT>> output_wrapper = nullptr;
 
     switch(metadata.output_class) {
     case RClass::VECTOR: {
         Rcpp::Vector<RT> ans(output);
-        output_wrapper = std::make_shared<VectorOutputWrapper<RT, T>>(ans);
+        output_wrapper = std::make_shared<VectorOutputWrapper<RT, OUT>>(ans);
         break;
     }
     case RClass::LIST: {
-        output_wrapper = std::make_shared<ListOutputWrapper<RT, T>>(output);
+        output_wrapper = std::make_shared<ListOutputWrapper<RT, OUT>>(output);
         break;
     }
     case RClass::DATAFRAME: {
-        output_wrapper = std::make_shared<DataFrameOutputWrapper<RT, T>>(output);
+        output_wrapper = std::make_shared<DataFrameOutputWrapper<RT, OUT>>(output);
         break;
     }
     case RClass::MATRIX: {
         Rcpp::Matrix<RT> ans(output);
-        output_wrapper = std::make_shared<MatrixOutputWrapper<RT, T>>(ans);
+        output_wrapper = std::make_shared<MatrixOutputWrapper<RT, OUT>>(ans);
         break;
     }
     default: // nocov start
         Rcpp::stop("This operation does not support the chosen output class.");
     } // nocov end
 
-    RowExtremaWorker<T> worker(metadata, col_collection, *output_wrapper, extras);
+    RowExtremaWorker<T, WHICH> worker(metadata, col_collection, *output_wrapper, extras);
     parallel_for(worker);
 }
 
@@ -320,19 +323,35 @@ extern "C" SEXP row_extrema(SEXP metadata, SEXP data, SEXP output, SEXP extras) 
     if (out_len == 0) return R_NilValue;
 
     Rcpp::List extras_(extras);
+    bool which = Rcpp::as<bool>(extras_["which"]);
 
     if (metadata_.output_mode == LGLSXP) {
-        numeric_row_extrema<LGLSXP, int>(metadata_, col_collection, extras_, output);
+        if (which) {
+            numeric_row_extrema<INTSXP, int, true>(metadata_, col_collection, extras_, output);
+        }
+        else {
+            numeric_row_extrema<LGLSXP, int, false>(metadata_, col_collection, extras_, output);
+        }
     }
     else if (metadata_.output_mode == INTSXP) {
-        numeric_row_extrema<INTSXP, int>(metadata_, col_collection, extras_, output);
+        if (which) {
+            numeric_row_extrema<INTSXP, int, true>(metadata_, col_collection, extras_, output);
+        }
+        else {
+            numeric_row_extrema<INTSXP, int, false>(metadata_, col_collection, extras_, output);
+        }
     }
     else if (metadata_.output_mode == REALSXP) {
-        numeric_row_extrema<REALSXP, double>(metadata_, col_collection, extras_, output);
+        if (which) {
+            numeric_row_extrema<INTSXP, double, true>(metadata_, col_collection, extras_, output);
+        }
+        else {
+            numeric_row_extrema<REALSXP, double, false>(metadata_, col_collection, extras_, output);
+        }
     }
     else {
         std::unordered_set<std::string> temp_strings;
-        RowExtremaWorker<boost::string_ref> worker(metadata_, col_collection, extras_, temp_strings);
+        RowExtremaWorker<boost::string_ref, false> worker(metadata_, col_collection, extras_, temp_strings);
         parallel_for(worker);
 
         switch(metadata_.output_class) {

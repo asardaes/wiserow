@@ -13,9 +13,9 @@
 
 namespace wiserow {
 
-boost::string_ref RowExtremaWorker<boost::string_ref>::STRING_REF_NOT_SET = boost::string_ref("dummy");
+boost::string_ref RowExtremaWorker<boost::string_ref, false>::STRING_REF_NOT_SET = boost::string_ref("dummy");
 
-RowExtremaWorker<boost::string_ref>::RowExtremaWorker(const OperationMetadata& metadata,
+RowExtremaWorker<boost::string_ref, false>::RowExtremaWorker(const OperationMetadata& metadata,
                                                       const ColumnCollection& cc,
                                                       const Rcpp::List extras,
                                                       std::unordered_set<std::string>& temporary_strings)
@@ -28,9 +28,9 @@ RowExtremaWorker<boost::string_ref>::RowExtremaWorker(const OperationMetadata& m
 
 // -------------------------------------------------------------------------------------------------
 
-ParallelWorker::thread_local_ptr RowExtremaWorker<boost::string_ref>::work_row(std::size_t in_id,
-                                                                               std::size_t out_id,
-                                                                               ParallelWorker::thread_local_ptr t_local)
+ParallelWorker::thread_local_ptr RowExtremaWorker<boost::string_ref, false>::work_row(std::size_t in_id,
+                                                                                      std::size_t out_id,
+                                                                                      ParallelWorker::thread_local_ptr t_local)
 {
     supported_col_t variant;
     bool variant_initialized = false;
@@ -72,7 +72,7 @@ ParallelWorker::thread_local_ptr RowExtremaWorker<boost::string_ref>::work_row(s
 
 // -------------------------------------------------------------------------------------------------
 
-std::shared_ptr<BooleanVisitor> RowExtremaWorker<boost::string_ref>::instantiate_visitor(const boost::string_ref& str_ref) {
+std::shared_ptr<BooleanVisitor> RowExtremaWorker<boost::string_ref, false>::instantiate_visitor(const boost::string_ref& str_ref) {
     return std::make_shared<ComparisonVisitor<boost::string_ref>>(bool_op_,
                                                                   comp_op_,
                                                                   str_ref,
@@ -81,7 +81,7 @@ std::shared_ptr<BooleanVisitor> RowExtremaWorker<boost::string_ref>::instantiate
 
 // -------------------------------------------------------------------------------------------------
 
-boost::string_ref RowExtremaWorker<boost::string_ref>::coerce(const supported_col_t& variant, const bool is_logical) {
+boost::string_ref RowExtremaWorker<boost::string_ref, false>::coerce(const supported_col_t& variant, const bool is_logical) {
     std::string val;
 
     if (variant.type() == typeid(int)) {

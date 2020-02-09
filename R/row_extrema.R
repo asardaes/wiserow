@@ -1,7 +1,12 @@
 #' @importFrom methods as
 #'
-row_extrema_matrix <- function(.data, comp_op, ...) {
+row_extrema_matrix <- function(.data, comp_op, which = NULL, ...) {
     stopifnot(typeof(.data) %in% c("logical", "integer", "double", "character"))
+
+    if (!is.null(which)) {
+        which <- match.arg(which, c("first", "last"))
+        if (which == "last") comp_op <- paste0(comp_op, "=")
+    }
 
     metadata <- op_ctrl(input_class = "matrix",
                         input_modes = typeof(.data),
@@ -20,10 +25,14 @@ row_extrema_matrix <- function(.data, comp_op, ...) {
         }
     }
 
-    ans <- prepare_output(.data, metadata)
     extras <- list(
-        comp_op = comp_op
+        comp_op = comp_op,
+        which = !is.null(which)
     )
+
+    metadata_copy <- metadata
+    if (extras$which) metadata_copy$output_mode <- "integer"
+    ans <- prepare_output(.data, metadata_copy)
 
     if (NROW(ans) > 0L) {
         .Call(C_row_extrema, metadata, .data, ans, extras)
@@ -34,7 +43,12 @@ row_extrema_matrix <- function(.data, comp_op, ...) {
 
 #' @importFrom methods as
 #'
-row_extrema_df <- function(.data, comp_op, ...) {
+row_extrema_df <- function(.data, comp_op, which = NULL, ...) {
+    if (!is.null(which)) {
+        which <- match.arg(which, c("first", "last"))
+        if (which == "last") comp_op <- paste0(comp_op, "=")
+    }
+
     metadata <- op_ctrl(input_class = "data.frame",
                         input_modes = sapply(.data, typeof),
                         output_mode = "logical", # placeholder
@@ -62,10 +76,14 @@ row_extrema_df <- function(.data, comp_op, ...) {
         }
     }
 
-    ans <- prepare_output(.data, metadata)
     extras <- list(
-        comp_op = comp_op
+        comp_op = comp_op,
+        which = !is.null(which)
     )
+
+    metadata_copy <- metadata
+    if (extras$which) metadata_copy$output_mode <- "integer"
+    ans <- prepare_output(.data, metadata_copy)
 
     if (NROW(ans) > 0L) {
         .Call(C_row_extrema, metadata, .data, ans, extras)

@@ -265,13 +265,15 @@ private:
 
 // for logical, integer, and double. complex cannot be compared, character will require specialization
 // logical output can only happen if all inputs are logical
-template<typename T>
+template<typename T, bool WHICH>
 class RowExtremaWorker : public ParallelWorker
 {
 public:
+    typedef typename std::conditional<WHICH, int, T>::type OUT;
+
     RowExtremaWorker(const OperationMetadata& metadata,
                      const ColumnCollection& cc,
-                     OutputWrapper<T>& ans,
+                     OutputWrapper<OUT>& ans,
                      const Rcpp::List extras)
         : ParallelWorker(metadata, cc)
         , ans_(ans)
@@ -292,22 +294,27 @@ public:
                 if (metadata.na_action == NaAction::EXCLUDE) {
                     continue;
                 }
-                else {
-                    variant = std::is_same<T, int>::value ? NA_INTEGER : NA_REAL;
-                    variant_initialized = true;
-                    break;
+                else if (std::is_same<OUT, int>::value) { // ternary operator causes type problems, compiler optimizations?
+                    variant = NA_INTEGER;
                 }
+                else {
+                    variant = NA_REAL;
+                }
+
+                variant_initialized = true;
+                break;
             }
             else if (!visitor) {
-                variant = coerce(next_variant);
-                visitor = instantiate_visitor(variant);
+                const supported_col_t coerced_next = coerce(next_variant);
+                variant = WHICH ? static_cast<int>(j + 1) : coerced_next;
+                visitor = instantiate_visitor(coerced_next);
             }
             else {
                 const supported_col_t coerced_next = coerce(next_variant);
                 bool next_more_extreme = boost::apply_visitor(*visitor, coerced_next);
                 if (next_more_extreme) {
-                    variant = coerced_next;
-                    visitor = instantiate_visitor(variant);
+                    variant = WHICH ? static_cast<int>(j + 1) : coerced_next;
+                    visitor = instantiate_visitor(coerced_next);
                 }
             }
 
@@ -315,9 +322,9 @@ public:
         }
 
         if (variant_initialized) {
-            ans_[out_id] = coerce(variant);
+            ans_[out_id] = boost::get<OUT>(variant);
         }
-        else if (std::is_same<T, int>::value) {
+        else if (std::is_same<OUT, int>::value) {
             ans_[out_id] = NA_INTEGER;
         }
         else {
@@ -345,7 +352,7 @@ private:
         throw std::runtime_error("[wiserow] Invalid type passed to RowExtremaWorker. This should not happen."); // nocov
     }
 
-    OutputWrapper<T>& ans_;
+    OutputWrapper<OUT>& ans_;
     const CompOp comp_op_;
     const std::shared_ptr<BooleanVisitor> dummy_parent_visitor_;
 
@@ -357,7 +364,7 @@ private:
 // SET_STRING_ELT doesn't seem to be thread safe :(
 
 template<>
-class RowExtremaWorker<boost::string_ref> : public ParallelWorker
+class RowExtremaWorker<boost::string_ref, false> : public ParallelWorker
 {
 public:
     RowExtremaWorker(const OperationMetadata& metadata,
