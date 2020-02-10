@@ -6,7 +6,7 @@ Description: Fast row-oriented operations implemented in C++, all of which are m
     even of character data thanks to Boost's 'string_ref'. In contrast to other functions, the ones
     in this package support data frames with differently typed columns as input without coercion to
     a matrix, performing on-the-fly type promotion following R rules, where necessary.
-Version: 0.0.1.9000
+Version: 0.1.0
 Depends:
     R (>= 3.1.0)
 Imports:
@@ -28,7 +28,7 @@ Authors@R: c(
     )
 BugReports: https://github.com/asardaes/wiserow/issues
 License: GPL (>= 3)
-URL: https://github.com/asardaes/wiserow
+URL: https://asardaes.github.io/wiserow/, https://github.com/asardaes/wiserow
 NeedsCompilation: yes
 SystemRequirements: C++11, GNU make
 Language: en-US
