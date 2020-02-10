@@ -8,6 +8,17 @@
 #' @param output_mode Passed to [op_ctrl()]. If missing, it will be inferred.
 #' @param output_class Passed to [op_ctrl()]. If missing, it will be inferred.
 #'
+#' @examples
+#'
+#' mat <- matrix(rnorm(10L), nrow = 2L, ncol = 5L)
+#'
+#' row_means(mat)
+#'
+#' # semantically, this is like looking for row means that are different from zero
+#' # (but not missing)
+#' mat[1L] <- NA_real_
+#' row_means(mat, output_mode = "logical", na_action = "pass")
+#'
 row_means <- function(.data, ...) {
     UseMethod("row_means")
 }

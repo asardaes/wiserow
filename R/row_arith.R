@@ -15,6 +15,22 @@
 #' `x` may be a list of values with different non-character types (like a `data.frame` row), `NA`
 #' values can be excluded, and results can be accumulated.
 #'
+#' @examples
+#'
+#' mat <- matrix(1L:9L, nrow = 3L, ncol = 3L)
+#'
+#' row_arith(mat, "-")
+#' row_arith(mat, "-", cumulative = TRUE)
+#'
+#' df <- data.frame(bool = TRUE, int = 1L, double = 1.0, complex = 1+0i)
+#'
+#' # all columns promoted to complex
+#' row_arith(df, "*")
+#' row_arith(df, "/", cumulative = TRUE)
+#'
+#' # only promotion to integer is needed
+#' row_arith(df, "+", cols = 1:2)
+#'
 row_arith <- function(.data, ...) {
     UseMethod("row_arith")
 }

@@ -34,3 +34,9 @@ character values from its levels.}
 \description{
 Conditions related to missing values
 }
+\examples{
+
+# any base type supported
+row_nas(data.frame(NA, NA_integer_, NA_real_, NA_complex_), "all", output_class = "data.frame")
+
+}

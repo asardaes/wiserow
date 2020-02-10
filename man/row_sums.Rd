@@ -18,5 +18,5 @@ row_sums(.data, ...)
 \item{...}{Arguments for \code{\link[=row_arith]{row_arith()}} (except \code{operator}).}
 }
 \description{
-Wrapper for \code{\link[=row_arith]{row_arith()}}.
+Wrapper for \code{\link[=row_arith]{row_arith()}} with \code{operator = "+"}.
 }

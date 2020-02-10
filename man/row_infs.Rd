@@ -31,3 +31,12 @@ supported.}
 \description{
 Conditions related to infinite values
 }
+\examples{
+
+# consistency with R with respect to NA/NaN
+row_infs(data.frame(NaN, NA_real_, NA_complex_), "none")
+
+# complex can also be infinite
+row_infs(data.frame(Inf, -Inf, as.complex(Inf), as.complex(-Inf)), "all")
+
+}

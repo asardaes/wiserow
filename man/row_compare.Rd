@@ -25,7 +25,8 @@ row_compare(.data, match_type = "none", operator = "==", values = 0L, ...)
   Arguments passed on to \code{\link[=op_ctrl]{op_ctrl}}
   \describe{
     \item{\code{output_class}}{One of ("vector", "list", "data.frame", "matrix"), possibly abbreviated.}
-    \item{\code{na_action}}{One of ("exclude", "pass"), possibly abbreviated.}
+    \item{\code{na_action}}{One of ("exclude", "pass"), possibly abbreviated. See \link[stats:na.pass]{stats::na.pass} for
+semantics.}
     \item{\code{cols}}{A vector indicating which columns to consider for the operation. If \code{NULL}, all
 columns are used. If its length is 0, no columns are considered. Negative numbers, logical
 values, character vectors representing column names, and \link[tidyselect:select_helpers]{tidyselect::select_helpers} are

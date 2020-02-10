@@ -8,6 +8,18 @@
 #' @template generic-choices
 #' @inheritDotParams op_ctrl -output_mode -na_action -factor_mode
 #'
+#' @examples
+#'
+#' # consistency with R with respect to NA/NaN
+#' df <- data.frame(NaN, NA_real_, NA_complex_, NA_integer_, NA_character_, NA)
+#' sapply(df, is.finite)
+#' row_finites(df, "none")
+#'
+#' # complex also supported
+#' mat <- matrix(as.complex(Inf), nrow = 2L, ncol = 2L)
+#' mat[1L] <- 0+0i
+#' row_finites(mat, "any")
+#'
 row_finites <- function(.data, match_type = "none", ...) {
     UseMethod("row_finites")
 }

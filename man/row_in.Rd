@@ -46,3 +46,15 @@ Type promotion/conversion will follow normal R rules.
 \note{
 Note that string comparison follows C++ rules.
 }
+\examples{
+
+mat <- matrix(sample(letters, 10), nrow = 5L, ncol = 2L)
+
+# count how many columns are in a chosen subset
+row_in(mat, "count", list(c("a", "b")))
+
+# careful if complex numbers are involved
+row_in(data.frame(-1 + 0i, 1/3 + 0i), "all", list(-1L, 1/3))
+row_in(data.frame(-1 + 1i, 1/3 - 1i), "none", list(-1L, 1/3))
+
+}

@@ -6,6 +6,8 @@
 #' package support data frames with differently typed columns as input without coercion to a matrix,
 #' performing on-the-fly type promotion following R rules, where necessary.
 #'
+#' Start by looking at [op_ctrl()].
+#'
 #' @author Alexis Sarda-Espinosa
 #'
 #' @useDynLib wiserow, .registration = TRUE

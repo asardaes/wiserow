@@ -8,6 +8,11 @@
 #' @template generic-choices
 #' @inheritDotParams op_ctrl -output_mode -na_action
 #'
+#' @examples
+#'
+#' # any base type supported
+#' row_nas(data.frame(NA, NA_integer_, NA_real_, NA_complex_), "all", output_class = "data.frame")
+#'
 row_nas <- function(.data, match_type = "none", ...) {
     UseMethod("row_nas")
 }

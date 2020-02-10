@@ -18,7 +18,8 @@ row_means(.data, ...)
 \item{...}{
   Arguments passed on to \code{\link[=op_ctrl]{op_ctrl}}
   \describe{
-    \item{\code{na_action}}{One of ("exclude", "pass"), possibly abbreviated.}
+    \item{\code{na_action}}{One of ("exclude", "pass"), possibly abbreviated. See \link[stats:na.pass]{stats::na.pass} for
+semantics.}
     \item{\code{cols}}{A vector indicating which columns to consider for the operation. If \code{NULL}, all
 columns are used. If its length is 0, no columns are considered. Negative numbers, logical
 values, character vectors representing column names, and \link[tidyselect:select_helpers]{tidyselect::select_helpers} are
@@ -34,4 +35,16 @@ supported.}
 }
 \description{
 Row-wise means
+}
+\examples{
+
+mat <- matrix(rnorm(10L), nrow = 2L, ncol = 5L)
+
+row_means(mat)
+
+# semantically, this is like looking for row means that are different from zero
+# (but not missing)
+mat[1L] <- NA_real_
+row_means(mat, output_mode = "logical", na_action = "pass")
+
 }

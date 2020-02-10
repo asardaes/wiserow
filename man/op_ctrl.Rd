@@ -19,7 +19,8 @@ op_ctrl(
 
 \item{output_class}{One of ("vector", "list", "data.frame", "matrix"), possibly abbreviated.}
 
-\item{na_action}{One of ("exclude", "pass"), possibly abbreviated.}
+\item{na_action}{One of ("exclude", "pass"), possibly abbreviated. See \link[stats:na.pass]{stats::na.pass} for
+semantics.}
 
 \item{cols}{A vector indicating which columns to consider for the operation. If \code{NULL}, all
 columns are used. If its length is 0, no columns are considered. Negative numbers, logical
@@ -38,5 +39,17 @@ character values from its levels.}
 Operation's control parameters
 }
 \details{
+Each function in this package supports arguments for \code{op_ctrl} through its ellipsis, but
+sometimes they don't pay attention to certain options; each function specifies what can be used.
+
+Subsetting with \code{rows} or \code{cols} does \emph{not} incur a deep copy of the data, only the vector with
+desired indices is kept in memory, and look-ups are done. Support for \code{tidyselect} only works
+when this function is \emph{not} called directly.
+
+When a function supports \code{output_mode}, the result is essentially cast to the desired mode, as if
+something like \code{as.logical}, \code{as.integer}, or similar was used; currently only supported by
+\code{\link[=row_means]{row_means()}}.
+}
+\note{
 Abbreviations are supported in accordance to the rules from \code{\link[base:match.arg]{base::match.arg()}}.
 }

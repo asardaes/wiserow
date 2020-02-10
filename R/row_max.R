@@ -15,6 +15,19 @@
 #'
 #' String comparison is done in C++, which can vary from what R does.
 #'
+#' @examples
+#'
+#' df <- data.frame(FALSE, TRUE, NA_character_)
+#'
+#' # all columns promoted to character (on-the-fly)
+#' row_max(df)
+#' row_max(df, na_action = "pass")
+#'
+#' # no promotion
+#' row_max(df, cols = 1:2)
+#'
+#' row_max(df, cols = 1:2, which = "first")
+#'
 row_max <- function(.data, which = NULL, ...) {
     UseMethod("row_max")
 }

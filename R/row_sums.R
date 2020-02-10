@@ -1,6 +1,6 @@
 #' Row-wise sum
 #'
-#' Wrapper for [row_arith()].
+#' Wrapper for [row_arith()] with `operator = "+"`.
 #'
 #' @export
 #'

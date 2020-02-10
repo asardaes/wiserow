@@ -12,6 +12,9 @@ character data thanks to Boost's \code{string_ref}. In contrast to other functio
 package support data frames with differently typed columns as input without coercion to a matrix,
 performing on-the-fly type promotion following R rules, where necessary.
 }
+\details{
+Start by looking at \code{\link[=op_ctrl]{op_ctrl()}}.
+}
 \seealso{
 Useful links:
 \itemize{

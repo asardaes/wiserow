@@ -5,7 +5,8 @@
 #'
 #' @param output_mode Desired [base::storage.mode()] for the result.
 #' @param output_class One of ("vector", "list", "data.frame", "matrix"), possibly abbreviated.
-#' @param na_action One of ("exclude", "pass"), possibly abbreviated.
+#' @param na_action One of ("exclude", "pass"), possibly abbreviated. See [stats::na.pass] for
+#'   semantics.
 #' @param cols A vector indicating which columns to consider for the operation. If `NULL`, all
 #'   columns are used. If its length is 0, no columns are considered. Negative numbers, logical
 #'   values, character vectors representing column names, and [tidyselect::select_helpers] are
@@ -17,6 +18,19 @@
 #' @param ... Internal.
 #'
 #' @details
+#'
+#' Each function in this package supports arguments for `op_ctrl` through its ellipsis, but
+#' sometimes they don't pay attention to certain options; each function specifies what can be used.
+#'
+#' Subsetting with `rows` or `cols` does *not* incur a deep copy of the data, only the vector with
+#' desired indices is kept in memory, and look-ups are done. Support for `tidyselect` only works
+#' when this function is *not* called directly.
+#'
+#' When a function supports `output_mode`, the result is essentially cast to the desired mode, as if
+#' something like `as.logical`, `as.integer`, or similar was used; currently only supported by
+#' [row_means()].
+#'
+#' @note
 #'
 #' Abbreviations are supported in accordance to the rules from [base::match.arg()].
 #'

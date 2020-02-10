@@ -31,7 +31,7 @@
 #' # after processing the 2nd column, all values will be promoted to character
 #' row_duplicated(data.frame(TRUE, "TRUE", TRUE))
 #'
-#' # after the 1st column the set is (TRUE)
+#' # after the 1st column the set of seen values is (TRUE)
 #' # after the 2nd column, TRUE is promoted to 1, and the set is (1)
 #' # after the 3rd column, 1 is promoted to "1", and the set is ("1", "FALSE")
 #' # the final column is thus promoted to "TRUE"

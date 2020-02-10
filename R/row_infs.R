@@ -8,6 +8,14 @@
 #' @template generic-choices
 #' @inheritDotParams op_ctrl -output_mode -na_action -factor_mode
 #'
+#' @examples
+#'
+#' # consistency with R with respect to NA/NaN
+#' row_infs(data.frame(NaN, NA_real_, NA_complex_), "none")
+#'
+#' # complex can also be infinite
+#' row_infs(data.frame(Inf, -Inf, as.complex(Inf), as.complex(-Inf)), "all")
+#'
 row_infs <- function(.data, match_type = "none", ...) {
     UseMethod("row_infs")
 }
