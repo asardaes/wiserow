@@ -7,10 +7,10 @@
 \title{Multi-threaded, coercion-free implementations of common row-wise operations}
 \description{
 Fast row-oriented operations implemented in C++, all of which are multi-threaded by leveraging
-\pkg{RcppParallel} and \pkg{RcppThread}. Thanks to Boost's \code{string_ref}, virtually no deep copies
-of input data are made. In contrast to other functions, the ones in this package support data
-frames with differently typed columns as input without coercion to a matrix, performing
-on-the-fly type promotion following R rules, where necessary.
+\pkg{RcppParallel} and \pkg{RcppThread}. Virtually no deep copies of input data are made, even of
+character data thanks to Boost's \code{string_ref}. In contrast to other functions, the ones in this
+package support data frames with differently typed columns as input without coercion to a matrix,
+performing on-the-fly type promotion following R rules, where necessary.
 }
 \seealso{
 Useful links:

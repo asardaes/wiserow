@@ -8,10 +8,10 @@ Status](https://travis-ci.org/asardaes/wiserow.svg?branch=master)](https://travi
 Multi-threaded, coercion-free implementations of common row-wise operations.
 
 Fast row-oriented operations implemented in C++, all of which are multi-threaded by
-leveraging `RcppParallel` and `RcppThread`. Thanks to Boost's `string_ref`, virtually no deep
-copies of input data are made. In contrast to other functions, the ones in this package support
-data frames with differently typed columns as input without coercion to a matrix, performing
-on-the-fly type promotion following R rules, where necessary.
+leveraging `RcppParallel` and `RcppThread`. Virtually no deep copies of input data are made,
+even of character data thanks to Boost's `string_ref`. In contrast to other functions, the ones
+in this package support data frames with differently typed columns as input without coercion to
+a matrix, performing on-the-fly type promotion following R rules, where necessary.
 
 ## License
 
