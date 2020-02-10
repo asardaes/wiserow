@@ -341,6 +341,9 @@ public:
         else if (std::is_same<OUT_T, int>::value) {
             ans_[out_id] = NA_INTEGER;
         }
+        else if (comp_op_ == CompOp::LT || comp_op_ == CompOp::LTE) {
+            ans_[out_id] = R_PosInf;
+        }
         else {
             ans_[out_id] = R_NegInf;
         }
