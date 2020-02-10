@@ -81,6 +81,17 @@ public:
             }
         }
 
+        // any int > 1 is not really TRUE for R
+        if (metadata.output_mode == LGLSXP) {
+            std::size_t max_j = cumulative_ ? col_collection_.ncol() : 1;
+            for (std::size_t j = 0; j < max_j; j++) {
+                T ans = ans_(out_id, j);
+                if (ans != na_value_ && ans != 0.0) { // double can be cast to complex, int can't
+                    ans_(out_id, j) = 1;
+                }
+            }
+        }
+
         return nullptr;
     }
 protected:
@@ -98,105 +109,12 @@ protected:
     const bool cumulative_;
     OutputWrapper<T>& ans_;
 
-    const T na_value_ = NA_REAL;
+    const T na_value_ = std::is_same<T, int>::value ? NA_INTEGER : NA_REAL;
     const NAVisitor na_visitor_;
 
 private:
     const ArithmeticOperator arith_opr_;
     const NumericVisitor<T> visitor_;
-};
-
-// -------------------------------------------------------------------------------------------------
-// Specialization for logical (which is integer in R) because any int > 1 is not really TRUE for R
-
-template<>
-class RowArithWorker<int> : public ParallelWorker
-{
-public:
-    RowArithWorker(const OperationMetadata& metadata,
-                   const ColumnCollection& cc,
-                   OutputWrapper<int>& ans,
-                   const Rcpp::List extras)
-        : ParallelWorker(metadata, cc)
-        , cumulative_(Rcpp::as<bool>(extras["cumulative"]))
-        , ans_(ans)
-        , arith_opr_(parse_arith_op(Rcpp::as<std::string>(extras["arith_op"])))
-    { }
-
-    virtual thread_local_ptr work_row(std::size_t in_id, std::size_t out_id, thread_local_ptr t_local) override {
-        bool need_init = arith_opr_.arith_op != ArithOp::ADD;
-
-        for (std::size_t j = 0; j < col_collection_.ncol(); j++) {
-            bool is_na = boost::apply_visitor(na_visitor_, col_collection_(in_id, j));
-
-            if (is_na) {
-                if (metadata.na_action == NaAction::PASS) {
-                    if (cumulative_) {
-                        for (std::size_t k = j; k < col_collection_.ncol(); k++) {
-                            ans_(out_id, k) = na_value_;
-                        }
-                    }
-                    else {
-                        ans_[out_id] = na_value_;
-                    }
-
-                    break;
-                }
-                else if (cumulative_) {
-                    ans_(out_id, j) = ans_(out_id, j > 0 ? j - 1 : 0);
-                }
-            }
-            else if (need_init) {
-                need_init = false;
-                supported_col_t variant = col_collection_(in_id, j);
-                ans_(out_id, cumulative_ ? j : 0) = boost::apply_visitor(visitor_, variant);
-                // this branch will never be reached from RowMeansWorker
-            }
-            else {
-                supported_col_t variant = col_collection_(in_id, j);
-                const int val = boost::apply_visitor(visitor_, variant);
-                std::size_t prev_j = cumulative_ ? (j > 0 ? j - 1 : 0) : 0;
-                ans_(out_id, cumulative_ ? j : 0) = arith_opr_.apply(ans_(out_id, prev_j), val);
-
-                // for RowMeansWorker
-                if (t_local) {
-                    std::static_pointer_cast<CountStrategy>(t_local)->apply(0, variant, true);
-                }
-            }
-        }
-
-        std::size_t max_j = cumulative_ ? col_collection_.ncol() : 1;
-        for (std::size_t j = 0; j < max_j; j++) {
-            int ans = ans_(out_id, j);
-            if (metadata.output_mode == LGLSXP && ans != na_value_ && ans != 0) {
-                ans_(out_id, j) = 1;
-            }
-        }
-
-        return nullptr;
-    }
-
-protected:
-    RowArithWorker(const OperationMetadata& metadata,
-                   const ColumnCollection& cc,
-                   OutputWrapper<int>& ans,
-                   const Rcpp::List extras,
-                   ArithmeticOperator&& arith_opr)
-        : ParallelWorker(metadata, cc)
-        , cumulative_(Rcpp::as<bool>(extras["cumulative"]))
-        , ans_(ans)
-        , arith_opr_(std::move(arith_opr))
-    { }
-
-    const bool cumulative_;
-    OutputWrapper<int>& ans_;
-
-    const int na_value_ = NA_INTEGER;
-    const NAVisitor na_visitor_;
-
-private:
-    const ArithmeticOperator arith_opr_;
-    const NumericVisitor<int> visitor_;
 };
 
 // =================================================================================================
