@@ -60,3 +60,14 @@ test_that("Grain for interruption check is calculated correctly in C++.", {
     ans <- row_sums(mat, output_mode = "double")
     expect_equal(ans, expected)
 })
+
+test_that("compute_output_mode works.", {
+    expect_error(wiserow:::compute_output_mode("logical", "logical"), "logical")
+
+    expect_identical(wiserow:::compute_output_mode(rep("logical", 10L)), "logical")
+
+    expect_identical(wiserow:::compute_output_mode(c("logical")), "logical")
+    expect_identical(wiserow:::compute_output_mode(c("logical", "integer")), "integer")
+    expect_identical(wiserow:::compute_output_mode(c("logical", "integer", "double")), "double")
+    expect_identical(wiserow:::compute_output_mode(c("logical", "integer", "double", "character")), "character")
+})

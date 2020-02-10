@@ -3,6 +3,7 @@
 #include <cstddef> // size_t
 #include <memory>
 #include <string>
+#include <unordered_set>
 
 #include <Rcpp.h>
 
@@ -269,6 +270,153 @@ extern "C" SEXP row_duplicated(SEXP metadata, SEXP data, SEXP output, SEXP extra
     else { // nocov start
         Rcpp::stop("Match type [" + match_type + "] not supported.");
     } // nocov end
+
+    return R_NilValue;
+    END_RCPP
+}
+
+// =================================================================================================
+
+template<int RT, typename T, bool WHICH>
+void numeric_row_extrema(const OperationMetadata& metadata,
+                         const ColumnCollection& col_collection,
+                         const Rcpp::List& extras,
+                         SEXP output)
+{
+    typedef typename std::conditional<WHICH, int, T>::type OUT_T;
+
+    std::shared_ptr<OutputWrapper<OUT_T>> output_wrapper = nullptr;
+
+    switch(metadata.output_class) {
+    case RClass::VECTOR: {
+        Rcpp::Vector<RT> ans(output);
+        output_wrapper = std::make_shared<VectorOutputWrapper<RT, OUT_T>>(ans);
+        break;
+    }
+    case RClass::LIST: {
+        output_wrapper = std::make_shared<ListOutputWrapper<RT, OUT_T>>(output);
+        break;
+    }
+    case RClass::DATAFRAME: {
+        output_wrapper = std::make_shared<DataFrameOutputWrapper<RT, OUT_T>>(output);
+        break;
+    }
+    case RClass::MATRIX: {
+        Rcpp::Matrix<RT> ans(output);
+        output_wrapper = std::make_shared<MatrixOutputWrapper<RT, OUT_T>>(ans);
+        break;
+    }
+    default: // nocov start
+        Rcpp::stop("This operation does not support the chosen output class.");
+    } // nocov end
+
+    RowExtremaWorker<T, WHICH> worker(metadata, col_collection, *output_wrapper, extras);
+    parallel_for(worker);
+}
+
+extern "C" SEXP row_extrema(SEXP metadata, SEXP data, SEXP output, SEXP extras) {
+    BEGIN_RCPP
+    OperationMetadata metadata_(metadata);
+
+    ColumnCollection col_collection = ColumnCollection::coerce(metadata_, data);
+    std::size_t out_len = output_length(metadata_, col_collection);
+    if (out_len == 0) return R_NilValue;
+
+    Rcpp::List extras_(extras);
+    bool which = Rcpp::as<bool>(extras_["which"]);
+
+    if (metadata_.output_mode == LGLSXP) {
+        if (which) {
+            numeric_row_extrema<INTSXP, int, true>(metadata_, col_collection, extras_, output);
+        }
+        else {
+            numeric_row_extrema<LGLSXP, int, false>(metadata_, col_collection, extras_, output);
+        }
+    }
+    else if (metadata_.output_mode == INTSXP) {
+        if (which) {
+            numeric_row_extrema<INTSXP, int, true>(metadata_, col_collection, extras_, output);
+        }
+        else {
+            numeric_row_extrema<INTSXP, int, false>(metadata_, col_collection, extras_, output);
+        }
+    }
+    else if (metadata_.output_mode == REALSXP) {
+        if (which) {
+            numeric_row_extrema<INTSXP, double, true>(metadata_, col_collection, extras_, output);
+        }
+        else {
+            numeric_row_extrema<REALSXP, double, false>(metadata_, col_collection, extras_, output);
+        }
+    }
+    else if (which) {
+        // output_mode == CHARSXP
+        numeric_row_extrema<INTSXP, boost::string_ref, true>(metadata_, col_collection, extras_, output);
+    }
+    else {
+        std::unordered_set<std::string> temp_strings;
+        RowExtremaWorker<boost::string_ref, false> worker(metadata_, col_collection, extras_, temp_strings);
+        parallel_for(worker);
+
+        switch(metadata_.output_class) {
+        case RClass::VECTOR: {
+            Rcpp::StringVector ans(output);
+            for (R_xlen_t i = 0; i < ans.length(); i++) {
+                const char * data = worker.ans[i].data();
+                if (data != worker.STRING_REF_NOT_SET.data()) {
+                    ans[i] = data;
+                }
+                else {
+                    ans[i] = NA_STRING;
+                }
+            }
+            break;
+        }
+        case RClass::LIST: {
+            Rcpp::List list(output);
+            for (R_xlen_t i = 0; i < list.length(); i++) {
+                const char * data = worker.ans[i].data();
+                Rcpp::StringVector ans(list[i]);
+                if (data != worker.STRING_REF_NOT_SET.data()) {
+                    ans[0] = data;
+                }
+                else {
+                    ans[0] = NA_STRING;
+                }
+            }
+            break;
+        }
+        case RClass::DATAFRAME: {
+            Rcpp::DataFrame df(output);
+            Rcpp::StringVector ans(df[0]);
+            for (R_xlen_t i = 0; i < ans.length(); i++) {
+                const char * data = worker.ans[i].data();
+                if (data != worker.STRING_REF_NOT_SET.data()) {
+                    ans[i] = data;
+                }
+                else {
+                    ans[i] = NA_STRING;
+                }
+            }
+            break;
+        }
+        case RClass::MATRIX: {
+            Rcpp::StringMatrix ans(output);
+            for (int i = 0; i < ans.nrow(); i++) {
+                const char * data = worker.ans[i].data();
+                if (data != worker.STRING_REF_NOT_SET.data()) {
+                    ans[i] = data;
+                }
+                else {
+                    ans[i] = NA_STRING;
+                }
+            }
+            break;
+        }
+        default: // nocov start
+            Rcpp::stop("This operation does not support the chosen output class.");
+        } // nocov end
+    }
 
     return R_NilValue;
     END_RCPP
