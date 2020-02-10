@@ -1,6 +1,6 @@
 
 ## Initial release
-
+This is the first version of the package.
 
 ## Test environments
 * Local GNU/Linux, R release
