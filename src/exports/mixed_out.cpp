@@ -349,6 +349,10 @@ extern "C" SEXP row_extrema(SEXP metadata, SEXP data, SEXP output, SEXP extras) 
             numeric_row_extrema<REALSXP, double, false>(metadata_, col_collection, extras_, output);
         }
     }
+    else if (which) {
+        // output_mode == CHARSXP
+        numeric_row_extrema<INTSXP, boost::string_ref, true>(metadata_, col_collection, extras_, output);
+    }
     else {
         std::unordered_set<std::string> temp_strings;
         RowExtremaWorker<boost::string_ref, false> worker(metadata_, col_collection, extras_, temp_strings);
