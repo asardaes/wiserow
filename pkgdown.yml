@@ -1,0 +1,8 @@
+pandoc: '2.2'
+pkgdown: 1.4.1.9000
+pkgdown_sha: 48e12e0fc836ec8ca423b44656b97f719cd856c7
+articles: []
+urls:
+  reference: https://asardaes.github.io/wiserow//reference
+  article: https://asardaes.github.io/wiserow//articles
+
