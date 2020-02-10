@@ -32,7 +32,7 @@ row_finites.matrix <- function(.data, match_type = "none", ...) {
         match_type = match_type
     )
 
-    if (nrow(.data) > 0L) {
+    if (NROW(ans) > 0L) {
         .Call(C_row_finites, metadata, .data, ans, extras)
     }
 
@@ -60,7 +60,7 @@ row_finites.data.frame <- function(.data, match_type = "none", ...) {
         match_type = match_type
     )
 
-    if (nrow(.data) > 0L) {
+    if (NROW(ans) > 0L) {
         .Call(C_row_finites, metadata, .data, ans, extras)
     }
 

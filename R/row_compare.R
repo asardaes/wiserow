@@ -70,7 +70,7 @@ row_compare.matrix <- function(.data, match_type = "none", operator = "==", valu
         target_val = values
     )
 
-    if (nrow(.data) > 0L) {
+    if (NROW(ans) > 0L) {
         .Call(C_row_compare, metadata, .data, ans, extras)
     }
 
@@ -104,7 +104,7 @@ row_compare.data.frame <- function(.data, match_type = "none", operator = "==", 
         target_val = values
     )
 
-    if (nrow(.data) > 0L) {
+    if (NROW(ans) > 0L) {
         .Call(C_row_compare, metadata, .data, ans, extras)
     }
 

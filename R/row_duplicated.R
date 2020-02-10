@@ -71,7 +71,7 @@ row_duplicated.matrix <- function(.data, match_type = NULL, output_class, ...) {
         match_type = match_type
     )
 
-    if (nrow(.data) > 0L) {
+    if (NROW(ans) > 0L) {
         .Call(C_row_duplicated, metadata, .data, ans, extras)
     }
 
@@ -108,7 +108,7 @@ row_duplicated.data.frame <- function(.data, match_type = NULL, output_class, ..
         match_type = match_type
     )
 
-    if (nrow(.data) > 0L) {
+    if (NROW(ans) > 0L) {
         .Call(C_row_duplicated, metadata, .data, ans, extras)
     }
 

@@ -32,7 +32,7 @@ row_nas.matrix <- function(.data, match_type = "none", ...) {
         match_type = match_type
     )
 
-    if (nrow(.data) > 0L) {
+    if (NROW(ans) > 0L) {
         .Call(C_row_nas, metadata, .data, ans, extras)
     }
 
@@ -59,7 +59,7 @@ row_nas.data.frame <- function(.data, match_type = "none", ...) {
         match_type = match_type
     )
 
-    if (nrow(.data) > 0L) {
+    if (NROW(ans) > 0L) {
         .Call(C_row_nas, metadata, .data, ans, extras)
     }
 

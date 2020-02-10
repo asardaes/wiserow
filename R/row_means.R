@@ -45,7 +45,7 @@ row_means.matrix <- function(.data, cumulative = FALSE, output_mode, output_clas
         cumulative = cumulative
     )
 
-    if (nrow(.data) > 0L) {
+    if (NROW(ans) > 0L) {
         .Call(C_row_means, metadata, .data, ans, extras)
     }
 
@@ -98,7 +98,7 @@ row_means.data.frame <- function(.data, cumulative = FALSE, output_mode, output_
         cumulative = cumulative
     )
 
-    if (nrow(.data) > 0L) {
+    if (NROW(ans) > 0L) {
         .Call(C_row_means, metadata, .data, ans, extras)
     }
 

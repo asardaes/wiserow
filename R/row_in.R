@@ -52,7 +52,7 @@ row_in.matrix <- function(.data, match_type = "none", sets = list(), negate = FA
         negate = isTRUE(negate)
     )
 
-    if (nrow(.data) > 0L) {
+    if (NROW(ans) > 0L) {
         .Call(C_row_in, metadata, .data, ans, extras)
     }
 
@@ -87,7 +87,7 @@ row_in.data.frame <- function(.data, match_type = "none", sets = list(), negate 
         negate = isTRUE(negate)
     )
 
-    if (nrow(.data) > 0L) {
+    if (NROW(ans) > 0L) {
         .Call(C_row_in, metadata, .data, ans, extras)
     }
 
