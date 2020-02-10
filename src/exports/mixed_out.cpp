@@ -283,27 +283,27 @@ void numeric_row_extrema(const OperationMetadata& metadata,
                          const Rcpp::List& extras,
                          SEXP output)
 {
-    typedef typename std::conditional<WHICH, int, T>::type OUT;
+    typedef typename std::conditional<WHICH, int, T>::type OUT_T;
 
-    std::shared_ptr<OutputWrapper<OUT>> output_wrapper = nullptr;
+    std::shared_ptr<OutputWrapper<OUT_T>> output_wrapper = nullptr;
 
     switch(metadata.output_class) {
     case RClass::VECTOR: {
         Rcpp::Vector<RT> ans(output);
-        output_wrapper = std::make_shared<VectorOutputWrapper<RT, OUT>>(ans);
+        output_wrapper = std::make_shared<VectorOutputWrapper<RT, OUT_T>>(ans);
         break;
     }
     case RClass::LIST: {
-        output_wrapper = std::make_shared<ListOutputWrapper<RT, OUT>>(output);
+        output_wrapper = std::make_shared<ListOutputWrapper<RT, OUT_T>>(output);
         break;
     }
     case RClass::DATAFRAME: {
-        output_wrapper = std::make_shared<DataFrameOutputWrapper<RT, OUT>>(output);
+        output_wrapper = std::make_shared<DataFrameOutputWrapper<RT, OUT_T>>(output);
         break;
     }
     case RClass::MATRIX: {
         Rcpp::Matrix<RT> ans(output);
-        output_wrapper = std::make_shared<MatrixOutputWrapper<RT, OUT>>(ans);
+        output_wrapper = std::make_shared<MatrixOutputWrapper<RT, OUT_T>>(ans);
         break;
     }
     default: // nocov start

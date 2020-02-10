@@ -269,11 +269,11 @@ template<typename T, bool WHICH>
 class RowExtremaWorker : public ParallelWorker
 {
 public:
-    typedef typename std::conditional<WHICH, int, T>::type OUT;
+    typedef typename std::conditional<WHICH, int, T>::type OUT_T;
 
     RowExtremaWorker(const OperationMetadata& metadata,
                      const ColumnCollection& cc,
-                     OutputWrapper<OUT>& ans,
+                     OutputWrapper<OUT_T>& ans,
                      const Rcpp::List extras)
         : ParallelWorker(metadata, cc)
         , ans_(ans)
@@ -294,7 +294,7 @@ public:
                 if (metadata.na_action == NaAction::EXCLUDE) {
                     continue;
                 }
-                else if (std::is_same<OUT, int>::value) { // ternary operator causes type problems, compiler optimizations?
+                else if (std::is_same<OUT_T, int>::value) { // ternary operator causes type problems, compiler optimizations?
                     variant = NA_INTEGER;
                 }
                 else {
@@ -322,9 +322,9 @@ public:
         }
 
         if (variant_initialized) {
-            ans_[out_id] = boost::get<OUT>(variant);
+            ans_[out_id] = boost::get<OUT_T>(variant);
         }
-        else if (std::is_same<OUT, int>::value) {
+        else if (std::is_same<OUT_T, int>::value) {
             ans_[out_id] = NA_INTEGER;
         }
         else {
@@ -352,7 +352,7 @@ private:
         throw std::runtime_error("[wiserow] Invalid type passed to RowExtremaWorker. This should not happen."); // nocov
     }
 
-    OutputWrapper<OUT>& ans_;
+    OutputWrapper<OUT_T>& ans_;
     const CompOp comp_op_;
     const std::shared_ptr<BooleanVisitor> dummy_parent_visitor_;
 
