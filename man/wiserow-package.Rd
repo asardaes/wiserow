@@ -4,9 +4,13 @@
 \name{wiserow-package}
 \alias{wiserow}
 \alias{wiserow-package}
-\title{Fast, multi-threaded implementations of common row-wise operations}
+\title{Multi-threaded, coercion-free implementations of common row-wise operations}
 \description{
-TBD.
+Fast row-oriented operations implemented in C++, all of which are multi-threaded by leveraging
+\pkg{RcppParallel} and \pkg{RcppThread}. Thanks to Boost's \code{string_ref}, virtually no deep copies
+of input data are made. In contrast to other functions, the ones in this package support data
+frames with differently typed columns as input without coercion to a matrix, performing
+on-the-fly type promotion following R rules, where necessary.
 }
 \seealso{
 Useful links:

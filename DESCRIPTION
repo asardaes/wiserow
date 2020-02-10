@@ -1,7 +1,11 @@
 Package: wiserow
 Type: Package
-Title: Multi-threaded, coercion-free implementations of common row-wise operations
-Description: TBD.
+Title: Multi-Threaded, Coercion-Free Implementations of Common Row-Wise Operations
+Description: Fast row-oriented operations implemented in C++, all of which are multi-threaded by
+    leveraging 'RcppParallel' and 'RcppThread'. Thanks to Boost's 'string_ref', virtually no deep
+    copies of input data are made. In contrast to other functions, the ones in this package support
+    data frames with differently typed columns as input without coercion to a matrix, performing
+    on-the-fly type promotion following R rules, where necessary.
 Version: 0.0.1.9000
 Depends:
     R (>= 3.1.0)
@@ -18,7 +22,7 @@ LinkingTo:
     RcppThread
 Suggests:
     testthat
-Date: 2019-09-08
+Date: 2020-02-10
 Authors@R: c(
         person("Alexis", "Sarda-Espinosa", role=c("cre", "aut"), email="alexis.sarda@gmail.com")
     )
