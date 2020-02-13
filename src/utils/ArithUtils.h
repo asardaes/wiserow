@@ -17,7 +17,8 @@ ArithOp parse_arith_op(const std::string& arith_op);
 // =================================================================================================
 
 // will NOT deal with NA
-class ArithmeticOperator {
+class ArithmeticOperator
+{
 public:
     ArithmeticOperator(const ArithOp arith_op)
         : arith_op(arith_op)

@@ -1,8 +1,11 @@
-#ifndef WISEROW_BOOLEANVISITORDECORATOR_H_
-#define WISEROW_BOOLEANVISITORDECORATOR_H_
+#ifndef WISEROW_BOOLEANVISITOR_H_
+#define WISEROW_BOOLEANVISITOR_H_
 
 #include <complex>
 #include <memory>
+
+#define R_NO_REMAP
+#include <Rinternals.h> // SEXP
 
 #include <boost/utility/string_ref.hpp>
 #include <boost/variant.hpp>
@@ -22,7 +25,7 @@ public:
     virtual bool operator()(const std::complex<double>& val) const = 0;
 };
 
-// -------------------------------------------------------------------------------------------------
+// =================================================================================================
 
 class InitBooleanVisitor : public BooleanVisitor
 {
@@ -38,7 +41,7 @@ private:
     const bool init_;
 };
 
-// -------------------------------------------------------------------------------------------------
+// =================================================================================================
 
 class BooleanVisitorDecorator : public BooleanVisitor
 {
@@ -60,6 +63,25 @@ private:
     const bool negate_;
 };
 
+// =================================================================================================
+
+class BooleanVisitorBuilder
+{
+public:
+    BooleanVisitorBuilder(const BoolOp op = BoolOp::OR, const bool init = false);
+
+    BooleanVisitorBuilder& is_na(const bool negate = false);
+    BooleanVisitorBuilder& is_inf(const bool negate = false);
+    BooleanVisitorBuilder& compare(const CompOp comp_op, const SEXP& target_val);
+    BooleanVisitorBuilder& in_set(const SEXP& target_vals, const bool negate = false);
+
+    std::shared_ptr<BooleanVisitor> build();
+
+private:
+    const BoolOp op_;
+    std::shared_ptr<BooleanVisitor> visitor_;
+};
+
 } // namespace wiserow
 
-#endif // WISEROW_BOOLEANVISITORDECORATOR_H_
+#endif // WISEROW_BOOLEANVISITOR_H_

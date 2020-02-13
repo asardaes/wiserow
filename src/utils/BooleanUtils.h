@@ -3,6 +3,7 @@
 
 #include <complex>
 #include <stdexcept> // invalid_argument
+#include <type_traits> // is_same
 
 #include <boost/utility/string_ref.hpp>
 
@@ -34,7 +35,8 @@ CompOp parse_comp_op(const std::string& comp_op);
 
 // =================================================================================================
 
-class LogicalOperator {
+class LogicalOperator
+{
 public:
     LogicalOperator(const BoolOp bool_op);
 
@@ -47,11 +49,10 @@ private:
 // =================================================================================================
 
 // will NOT deal with NA
-class ComparisonOperator {
+class ComparisonOperator
+{
 public:
-    ComparisonOperator(const CompOp comp_op)
-        : comp_op_(comp_op)
-    { }
+    ComparisonOperator(const CompOp comp_op);
 
     template<typename T, typename U>
     bool apply(const T& a, const U& b) const {
@@ -73,9 +74,7 @@ public:
         return false; // nocov
     }
 
-    bool apply(const boost::string_ref& a, const boost::string_ref& b) const {
-        return this->apply<boost::string_ref, boost::string_ref>(a, b);
-    }
+    bool apply(const boost::string_ref& a, const boost::string_ref& b) const;
 
     template<typename T>
     bool apply(const boost::string_ref& a, const T& b) const {
@@ -117,38 +116,20 @@ public:
         return false; // nocov
     }
 
-    bool apply(const std::complex<double>& a, const std::complex<double>& b) const {
-        switch(comp_op_) {
-        case CompOp::EQ:
-            return a == b;
-        case CompOp::NEQ:
-            return a != b;
-        default:
-            throw std::invalid_argument("[wiserow] complex numbers can only be compared for (in)equality.");
-        }
-    }
+    bool apply(const std::complex<double>& a, const std::complex<double>& b) const;
 
-    bool apply(const std::complex<double>& a, const double b) const {
-        switch(comp_op_) {
-        case CompOp::EQ:
-            return a.imag() == 0 && a.real() == b;
-        case CompOp::NEQ:
-            return a.imag() != 0 || a.real() != b;
-        default:
-            throw std::invalid_argument("[wiserow] complex numbers can only be compared for (in)equality.");
-        }
-    }
+    bool apply(const std::complex<double>& a, const double b) const;
 
-    bool apply(const double a, const std::complex<double>& b) const {
-        return this->apply(b, a);
-    }
+    bool apply(const double a, const std::complex<double>& b) const;
 
-    bool apply(const std::complex<double>& a, const int b) const {
-        return this->apply(a, static_cast<double>(b));
-    }
+    bool apply(const std::complex<double>& a, const int b) const;
 
-    bool apply(const int a, const std::complex<double>& b) const {
-        return this->apply(b, static_cast<double>(a));
+    bool apply(const int a, const std::complex<double>& b) const;
+
+    template<typename T>
+    typename std::enable_if<!std::is_same<T, boost::string_ref>::value, bool>::type
+    apply(const T a, const bool b) const {
+        return this->apply(a, static_cast<int>(b));
     }
 
 private:
