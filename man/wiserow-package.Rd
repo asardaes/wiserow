@@ -8,9 +8,10 @@
 \description{
 Fast row-oriented operations implemented in C++, all of which are multi-threaded by leveraging
 \pkg{RcppParallel} and \pkg{RcppThread}. Virtually no deep copies of input data are made, even of
-character data thanks to Boost's \code{string_ref}. In contrast to other functions, the ones in this
-package support data frames with differently typed columns as input without coercion to a matrix,
-performing on-the-fly type promotion following R rules, where necessary.
+character data thanks to the 'string_ref' class from the C++ 'Boost' library. In contrast to
+other functions, the ones in this package support data frames with differently typed columns as
+input without coercing to a matrix, performing, if necessary, on-the-fly type promotion according
+to R rules (like transforming logicals to integers to allow summation).
 }
 \details{
 Start by looking at \code{\link[=op_ctrl]{op_ctrl()}}.
@@ -18,6 +19,7 @@ Start by looking at \code{\link[=op_ctrl]{op_ctrl()}}.
 \seealso{
 Useful links:
 \itemize{
+  \item \url{https://asardaes.github.io/wiserow/}
   \item \url{https://github.com/asardaes/wiserow}
   \item Report bugs at \url{https://github.com/asardaes/wiserow/issues}
 }
