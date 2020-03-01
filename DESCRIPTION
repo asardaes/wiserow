@@ -22,6 +22,7 @@ LinkingTo:
     RcppParallel,
     RcppThread
 Suggests:
+    rlang,
     testthat
 Date: 2020-03-01
 Authors@R: c(
