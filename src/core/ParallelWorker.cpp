@@ -21,7 +21,12 @@ std::size_t ParallelWorker::num_ops() const {
 }
 
 void ParallelWorker::operator()(std::size_t begin, std::size_t end) {
-    if (eptr) return;
+    mutex_.lock();
+    if (eptr) {
+        mutex_.unlock();
+        return;
+    }
+    mutex_.unlock();
 
     try {
         thread_local_ptr t_local(nullptr);
@@ -32,7 +37,7 @@ void ParallelWorker::operator()(std::size_t begin, std::size_t end) {
             t_local = work_row(corresponding_row(id), id, t_local);
         }
     }
-    catch(...) {
+    catch (...) {
         mutex_.lock();
         if (!eptr) eptr = std::current_exception();
         mutex_.unlock();
