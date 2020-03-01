@@ -162,12 +162,16 @@ public:
             if (ans != this->na_value_) {
                 double n = thread_local_counter->output(this->metadata, 0, false);
 
-                if (this->metadata.output_mode != LGLSXP) {
-                    this->ans_(out_id, 0) = ans / n;
+                if (!(this->metadata.cols.is_null) && this->metadata.cols.len == 0) {
+                    // corner case: no columns considered
+                    this->ans_(out_id, 0) = std::is_integral<T>::value ? this->na_value_ : R_NaN;
                 }
                 else if (n == 0.0) {
                     // corner case: all values were NA
                     this->ans_(out_id, 0) = this->na_value_;
+                }
+                else if (this->metadata.output_mode != LGLSXP) {
+                    this->ans_(out_id, 0) = ans / n;
                 }
             }
         }
