@@ -71,7 +71,12 @@ inline void parallel_for(ParallelWorker& worker) {
     RcppParallel::parallelFor(0, num_ops, worker, static_cast<std::size_t>(grain));
 
     if (worker.eptr) {
-        std::rethrow_exception(worker.eptr);
+        try {
+            std::rethrow_exception(worker.eptr);
+        }
+        catch (const std::exception& e) {
+            Rcpp::stop(e.what());
+        }
     }
 
     // always call after parallelFor to actually throw exception if there was an interruption
