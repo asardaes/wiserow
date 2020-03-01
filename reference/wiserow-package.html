@@ -18,8 +18,8 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script>
 
 <!-- Font Awesome icons -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.1/css/all.min.css" integrity="sha256-PbSmjxuVAzJ6FPvNYsrXygfGhNJYyZ2GktDbkMBqQZg=" crossorigin="anonymous" />
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.1/css/v4-shims.min.css" integrity="sha256-A6jcAdwFD48VMjlI3GDxUd+eCQa7/KWy6G9oe/ovaPA=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/all.min.css" integrity="sha256-nAmazAk6vS34Xqo0BSrTb+abbtFlgsFK7NKSi6o7Y78=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/v4-shims.min.css" integrity="sha256-6qHlizsOWFskGlwVOKuns+D1nB6ssZrHQrNj1wGplHc=" crossorigin="anonymous" />
 
 <!-- clipboard.js -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script>
@@ -38,9 +38,10 @@
 <meta property="og:title" content="Multi-threaded, coercion-free implementations of common row-wise operations — wiserow-package" />
 <meta property="og:description" content="Fast row-oriented operations implemented in C++, all of which are multi-threaded by leveraging
 RcppParallel and RcppThread. Virtually no deep copies of input data are made, even of
-character data thanks to Boost's string_ref. In contrast to other functions, the ones in this
-package support data frames with differently typed columns as input without coercion to a matrix,
-performing on-the-fly type promotion following R rules, where necessary." />
+character data thanks to the 'string_ref' class from the C++ 'Boost' library. In contrast to
+other functions, the ones in this package support data frames with differently typed columns as
+input without coercing to a matrix, performing, if necessary, on-the-fly type promotion according
+to R rules (like transforming logicals to integers to allow summation)." />
 <meta name="twitter:card" content="summary" />
 
 
@@ -73,7 +74,7 @@ performing on-the-fly type promotion following R rules, where necessary." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">wiserow</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.1.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0</span>
       </span>
     </div>
 
@@ -117,9 +118,10 @@ performing on-the-fly type promotion following R rules, where necessary." />
     <div class="ref-description">
     <p>Fast row-oriented operations implemented in C++, all of which are multi-threaded by leveraging
 <span class="pkg">RcppParallel</span> and <span class="pkg">RcppThread</span>. Virtually no deep copies of input data are made, even of
-character data thanks to Boost's <code>string_ref</code>. In contrast to other functions, the ones in this
-package support data frames with differently typed columns as input without coercion to a matrix,
-performing on-the-fly type promotion following R rules, where necessary.</p>
+character data thanks to the 'string_ref' class from the C++ 'Boost' library. In contrast to
+other functions, the ones in this package support data frames with differently typed columns as
+input without coercing to a matrix, performing, if necessary, on-the-fly type promotion according
+to R rules (like transforming logicals to integers to allow summation).</p>
     </div>
 
 
@@ -130,6 +132,7 @@ performing on-the-fly type promotion following R rules, where necessary.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
     <div class='dont-index'><p>Useful links:</p><ul>
+<li><p><a href='https://asardaes.github.io/wiserow/'>https://asardaes.github.io/wiserow/</a></p></li>
 <li><p><a href='https://github.com/asardaes/wiserow'>https://github.com/asardaes/wiserow</a></p></li>
 <li><p>Report bugs at <a href='https://github.com/asardaes/wiserow/issues'>https://github.com/asardaes/wiserow/issues</a></p></li>
 </ul>
@@ -137,7 +140,7 @@ performing on-the-fly type promotion following R rules, where necessary.</p>
 </div>
 
   </div>
-  <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
+  <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#details">Details</a></li>
@@ -156,7 +159,7 @@ performing on-the-fly type promotion following R rules, where necessary.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.4.1.9000.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.4.1.</p>
 </div>
 
       </footer>
