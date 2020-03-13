@@ -1,4 +1,6 @@
 if (!identical(Sys.getenv("NOT_CRAN"), "true")) {
+    cat("Allowing unknown error messages.\n")
+
     # see https://github.com/RcppCore/Rcpp/issues/972
     # what is mentioned there happened on r-devel-fedora-clang
     expect_error <- function(...) {

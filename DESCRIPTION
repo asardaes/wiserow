@@ -7,7 +7,7 @@ Description: Fast row-oriented operations implemented in C++, all of which are m
     contrast to other functions, the ones in this package support data frames with differently typed
     columns as input without coercing to a matrix, performing, if necessary, on-the-fly type
     promotion according to R rules (like transforming logicals to integers to allow summation).
-Version: 0.1.0.9000
+Version: 0.1.1
 Depends:
     R (>= 3.1.0)
 Imports:
@@ -24,7 +24,7 @@ LinkingTo:
 Suggests:
     rlang,
     testthat
-Date: 2020-03-01
+Date: 2020-03-13
 Authors@R: c(
         person("Alexis", "Sarda-Espinosa", role=c("cre", "aut"), email="alexis.sarda@gmail.com")
     )
@@ -36,5 +36,5 @@ SystemRequirements: C++11, GNU make
 Language: en-US
 Encoding: UTF-8
 LazyData: TRUE
-RoxygenNote: 7.0.2
+RoxygenNote: 7.1.0
 Roxygen: list(markdown = TRUE)

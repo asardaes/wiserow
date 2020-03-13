@@ -1,5 +1,8 @@
 
-## Update to version
+## Update to version 0.1.1
+
+- Fixed undefined behavior found by clang's sanitizer.
+- Modified tests to account for different error messages.
 
 ## Test environments
 * Local GNU/Linux, R release
