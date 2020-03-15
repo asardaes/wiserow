@@ -22,6 +22,7 @@ public:
 };
 
 // =================================================================================================
+// see https://github.com/dart-lang/sdk/issues/38141 for the reasoning behind 'threw' variable
 
 class ParallelWorker : public RcppParallel::Worker
 {
@@ -34,6 +35,7 @@ public:
 
     const OperationMetadata metadata;
     std::exception_ptr eptr;
+    bool threw = false;
 
 protected:
     typedef std::shared_ptr<WorkerThreadLocal> thread_local_ptr;
@@ -70,8 +72,11 @@ inline __attribute__((always_inline)) void parallel_for(ParallelWorker& worker) 
 
     RcppParallel::parallelFor(0, num_ops, worker, static_cast<std::size_t>(grain));
 
-    if (worker.eptr) {
-        std::rethrow_exception(worker.eptr);
+    if (worker.threw) {
+        if (worker.eptr)
+            std::rethrow_exception(worker.eptr);
+        else
+            Rcpp::stop("[wiserow] Operation failed but the exception could not be caught (unknown reason)."); // nocov
     }
 
     // always call after parallelFor to actually throw exception if there was an interruption
