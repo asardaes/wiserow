@@ -13,8 +13,8 @@ test_that("row_sums can handle errors and edge cases appropriately.", {
         expect_error(regexp = "not support", row_sums(char_mat, output_mode = "complex"))
     )
 
-    expect_error(regexp = "row_sums can only return", row_sums(int_mat, output_mode = "character"))
-    expect_error(regexp = "row_sums can only return", row_sums(int_mat, output_mode = "character", output_class = "list"))
+    expect_error(regexp = "row_arith can only return", row_sums(int_mat, output_mode = "character"))
+    expect_error(regexp = "row_arith can only return", row_sums(int_mat, output_mode = "character", output_class = "list"))
 
     expect_identical(row_sums(as.matrix(data.frame())), vector("integer"))
     expect_identical(row_sums(data.frame()), vector("integer"))
