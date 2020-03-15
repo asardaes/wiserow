@@ -332,8 +332,7 @@ class RowExtremaWorker<boost::string_ref, false> : public ParallelWorker
 public:
     RowExtremaWorker(const OperationMetadata& metadata,
                      const ColumnCollection& cc,
-                     const Rcpp::List extras,
-                     std::unordered_set<std::string>& temporary_strings);
+                     const Rcpp::List extras);
 
     static boost::string_ref STRING_REF_NOT_SET;
 
@@ -348,7 +347,7 @@ private:
     const CompOp comp_op_;
     const std::shared_ptr<BooleanVisitor> dummy_parent_visitor_;
 
-    std::unordered_set<std::string>& temporary_strings_;
+    std::unordered_set<std::string> temporary_strings_;
 
     const BoolOp bool_op_ = BoolOp::AND;
     const NAVisitor na_visitor_;

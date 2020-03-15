@@ -3,7 +3,6 @@
 #include <cstddef> // size_t
 #include <memory>
 #include <string>
-#include <unordered_set>
 
 #include <Rcpp.h>
 
@@ -354,8 +353,7 @@ extern "C" SEXP row_extrema(SEXP metadata, SEXP data, SEXP output, SEXP extras) 
         numeric_row_extrema<INTSXP, boost::string_ref, true>(metadata_, col_collection, extras_, output);
     }
     else {
-        std::unordered_set<std::string> temp_strings;
-        RowExtremaWorker<boost::string_ref, false> worker(metadata_, col_collection, extras_, temp_strings);
+        RowExtremaWorker<boost::string_ref, false> worker(metadata_, col_collection, extras_);
         parallel_for(worker);
 
         switch(metadata_.output_class) {

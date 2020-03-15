@@ -8,13 +8,11 @@ boost::string_ref RowExtremaWorker<boost::string_ref, false>::STRING_REF_NOT_SET
 
 RowExtremaWorker<boost::string_ref, false>::RowExtremaWorker(const OperationMetadata& metadata,
                                                              const ColumnCollection& cc,
-                                                             const Rcpp::List extras,
-                                                             std::unordered_set<std::string>& temporary_strings)
+                                                             const Rcpp::List extras)
     : ParallelWorker(metadata, cc)
     , ans(cc.nrow())
     , comp_op_(parse_comp_op(Rcpp::as<std::string>(extras["comp_op"])))
     , dummy_parent_visitor_(std::make_shared<InitBooleanVisitor>(true))
-    , temporary_strings_(temporary_strings)
 { }
 
 // -------------------------------------------------------------------------------------------------
