@@ -23,6 +23,7 @@ matrix:
         on:
           branch: docs
     - os: osx
+      osx_image: xcode9
       r: release
     - os: linux
       r: devel
