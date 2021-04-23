@@ -1,6 +1,5 @@
 [![CRAN Status](http://www.r-pkg.org/badges/version/wiserow)](https://cran.r-project.org/package=wiserow)
-[![Travis-CI Build](https://travis-ci.org/asardaes/wiserow.svg?branch=master)](https://travis-ci.org/asardaes/wiserow)
-[![AppVeyor Build](https://ci.appveyor.com/api/projects/status/0906yq90252mlb77?svg=true)](https://ci.appveyor.com/project/asardaes/wiserow)
+[![R-CMD-check](https://github.com/asardaes/wiserow/workflows/R-CMD-check/badge.svg)](https://github.com/asardaes/wiserow/actions)
 [![codecov](https://codecov.io/gh/asardaes/wiserow/branch/master/graph/badge.svg)](https://codecov.io/gh/asardaes/wiserow)
 
 # Wiserow
