@@ -21,11 +21,11 @@ row_max(.data, which = NULL, ...)
   Arguments passed on to \code{\link[=op_ctrl]{op_ctrl}}
   \describe{
     \item{\code{output_class}}{One of ("vector", "list", "data.frame", "matrix"), possibly abbreviated.}
-    \item{\code{na_action}}{One of ("exclude", "pass"), possibly abbreviated. See \link[stats:na.pass]{stats::na.pass} for
+    \item{\code{na_action}}{One of ("exclude", "pass"), possibly abbreviated. See \link[stats:na.fail]{stats::na.pass} for
 semantics.}
     \item{\code{cols}}{A vector indicating which columns to consider for the operation. If \code{NULL}, all
 columns are used. If its length is 0, no columns are considered. Negative numbers, logical
-values, character vectors representing column names, and \link[tidyselect:select_helpers]{tidyselect::select_helpers} are
+values, character vectors representing column names, and \link[tidyselect:language]{tidyselect::select_helpers} are
 supported.}
     \item{\code{rows}}{Like \code{cols} but for row indices, and without \code{tidyselect} support.}
     \item{\code{factor_mode}}{One of ("character", "integer"), possibly abbreviated. If a column is a

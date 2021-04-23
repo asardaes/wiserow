@@ -15,16 +15,16 @@ op_ctrl(
 )
 }
 \arguments{
-\item{output_mode}{Desired \code{\link[base:storage.mode]{base::storage.mode()}} for the result.}
+\item{output_mode}{Desired \code{\link[base:mode]{base::storage.mode()}} for the result.}
 
 \item{output_class}{One of ("vector", "list", "data.frame", "matrix"), possibly abbreviated.}
 
-\item{na_action}{One of ("exclude", "pass"), possibly abbreviated. See \link[stats:na.pass]{stats::na.pass} for
+\item{na_action}{One of ("exclude", "pass"), possibly abbreviated. See \link[stats:na.fail]{stats::na.pass} for
 semantics.}
 
 \item{cols}{A vector indicating which columns to consider for the operation. If \code{NULL}, all
 columns are used. If its length is 0, no columns are considered. Negative numbers, logical
-values, character vectors representing column names, and \link[tidyselect:select_helpers]{tidyselect::select_helpers} are
+values, character vectors representing column names, and \link[tidyselect:language]{tidyselect::select_helpers} are
 supported.}
 
 \item{rows}{Like \code{cols} but for row indices, and without \code{tidyselect} support.}

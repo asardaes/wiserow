@@ -24,7 +24,7 @@ row_duplicated(.data, match_type = NULL, output_class, ...)
   \describe{
     \item{\code{cols}}{A vector indicating which columns to consider for the operation. If \code{NULL}, all
 columns are used. If its length is 0, no columns are considered. Negative numbers, logical
-values, character vectors representing column names, and \link[tidyselect:select_helpers]{tidyselect::select_helpers} are
+values, character vectors representing column names, and \link[tidyselect:language]{tidyselect::select_helpers} are
 supported.}
     \item{\code{rows}}{Like \code{cols} but for row indices, and without \code{tidyselect} support.}
     \item{\code{factor_mode}}{One of ("character", "integer"), possibly abbreviated. If a column is a
