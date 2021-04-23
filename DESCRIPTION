@@ -7,7 +7,7 @@ Description: Fast row-oriented operations implemented in C++, all of which are m
     contrast to other functions, the ones in this package support data frames with differently typed
     columns as input without coercing to a matrix, performing, if necessary, on-the-fly type
     promotion according to R rules (like transforming logicals to integers to allow summation).
-Version: 0.1.2.9000
+Version: 0.1.1.9000
 Depends:
     R (>= 3.1.0)
 Imports:
