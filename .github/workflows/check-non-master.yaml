@@ -4,6 +4,7 @@ on:
   push:
     branches-ignore:
       - master
+      - docs
   pull_request:
     branches:
       - master
