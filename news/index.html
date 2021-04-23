@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Multi-threaded, coercion-free implementations of common row-wise operations — wiserow-package • wiserow</title>
+<title>Changelog • wiserow</title>
 
 
 <!-- jquery -->
@@ -39,13 +39,7 @@
 
 
 
-<meta property="og:title" content="Multi-threaded, coercion-free implementations of common row-wise operations — wiserow-package" />
-<meta property="og:description" content="Fast row-oriented operations implemented in C++, all of which are multi-threaded by leveraging
-RcppParallel and RcppThread. Virtually no deep copies of input data are made, even of
-character data thanks to the 'string_ref' class from the C++ 'Boost' library. In contrast to
-other functions, the ones in this package support data frames with differently typed columns as
-input without coercing to a matrix, performing, if necessary, on-the-fly type promotion according
-to R rules (like transforming logicals to integers to allow summation)." />
+<meta property="og:title" content="Changelog" />
 
 
 
@@ -64,7 +58,7 @@ to R rules (like transforming logicals to integers to allow summation)." />
   </head>
 
   <body data-spy="scroll" data-target="#toc">
-    <div class="container template-reference-topic">
+    <div class="container template-news">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -116,44 +110,42 @@ to R rules (like transforming logicals to integers to allow summation)." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Multi-threaded, coercion-free implementations of common row-wise operations</h1>
-    <small class="dont-index">Source: <a href='https://github.com/asardaes/wiserow/blob/master/R/pkg.R'><code>R/pkg.R</code></a></small>
-    <div class="hidden name"><code>wiserow-package.Rd</code></div>
+      <h1 data-toc-skip>Changelog <small></small></h1>
+      <small>Source: <a href='https://github.com/asardaes/wiserow/blob/master/NEWS.md'><code>NEWS.md</code></a></small>
     </div>
 
-    <div class="ref-description">
-    <p>Fast row-oriented operations implemented in C++, all of which are multi-threaded by leveraging
-<span class="pkg">RcppParallel</span> and <span class="pkg">RcppThread</span>. Virtually no deep copies of input data are made, even of
-character data thanks to the 'string_ref' class from the C++ 'Boost' library. In contrast to
-other functions, the ones in this package support data frames with differently typed columns as
-input without coercing to a matrix, performing, if necessary, on-the-fly type promotion according
-to R rules (like transforming logicals to integers to allow summation).</p>
-    </div>
-
-
-
-    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
-
-    <p>Start by looking at <code><a href='op_ctrl.html'>op_ctrl()</a></code>.</p>
-    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
-
-    <div class='dont-index'><p>Useful links:</p><ul>
-<li><p><a href='https://asardaes.github.io/wiserow/'>https://asardaes.github.io/wiserow/</a></p></li>
-<li><p><a href='https://github.com/asardaes/wiserow'>https://github.com/asardaes/wiserow</a></p></li>
-<li><p>Report bugs at <a href='https://github.com/asardaes/wiserow/issues'>https://github.com/asardaes/wiserow/issues</a></p></li>
+    <div id="wiserow-010" class="section level1">
+<h1 class="page-header" data-toc-text="0.1.0">
+<a href="#wiserow-010" class="anchor"></a>wiserow 0.1.0<small> 2020-02-29 </small>
+</h1>
+<ul>
+<li>Initial version</li>
 </ul>
-
 </div>
-    <h2 class="hasAnchor" id="author"><a class="anchor" href="#author"></a>Author</h2>
-
-    <p>Alexis Sarda-Espinosa</p>
-
+    <div id="wiserow-011" class="section level1">
+<h1 class="page-header" data-toc-text="0.1.1">
+<a href="#wiserow-011" class="anchor"></a>wiserow 0.1.1<small> Unreleased </small>
+</h1>
+<ul>
+<li>Fixed undefined behavior when dividing by zero in <code>row_means</code>.</li>
+</ul>
+</div>
+    <div id="wiserow-012" class="section level1">
+<h1 class="page-header" data-toc-text="0.1.2">
+<a href="#wiserow-012" class="anchor"></a>wiserow 0.1.2<small> Unreleased </small>
+</h1>
+<ul>
+<li>Maybe.</li>
+</ul>
+</div>
   </div>
+
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
       <h2 data-toc-skip>Contents</h2>
     </nav>
   </div>
+
 </div>
 
 

@@ -1,7 +1,8 @@
-pandoc: '2.2'
-pkgdown: 1.4.1
+pandoc: 2.7.3
+pkgdown: 1.6.1
 pkgdown_sha: ~
-articles: []
+articles: {}
+last_built: 2021-04-23T20:23Z
 urls:
   reference: https://asardaes.github.io/wiserow//reference
   article: https://asardaes.github.io/wiserow//articles
