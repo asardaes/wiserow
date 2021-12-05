@@ -35,6 +35,5 @@ NeedsCompilation: yes
 SystemRequirements: C++11, GNU make
 Language: en-US
 Encoding: UTF-8
-LazyData: TRUE
 RoxygenNote: 7.1.1
 Roxygen: list(markdown = TRUE)
