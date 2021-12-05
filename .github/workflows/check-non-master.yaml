@@ -56,7 +56,7 @@ jobs:
       - name: Test coverage
         if: runner.os == 'Linux' && matrix.config.r == 'release'
         run: |
-          Rscript -e 'remotes::install_cran("covr")'
+          Rscript -e 'install.packages("covr")'
           Rscript codecov.R
         continue-on-error: true
 
