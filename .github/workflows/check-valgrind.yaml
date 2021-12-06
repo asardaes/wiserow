@@ -1,0 +1,77 @@
+on: push
+
+name: R-CMD-check-with-valgrind
+
+jobs:
+  pre-condition:
+    name: Check hash of src files
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - id: cache_hit
+        uses: actions/cache@v2
+        with:
+          path: |
+            src
+          key: valgrind-0-${{ hashFiles('src/**') }}
+    outputs:
+      run_check: ${{ steps.cache_hit.outputs.cache-hit }}
+  R-CMD-check:
+    needs: pre-condition
+    if: needs.pre-condition.outputs.run_check != 'true'
+
+    strategy:
+      fail-fast: false
+      matrix:
+        config:
+          - {os: ubuntu-latest, r: 'release'}
+          - {os: ubuntu-latest, r: 'devel', http-user-agent: 'release'}
+
+    runs-on: ${{ matrix.config.os }}
+    name: ${{ matrix.config.os }} (${{ matrix.config.r }})
+
+    env:
+      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+      R_KEEP_PKG_SOURCE: yes
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Install valgrind
+        run: |
+          /usr/bin/sudo DEBIAN_FRONTEND=noninteractive apt-get install -y valgrind
+
+      - uses: r-lib/actions/setup-pandoc@v1
+
+      - uses: r-lib/actions/setup-r@v1
+        with:
+          r-version: ${{ matrix.config.r }}
+          http-user-agent: ${{ matrix.config.http-user-agent }}
+          use-public-rspm: true
+
+      - uses: r-lib/actions/setup-r-dependencies@v1
+        with:
+          extra-packages: rcmdcheck
+
+      - name: Check with valgrind
+        env:
+          NOT_CRAN: false
+          VALGRIND_OPTS: "--tool=memcheck --leak-check=full"
+        run: |
+          R CMD build .
+          R --vanilla CMD check *.tar.gz --as-cran --use-valgrind --no-manual
+
+      - name: Show testthat output
+        if: always()
+        run: find *.Rcheck -name 'testthat.Rout*' -exec cat '{}' \; || true
+        shell: bash
+
+      - name: Upload check results
+        if: failure()
+        uses: actions/upload-artifact@main
+        with:
+          name: ${{ runner.os }}-r${{ matrix.config.r }}-results
+          path: |
+            *.Rcheck/*.out
+            *.Rcheck/*.log
