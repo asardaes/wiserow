@@ -8,8 +8,6 @@ Description: Fast row-oriented operations implemented in C++, all of which are m
     columns as input without coercing to a matrix, performing, if necessary, on-the-fly type
     promotion according to R rules (like transforming logicals to integers to allow summation).
 Version: 0.1.1.9000
-Depends:
-    R
 Imports:
     methods,
     glue,
