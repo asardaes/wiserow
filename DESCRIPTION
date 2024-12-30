@@ -9,7 +9,7 @@ Description: Fast row-oriented operations implemented in C++, all of which are m
     promotion according to R rules (like transforming logicals to integers to allow summation).
 Version: 0.1.1.9000
 Depends:
-    R (>= 3.1.0)
+    R
 Imports:
     methods,
     glue,
@@ -24,7 +24,7 @@ LinkingTo:
 Suggests:
     rlang,
     testthat
-Date: 2021-04-23
+Date: 2024-12-30
 Authors@R: c(
         person("Alexis", "Sarda-Espinosa", role=c("cre", "aut"), email="alexis.sarda@gmail.com")
     )
@@ -32,8 +32,8 @@ BugReports: https://github.com/asardaes/wiserow/issues
 License: GPL (>= 3)
 URL: https://asardaes.github.io/wiserow/, https://github.com/asardaes/wiserow
 NeedsCompilation: yes
-SystemRequirements: C++11, GNU make
+SystemRequirements: GNU make
 Language: en-US
 Encoding: UTF-8
-RoxygenNote: 7.1.1
+RoxygenNote: 7.3.2
 Roxygen: list(markdown = TRUE)

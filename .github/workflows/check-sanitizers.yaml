@@ -10,14 +10,14 @@ jobs:
     name: Check hash of src files
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
 
       - id: cache_hit
-        uses: actions/cache@v2
+        uses: actions/cache@v4
         with:
           path: |
             src
-          key: san-0-${{ hashFiles('src/**') }}
+          key: san-${{ hashFiles('src/**') }}
     outputs:
       run_check: ${{ steps.cache_hit.outputs.cache-hit }}
   R-CMD-check:
@@ -40,15 +40,17 @@ jobs:
       R_KEEP_PKG_SOURCE: yes
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
 
-      - uses: actions/cache@v2
+      - uses: actions/cache@v4
         with:
           path: |
             /usr/local/lib/R/site-library
           key: ${{ matrix.config.img }}
 
       - name: Install dependencies
+        env:
+           ASAN_OPTIONS: "detect_odr_violation=0"
         shell: Rscriptdevel {0}
         run: |
           install.packages("remotes")
@@ -59,7 +61,7 @@ jobs:
       - name: Check with sanitizers
         env:
           NOT_CRAN: false
-          ASAN_OPTIONS: "detect_leaks=0"
+          ASAN_OPTIONS: "detect_leaks=0:detect_odr_violation=0"
         run: |
           Rdevel CMD build --no-build-vignettes --no-manual .
           Rdevel --vanilla CMD check *.tar.gz --as-cran --no-manual

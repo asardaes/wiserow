@@ -1,5 +1,5 @@
-CXX_STD = CXX11
 PKG_CXXFLAGS += -DRCPP_USE_UNWIND_PROTECT
+PKG_CXXFLAGS += $(shell ${R_HOME}/bin/Rscript -e "RcppParallel::CxxFlags()")
 
 # Needed due to RcppParallel
 PKG_LIBS += $(shell ${R_HOME}/bin/Rscript -e "RcppParallel::RcppParallelLibs()")
