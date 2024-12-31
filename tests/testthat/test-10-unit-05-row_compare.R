@@ -1,5 +1,3 @@
-context("  Row Compare")
-
 test_that("row_compare throws if an element of values has length != 0", {
     expect_error(row_compare(dbl_mat, values = list(1:2)), "length equal to 1")
     expect_error(row_compare(df, values = list(1:2)), "length equal to 1")

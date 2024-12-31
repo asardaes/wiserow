@@ -1,5 +1,3 @@
-context("  Row sums")
-
 test_that("row_sums can handle errors and edge cases appropriately.", {
     suppressWarnings(
         expect_error(regexp = "not support", row_sums(char_mat, output_mode = "integer"))
@@ -249,6 +247,8 @@ test_that("row_sums for complex matrices works.", {
 })
 
 test_that("row_sums for complex matrices with NAs works.", {
+    local_edition(2)
+
     expected <- rowSums(cplx_na_mat, na.rm = TRUE)
     ans <- row_sums(cplx_na_mat)
     expect_equal(ans, expected)

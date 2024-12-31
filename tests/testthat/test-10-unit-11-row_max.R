@@ -1,5 +1,3 @@
-context("  Row max")
-
 test_that("row_max works for matrices.", {
     matrices <- list(bool_na_mat, int_na_mat, dbl_na_mat, char_na_mat)
     na_actions <- wiserow:::.supported_na_actions

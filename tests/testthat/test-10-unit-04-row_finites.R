@@ -1,5 +1,3 @@
-context("  Row Finites")
-
 test_that("row_finites works as expected.", {
     dbl_cols <- sapply(df, is.double)
     cplx_cols <- sapply(df, is.complex)

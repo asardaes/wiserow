@@ -1,5 +1,3 @@
-context("  Row Infs")
-
 test_that("row_infs works as expected.", {
     dbl_cols <- sapply(df, is.double)
     cplx_cols <- sapply(df, is.complex)

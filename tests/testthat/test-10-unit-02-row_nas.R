@@ -1,5 +1,3 @@
-context("  Row NAs")
-
 test_that("row_nas for integer matrices works.", {
     expected <- apply(int_na_mat, 1L, function(x) { all(is.na(x)) })
     ans <- row_nas(int_na_mat, "all")

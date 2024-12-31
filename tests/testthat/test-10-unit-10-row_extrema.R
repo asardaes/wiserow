@@ -1,5 +1,3 @@
-context("  Row extrema")
-
 test_that("Error is thrown if complex numbers are involved.", {
     expect_error(wiserow:::row_extrema_matrix(cplx_mat), "typeof")
     expect_error(wiserow:::row_extrema_df(df), "complex")

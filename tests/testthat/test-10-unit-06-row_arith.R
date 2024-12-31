@@ -1,4 +1,3 @@
-context("  Row arith")
 # NOTE: row_sums came first, so its tests check most cases
 
 test_that("row_arith correctly infers output mode.", {
@@ -28,6 +27,8 @@ test_that("row_arith correctly infers output mode.", {
 })
 
 test_that("row_arith behaves as expected for data frames.", {
+    local_edition(2)
+
     df <- df[, sapply(df, typeof) != "character"]
 
     considered_cols <- list(
@@ -67,6 +68,8 @@ test_that("row_arith behaves as expected for data frames.", {
 })
 
 test_that("row_arith can accumulate.", {
+    local_edition(2)
+
     rows <- 1001:1500
 
     expect_error(row_arith(int_mat, cumulative = TRUE, output_class = "vector"), "cumulative")

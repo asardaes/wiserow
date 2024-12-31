@@ -1,5 +1,3 @@
-context("  Row In")
-
 test_that("row_in handles basic input errors.", {
     expect_error(row_in(matrix()), "empty")
     expect_error(row_in(data.frame()), "empty")

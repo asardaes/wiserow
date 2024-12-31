@@ -1,5 +1,3 @@
-context("  Row means")
-
 test_that("row_means can handle errors and edge cases appropriately.", {
     suppressWarnings(
         expect_error(regexp = "not support", row_means(char_mat, output_mode = "integer"))
@@ -250,6 +248,8 @@ test_that("row_means for complex matrices works.", {
 })
 
 test_that("row_means for complex matrices with NAs works.", {
+    local_edition(2)
+
     expected <- rowMeans(cplx_na_mat, na.rm = TRUE)
     ans <- row_means(cplx_na_mat)
     expect_equal(ans, expected)
@@ -260,6 +260,8 @@ test_that("row_means for complex matrices with NAs works.", {
 })
 
 test_that("row_means for complex matrices with column subset works.", {
+    local_edition(2)
+
     expected <- rowMeans(cplx_mat[, -2L])
     ans <- row_means(cplx_mat, cols = c(1, 3))
     expect_equal(ans, expected)
@@ -330,6 +332,8 @@ test_that("row_means for data frames works.", {
 })
 
 test_that("row_means can accumulate.", {
+    local_edition(2)
+
     cummeans <- function(x, na.rm = FALSE) {
         if (!na.rm) return(cumsum(x) / seq_along(x))
 

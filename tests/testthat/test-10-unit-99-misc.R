@@ -1,5 +1,3 @@
-context("  Miscellaneous")
-
 # some of these use row_sums as gateway because it was the first R function
 
 test_that("tidyselect support works.", {

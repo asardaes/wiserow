@@ -1,5 +1,3 @@
-context("  Row Duplicated")
-
 test_that("row_duplicated throws for invalid output class.", {
     expect_error(row_duplicated(int_mat, output_class = "vector"), "output class")
     expect_error(row_duplicated(df, output_class = "vector"), "output class")
@@ -39,7 +37,7 @@ test_that("row_duplicated's internal promotions work as expected.", {
 
             expected <- as.data.frame(t(apply(df[, cols], 1L, duplicated)))
             ans <- row_duplicated(df, cols = cols)
-            expect_equal(ans, expected, check.attributes = FALSE)
+            expect_equal(ans, expected, ignore_attr = TRUE)
         }
     }
 })
