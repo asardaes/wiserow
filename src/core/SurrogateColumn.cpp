@@ -7,16 +7,18 @@ namespace wiserow {
 /*
  * Accessing elements of STRSXP is based on STRING_ELT:
  * https://github.com/wch/r-source/blob/aa024e5fa456871f9825e9f257ae6872a9cb0722/src/main/memory.c#L3750
+ * which moved to https://github.com/wch/r-source/blob/76c648e4bd0828f5195e88659d484c7e9c1d6204/src/main/memory.c#L4102
  *
  * STRING_ELT calls STDVEC_DATAPTR and casts the result to SEXP*:
  * https://github.com/wch/r-source/blob/aa024e5fa456871f9825e9f257ae6872a9cb0722/src/include/Rinternals.h#L441
+ * which moved to https://github.com/wch/r-source/blob/76c648e4bd0828f5195e88659d484c7e9c1d6204/src/include/Defn.h#L413
  *
- * To get the final char* from SEXP*, we use CHAR(). This, along with STDVEC_DATAPTR, are only casts
+ * To get the final char* from SEXP*, we use CHAR() again. This, along with STDVEC_DATAPTR, are only casts
  * with some arithmetic, so they should be thread safe (?).
  */
 
 SurrogateColumn<Rcpp::StringMatrix>::SurrogateColumn(SEXP mat, const int j)
-    : data_ptr_(static_cast<SEXP *>(STDVEC_DATAPTR(mat)))
+    : data_(mat)
     , size_(Rf_nrows(mat))
     , offset_(j * size_)
 { }
@@ -31,13 +33,14 @@ const supported_col_t SurrogateColumn<Rcpp::StringMatrix>::operator[](const std:
                                 std::to_string(id));
     } // nocov end
 
-    return supported_col_t(boost::string_ref(CHAR(data_ptr_[id + offset_])));
+    SEXP element = STRING_ELT(data_, id + offset_);
+    return supported_col_t(boost::string_ref(CHAR(element)));
 }
 
 // =================================================================================================
 
 SurrogateColumn<Rcpp::StringVector>::SurrogateColumn(SEXP vec)
-    : data_ptr_(static_cast<SEXP *>(STDVEC_DATAPTR(vec)))
+    : data_(vec)
     , size_(Rf_xlength(vec))
 { }
 
@@ -51,7 +54,8 @@ const supported_col_t SurrogateColumn<Rcpp::StringVector>::operator[](const std:
                                 std::to_string(id));
     } // nocov end
 
-    return supported_col_t(boost::string_ref(CHAR(data_ptr_[id])));
+    SEXP element = STRING_ELT(data_, id);
+    return supported_col_t(boost::string_ref(CHAR(element)));
 }
 
 // =================================================================================================

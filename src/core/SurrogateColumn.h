@@ -57,7 +57,7 @@ public:
     const supported_col_t operator[](const std::size_t id) const override;
 
 private:
-    const SEXP *data_ptr_;
+    const SEXP data_;
     const std::size_t size_;
     const std::size_t offset_;
 };
@@ -74,7 +74,7 @@ public:
     const supported_col_t operator[](const std::size_t id) const override;
 
 private:
-    const SEXP *data_ptr_;
+    const SEXP data_;
     const std::size_t size_;
 };
 
