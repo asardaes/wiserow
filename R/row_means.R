@@ -2,7 +2,7 @@
 #'
 #' @export
 #'
-#' @template data-param
+#' @param .data `r roxygen_data_param()`
 #' @inheritDotParams op_ctrl -output_mode -output_class -factor_mode
 #' @param cumulative Logical. Whether to return the cumulative operation.
 #' @param output_mode Passed to [op_ctrl()]. If missing, it will be inferred.

@@ -4,7 +4,7 @@
 #'
 #' @export
 #'
-#' @template data-param
+#' @param .data `r roxygen_data_param()`
 #' @param ... Arguments for [row_arith()] (except `operator`).
 #'
 row_sums <- function(.data, ...) {

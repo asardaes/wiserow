@@ -1,11 +1,9 @@
 #' Conditions related to duplicated values
 #'
 #' @export
-#' @templateVar par match_type
-#' @templateVar choices (`NULL`, "any", "none", "which_first", "count")
 #'
-#' @template data-param
-#' @template generic-choices
+#' @param .data `r roxygen_data_param()`
+#' @param match_type `r roxygen_generic_choices('(\\code{NULL}, "any", "none", "which_first", "count")')`
 #' @inheritDotParams op_ctrl -output_class -output_mode -na_action
 #' @param output_class Passed to [op_ctrl()]. If missing, it will be inferred.
 #'

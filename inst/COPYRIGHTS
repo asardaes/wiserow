@@ -2,7 +2,7 @@ Overall license
 ===============
 
 wiserow: Multi-Threaded, Coercion-Free Implementations of Common Row-Wise Operations
-Copyright (C) 2019-2021  Alexis Sarda-Espinosa
+Copyright (C) 2019-2021, 2024-2025  Alexis Sarda-Espinosa
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by

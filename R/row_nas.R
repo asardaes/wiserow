@@ -1,11 +1,9 @@
 #' Conditions related to missing values
 #'
 #' @export
-#' @templateVar par match_type
-#' @templateVar choices ("all", "any", "none", "which_first", "count")
 #'
-#' @template data-param
-#' @template generic-choices
+#' @param .data `r roxygen_data_param()`
+#' @param match_type `r roxygen_generic_choices('("all", "any", "none", "which_first", "count")')`
 #' @inheritDotParams op_ctrl -output_mode -na_action
 #'
 #' @examples

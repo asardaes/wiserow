@@ -1,11 +1,9 @@
 #' Check if a row's columns' values are present in a set of known values
 #'
 #' @export
-#' @templateVar par match_type
-#' @templateVar choices ("all", "any", "none", "which_first", "count")
 #'
-#' @template data-param
-#' @template generic-choices
+#' @param .data `r roxygen_data_param()`
+#' @param match_type `r roxygen_generic_choices('("all", "any", "none", "which_first", "count")')`
 #' @param sets The list of sets to compare against. See details.
 #' @param negate Logical. If `TRUE`, values that are *not* in the `sets` are sought.
 #' @inheritDotParams op_ctrl -output_mode -na_action

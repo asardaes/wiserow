@@ -4,11 +4,9 @@
 #' index of the first column that fulfills the comparison, or the number of columns that do.
 #'
 #' @export
-#' @templateVar par match_type
-#' @templateVar choices ("all", "any", "none", "which_first", "count")
 #'
-#' @template data-param
-#' @template generic-choices
+#' @param .data `r roxygen_data_param()`
+#' @param match_type `r roxygen_generic_choices('("all", "any", "none", "which_first", "count")')`
 #' @param operator A character indicating the comparison operator. See details.
 #' @param values The value or list of values to compare against. See details.
 #' @inheritDotParams op_ctrl -output_mode

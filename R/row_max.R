@@ -2,7 +2,7 @@
 #'
 #' @export
 #'
-#' @template data-param
+#' @param .data `r roxygen_data_param()`
 #' @param which If not `NULL`, one of ("first", "last") to return the index where maxima occurs.
 #' @inheritDotParams op_ctrl -output_mode
 #'
