@@ -3,6 +3,17 @@ on:
   push:
     branches:
       - master
+    paths:
+      - 'R/**'
+      - 'src/**'
+      - 'test/**'
+  pull_request:
+    branches:
+      - master
+    paths:
+      - 'R/**'
+      - 'src/**'
+      - 'test/**'
   schedule:
     - cron: "0 0 1 * ?"
 
@@ -10,7 +21,7 @@ name: R-CMD-check
 permissions: read-all
 
 jobs:
-  R-CMD-check:
+  check:
     runs-on: ${{ matrix.config.os }}
 
     name: ${{ matrix.config.os }} (${{ matrix.config.r }})
