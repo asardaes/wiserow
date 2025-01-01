@@ -1,3 +1,4 @@
 url: https://asardaes.github.io/wiserow/
-
 destination: docs
+template:
+  bootstrap: 5

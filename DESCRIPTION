@@ -7,7 +7,7 @@ Description: Fast row-oriented operations implemented in C++, all of which are m
     contrast to other functions, the ones in this package support data frames with differently typed
     columns as input without coercing to a matrix, performing, if necessary, on-the-fly type
     promotion according to R rules (like transforming logicals to integers to allow summation).
-Version: 0.1.1.9000
+Version: 0.1.1
 Imports:
     methods,
     glue,
@@ -22,7 +22,7 @@ LinkingTo:
 Suggests:
     rlang,
     testthat
-Date: 2024-12-30
+Date: 2025-01-01
 Authors@R: c(
         person("Alexis", "Sarda-Espinosa", role=c("cre", "aut"), email="alexis.sarda@gmail.com")
     )

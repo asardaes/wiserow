@@ -6,14 +6,8 @@
 
 ## Test environments
 * Local GNU/Linux, R release
-* Local GNU/Linux, R release with Valgrind
-* Local Windows 10, R release
 * win-builder (devel and release)
-* Travis CI
-  + Linux: devel and release
-  + OSX: release
-* AppVeyor (x32 and x64)
-* Docker container: rocker/r-devel-ubsan-clang
+* GitHub CI (devel, release, and oldrel)
 
 ## R CMD check results
 * There were no ERRORs or WARNINGs
